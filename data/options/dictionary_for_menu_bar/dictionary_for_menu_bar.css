@@ -1,0 +1,140 @@
+/* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
+body {
+    line-height: 1.6;
+    font-size: 15px;
+    overflow: auto;
+    background: #eeeeee;
+    min-height: 550px;
+    /* max-height: 90vh; */
+    margin-bottom: 50px;
+    min-width: 750px;
+}
+
+/* @-moz-document url-prefix() {
+    body {
+        // min-height: 550px;
+    }
+} */
+
+
+.my-dictionary-custom-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
+    background-position: calc(100% - 5px) center;
+    /* background-position: calc(100%) center; */
+    background-repeat: no-repeat;
+    padding: 0 0 0 5px;
+    outline: none !important;
+    margin: 0;
+    font-family: Verdana, sans-serif;
+    color: #000000;
+    height: 30px;
+    cursor: pointer;
+}
+
+
+.my-dictionary-panel {
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: normal;
+    background: #ffffff;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+}
+
+
+
+
+.panel-select-panel-input-container {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.my-dictionary-panel .my-dictionary-panel-select {
+
+    /* unset some of the properties */
+    display: unset;
+    flex-grow: 1;
+    font-size: 15px !important;
+    border: none !important;
+    position: sticky;
+    width: 100%;
+    height: 30px;
+    padding: 0 20px 0px 5px !important;
+    border-right: 1px solid #ccc !important;
+}
+
+.my-dictionary-form {
+    width: 100%;
+    flex-grow: 1 !important;
+    background: #ffffff !important;
+    padding: 0 5px !important;
+    border-bottom: none !important;
+    display: inline-block !important;
+}
+
+.my-dictionary-query-input {
+    margin: 0px !important;
+    width: 100% !important;
+    height: 30px !important;
+    border: none !important;
+    padding: 0 0 0 5px !important;
+    outline: none !important;
+    letter-spacing: 1px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+.my-dictionary-query-input:focus {
+    font-weight: 600;
+}
+
+
+.my-dictionary-iframe {
+
+    background: #efefef;
+    width: 100%;
+    min-height: 85vh;
+
+    border: none;
+    border-top: 1px solid #ccc;
+}
+
+/* for links */
+
+input {
+    outline: none;
+    border: none;
+    border-bottom: 2px solid #aba8a8;
+}
+
+input:focus {
+    border-bottom-color: red;
+}
+
+
+
+
+
+#top-menu-bar {
+    text-align: center;
+}
+
+.settings-page-link {
+    border: 1px solid #ccc;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #e0e0e0;
+    padding: 4px 12px;
+    display: inline-block;
+    border-radius: 15px;
+    color: #786d6d;
+    margin-bottom: 12px;
+}
+
+.settings-page-link:hover {
+    background: #d2d3d3;
+}

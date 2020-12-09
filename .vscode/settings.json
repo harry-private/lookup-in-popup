@@ -1,0 +1,23 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "LICENSE": true,
+        ".gitattributes": true,
+        ".jsbeautifyrc": true,
+        ".vscode": true
+    },
+    "cSpell.ignoreWords": [
+      "afterbegin"
+    ],
+    "cSpell.words": [
+      "beforeend",
+      "flexbox",
+      "longman",
+      "xmlhttprequest"
+    ]
+
+}

@@ -1,0 +1,199 @@
+html,
+body {
+    line-height: 1.6;
+    font-size: 15px;
+    overflow: auto;
+    background: #eeeeee;
+
+    min-height: 550px;
+    /* max-height: 90vh; */
+    margin-bottom: 50px;
+    min-width: 750px;
+
+
+}
+
+input {
+    outline: none;
+    /* border: none; */
+    border: 2px solid #aba8a8;
+}
+
+input:focus {
+    border-color: #ccc;
+}
+
+.flex-container {
+    padding: 0;
+    margin: 0;
+    /* list-style: none; */
+    /* border: 1px solid silver; */
+    -ms-box-orient: horizontal;
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -moz-flex;
+    display: -webkit-flex;
+    display: flex;
+}
+
+.nowrap {
+    -webkit-flex-wrap: nowrap;
+    flex-wrap: nowrap;
+}
+
+.column {
+    flex: 50%;
+    /* the next properties are to truncate the texts */
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0;
+}
+
+
+.flash-messages {
+    position: fixed;
+    /* top: 5px; */
+    left: 40%;
+    display: none;
+    background: rgb(34, 187, 51);
+    padding: 15px;
+    border-radius: 5px;
+    color: #fff;
+}
+
+button {
+    background-color: #5d5d5b;
+    /* Green */
+    border: none;
+    color: white;
+    padding: 10px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background-color: #434342;
+}
+
+button:focus {
+    outline: none
+}
+
+input[type=text] {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0;
+    box-sizing: border-box;
+}
+
+select {
+    width: 100%;
+    padding: 12px 15px;
+    /* border: none; */
+    border-radius: 4px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    border: 2px solid #aba8a8;
+    outline: none;
+}
+
+select:focus {
+    border-color: #ccc;
+}
+
+.main-settings {
+    /* width: 450px; */
+    margin: 0 auto;
+    /* background: #fff; */
+    /* display: flex;
+    flex-wrap: wrap; */
+    max-width: 750px;
+}
+
+.main-settings-segment {
+    background: #ffffff;
+    /* flex-grow: 1; */
+    min-width: 300px;
+    border: 1px solid ccc;
+    border-radius: 8px;
+    padding: 15px;
+    /* margin: 5px; */
+    /* margin-left: 5px; */
+}
+
+.second-settings-segment {
+    border: 1px solid #ccc;
+    padding: 15px;
+
+}
+
+.main-settings-segment .header {
+    font-weight: 700;
+    /* padding: 5px; */
+    margin-bottom: 12px;
+    font-size: 23px
+}
+
+#dictionaries-settings .dictionary {
+    padding: 5px;
+    border-bottom: 1px solid #dedede;
+}
+
+#dictionaries-settings .dictionary:last-child {
+    border-bottom: none;
+}
+
+#dictionaries-settings .dictionary .dictionary-edited {
+
+    background: #eeeeee;
+    padding: 15px;
+}
+
+#top-menu-bar {
+    text-align: center;
+}
+
+.settings-page-link {
+    border: 1px solid #ccc;
+    font-size: 15px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #e0e0e0;
+    padding: 4px 12px;
+    display: inline-block;
+    border-radius: 15px;
+    color: #786d6d;
+    margin-bottom: 12px;
+}
+
+.settings-page-link:hover {
+    background: #d2d3d3;
+}
+
+.settings-page-link:focus {
+    outline: none;
+}
+
+.dictionary-remove:hover {
+    color: red;
+}
+
+.website-remove-from-list:hover {
+    color: red;
+}
+
+#enable-disable-website-wise .website-wrapper {
+    padding: 5px;
+    border-bottom: 1px solid #dedede;
+}
+
+#enable-disable-website-wise .website-wrapper:last-child {
+    border-bottom: none;
+}

@@ -1,0 +1,181 @@
+/* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
+.my-dictionary-popup {
+    background: unset;
+    width: 182px;
+    height: 30px;
+    box-sizing: content-box;
+    cursor: pointer;
+    z-index: 999999;
+    position: absolute;
+    padding: 0;
+    border-image: initial;
+}
+
+.my-dictionary-popup:hover {
+    background-color: rgb(248, 248, 248);
+    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px; */
+    /* border: 1px solid rgb(198, 198, 198); */
+    border-image: initial;
+}
+
+.my-dictionary-popup-icon {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==);
+    background-size: 19px;
+    height: 19px;
+    width: 19px;
+}
+
+.my-dictionary-custom-select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
+    background-position: calc(100% - 5px) center;
+    /* background-position: calc(100%) center; */
+    background-repeat: no-repeat;
+    padding: 0 0 0 5px;
+    outline: none !important;
+    margin: 0;
+    font-family: Verdana, sans-serif;
+    color: #000000;
+    height: 30px;
+    cursor: pointer;
+}
+
+.my-dictionary-popup-select {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==) !important;
+    width: 182px !important;
+    font-size: 15px !important;
+    border: 1.5px solid #ccc !important;
+    display: block !important;
+}
+
+.my-dictionary-panel {
+    font-size: 15px;
+    font-weight: normal;
+    letter-spacing: normal;
+    width: 50%;
+    /* height: 108vh; */
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+    z-index: 999999999;
+    position: fixed;
+    top: 0px;
+    left: 50%;
+    transform: translate(-50%);
+    background: #ffffff;
+}
+
+.my-dictionary-panel-extra-options {
+
+    background-color: #ececfe;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==);
+    background-position: calc(100% - 99%) center;
+    /* background-position: calc(100%) center; */
+    background-repeat: no-repeat;
+    text-align: right;
+    font-size: 17px;
+    border-bottom: 1px solid #ccc;
+    padding: 3px 9px 3px 0;
+    flex: 0 1 auto;
+}
+
+.my-dictionary-panel-extra-options * {
+    padding: 5px;
+    cursor: pointer;
+}
+
+.my-dictionary-panel-extra-options *:hover {
+    background: lightblue;
+}
+
+.my-dictionary-panel-close:hover {
+    background: red;
+    color: #fff;
+}
+
+.my-dictionary-panel-maximized {
+    width: 98% !important;
+}
+
+.panel-select-panel-input-container {
+    display: flex;
+    justify-content: flex-start;
+    flex: 0 1 auto;
+}
+
+.my-dictionary-panel .my-dictionary-panel-select {
+
+    /* unset some of the properties */
+    display: unset;
+    flex-grow: 1;
+    font-size: 15px !important;
+    border: none !important;
+    position: sticky;
+    width: 100%;
+    height: 30px;
+    padding: 0 20px 0px 5px !important;
+    border-right: 1px solid #ccc !important;
+}
+
+.my-dictionary-form {
+    width: 100%;
+    flex-grow: 1 !important;
+    background: #ffffff !important;
+    padding: 0 5px !important;
+    border-bottom: none !important;
+    display: inline-block !important;
+}
+
+.my-dictionary-query-input {
+    margin: 0px !important;
+    width: 100% !important;
+    height: 30px !important;
+    border: none !important;
+    padding: 0 0 0 5px !important;
+    outline: none !important;
+    letter-spacing: 1px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    -webkit-box-shadow: none !important;
+}
+
+.my-dictionary-query-input:focus {
+    font-weight: 600;
+}
+
+
+.my-dictionary-iframe {
+
+    background: #efefef;
+    width: 100%;
+    /* height: 85vh; */
+    border: none;
+    border-top: 1px solid #ccc;
+    /* edit start */
+    /* flex: 1 1 auto; */
+    height: 100%;
+
+    /* edit end */
+}
+
+.create-fixed-Position-element {
+
+    display: none;
+    top: 0;
+    background-color: #000;
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 999999998;
+    opacity: 0.5;
+
+}
+
+
+@media (max-width: 768px) {
+
+    .my-dictionary-panel {
+        width: 80%;
+    }
+}

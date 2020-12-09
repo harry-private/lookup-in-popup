@@ -1,0 +1,24 @@
+{
+  "name": "lookup",
+  "version": "0.0.1",
+  "description": "Lookup selected texts in popup on your chosen source",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "chrome": "web-ext run -t chromium",
+    "firefox": "web-ext run",
+    "both": "web-ext run -t firefox-desktop -t chromium",
+    "build-chrome": "web-ext --config=chrome_config.js build",
+    "build-firefox": "web-ext --config=firefox_config.js build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harry-private/lookup.git"
+  },
+  "author": "harry-private",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/harry-private/lookup/issues"
+  },
+  "homepage": "https://github.com/harry-private/lookup#readme"
+}
