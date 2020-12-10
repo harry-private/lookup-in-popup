@@ -141,16 +141,16 @@ select:focus {
     font-size: 23px
 }
 
-#dictionaries-settings .dictionary {
+#sources-settings .source {
     padding: 5px;
     border-bottom: 1px solid #dedede;
 }
 
-#dictionaries-settings .dictionary:last-child {
+#sources-settings .source:last-child {
     border-bottom: none;
 }
 
-#dictionaries-settings .dictionary .dictionary-edited {
+#sources-settings .source .source-edited {
 
     background: #eeeeee;
     padding: 15px;
@@ -181,7 +181,7 @@ select:focus {
     outline: none;
 }
 
-.dictionary-remove:hover {
+.source-remove:hover {
     color: red;
 }
 

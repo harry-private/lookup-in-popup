@@ -2,7 +2,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(
     function(details) {
         return { requestHeaders: details.requestHeaders };
     }, { urls: ["<all_urls>"] },
-    ["blocking", "requestHeaders"]);
+    ["blocking", "requestHeaders"]
+);
 
 
 
@@ -39,19 +40,9 @@ chrome.webRequest.onHeadersReceived.addListener(function(info) {
 // })
 
 chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.get(['dictionaries', 'triggerKey', 'enableDisable'], result => {
-        if (!('dictionaries' in result)) {
+    chrome.storage.sync.get(['sources', 'triggerKey', 'enableDisable'], result => {
+        if (!('sources' in result)) {
             firsTime();
-        }
-
-        // I can delete this after couple of updates
-        if (!('enableDisable' in result)) {
-            // if there is no enableDisable key in the storage I can set here
-            // because when this extension gets updated 
-            // users may not have that in there storage
-            // because initially there was no such key
-            setEnableDisableFirstTime();
-            setShowChooseDictionaryOptionsFirstTime();
         }
     });
 });
@@ -59,44 +50,56 @@ chrome.runtime.onInstalled.addListener(function() {
 
 function firsTime() {
     chrome.storage.sync.set({
-        dictionaries: [
-
-            {
+        sources: [{
                 "preInstalled": "true",
                 "id": "googleTranslate",
                 "title": "Google Translate",
                 "isGoogleTranslate": true,
                 "from": "auto", //default
                 "to": "en", //default
-                "url": dictionariesData.googleTranslate.generateUrl("auto", "en")
+                "url": sourcesData.googleTranslate.generateUrl("auto", "en")
+            },
+            {
+                "preInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
+                "id": "google",
+                "title": "Google",
+                "url": "https://www.google.com/search?q=%s"
+
             }, {
                 "preInstalled": "true",
                 "id": "cambridge",
                 "title": "Cambridge",
                 "fromTo": "english",
-                "url": dictionariesData.cambridge.generateUrl("english")
+                "url": sourcesData.cambridge.generateUrl("english")
             }, {
                 "preInstalled": "true",
                 "id": "oxford",
                 "title": "Oxford",
                 "fromTo": "en",
-                "url": dictionariesData.oxford.generateUrl("en")
+                "url": sourcesData.oxford.generateUrl("en")
             }, {
                 "preInstalled": "true",
                 "id": "collins",
                 "title": "Collins",
                 "fromTo": "english",
-                "url": dictionariesData.collins.generateUrl("english")
+                "url": sourcesData.collins.generateUrl("english")
             }, {
                 "preInstalled": "true",
                 "id": "longman",
                 "title": "Longman",
                 "fromTo": "english",
-                "url": dictionariesData.longman.generateUrl("english")
+                "url": sourcesData.longman.generateUrl("english")
+            },
+            {
+                "preInstalled": "true",
+                "id": "wikipedia",
+                "title": "Wikipedia",
+                "fromTo": "english",
+                "url": sourcesData.wikipedia.generateUrl("en")
             },
 
         ],
-        dictionariesHidden: [],
+        sourcesHidden: [],
         triggerKey: "none",
         enableDisable: {
             globally: "enable", //disabled|enabled
@@ -104,23 +107,6 @@ function firsTime() {
             blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
             whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
         },
-        showChooseDictionaryOptions: 'yes'
-    });
-}
-
-function setEnableDisableFirstTime() {
-    chrome.storage.sync.set({
-        enableDisable: {
-            globally: "enable", //disabled|enabled
-            listMode: "blacklist-mode", //blacklist-mode|whitelist-mode
-            blacklist: [], //"someUrl", "anotherUrl", "sommeAnotherUrl"
-            whitelist: [] //"someUrl", "anotherUrl", "sommeAnotherUrl"
-        }
-    });
-}
-
-function setShowChooseDictionaryOptionsFirstTime() {
-    chrome.storage.sync.set({
-        showChooseDictionaryOptions: 'yes'
+        showChooseSourceOptions: 'yes'
     });
 }

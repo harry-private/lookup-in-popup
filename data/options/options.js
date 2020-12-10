@@ -1,5 +1,5 @@
 const flashMessagesElem = document.querySelector('.flash-messages');
-const dictionariesSettingsElem = document.querySelector("#dictionaries-settings");
+const sourcesSettingsElem = document.querySelector("#sources-settings");
 const saveSettingsElem = document.querySelector("#save-settings");
 const triggerKeyElem = document.querySelector("#trigger-key");
 const enableDisableGloballyElem = document.querySelector("#enable-disable-globally");
@@ -11,20 +11,20 @@ const listUrlAddElem = document.querySelector("#list-url-add");
 const blacklistElem = document.querySelector("#blacklist");
 const whitelistElem = document.querySelector("#whitelist");
 
-const showChooseDictionaryOptionsElem = document.querySelector("#show-choose-dictionary-options");
+const showChooseSourceOptionsElem = document.querySelector("#show-choose-source-options");
 // document.body.style.height = (screen.height - 120) + "px";
 
-chrome.storage.sync.get(['dictionaries', "triggerKey", "enableDisable", "showChooseDictionaryOptions"], result => {
+chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
     console.log('result: ', result);
     // getting values from local storage, creating layout, and adding event listeners
-    createDictionariesSettingsLayout(result);
-    sortDictionaries();
-    addEventListenerToDictionarySideOptions();
+    createSourcesSettingsLayout(result);
+    sortSources();
+    addEventListenerToSourceSideOptions();
     addEventListenerToWhitelistBlacklistRemoveBtn();
 
 });
 
-addNewDictionary();
+addNewSource();
 saveSettings();
 addEventListenerToListMode();
 addWebsiteInList();
@@ -32,22 +32,22 @@ addWebsiteInList();
 function saveSettings() {
     saveSettingsElem.addEventListener("click", function() {
 
-        const dictionariesElem = dictionariesSettingsElem.querySelectorAll(".dictionary");
+        const sourcesElem = sourcesSettingsElem.querySelectorAll(".source");
         const blacklistWebsiteElem = document.querySelectorAll("#blacklist .website");
         console.log('blacklistWebsiteElem: ', blacklistWebsiteElem);
         const whitelistWebsiteElem = document.querySelectorAll("#whitelist .website");
 
 
         let triggerKeyToStore = changeTriggerKey();
-        let dictionariesToStore = getDictionariesFromInputs(dictionariesElem);
+        let sourcesToStore = getSourcesFromInputs(sourcesElem);
         let enableDisableGloballyToStore = changeEnableDisableGlobally();
         let blacklistAndWhitelist = getBlacklistAndWhitelist(blacklistWebsiteElem, whitelistWebsiteElem);
         // console.log('blacklistAndWhitelist: ', blacklistAndWhitelist);
-        if (dictionariesToStore.error == true)
+        if (sourcesToStore.error == true)
             return;
-        // save the dictionaries to the local storage
+        // save the sources to the local storage
         chrome.storage.sync.set({
-            dictionaries: dictionariesToStore.dictionariesToStore,
+            sources: sourcesToStore.sourcesToStore,
             triggerKey: triggerKeyToStore,
             enableDisable: {
                 globally: enableDisableGloballyToStore,
@@ -55,57 +55,57 @@ function saveSettings() {
                 blacklist: blacklistAndWhitelist[0],
                 whitelist: blacklistAndWhitelist[1],
             },
-            showChooseDictionaryOptions: showChooseDictionaryOptionsElem.value
+            showChooseSourceOptions: showChooseSourceOptionsElem.value
         });
 
         showFlashMessages(["Settings Saved!"]);
     });
 }
 
-function createDictionariesSettingsLayout(result) {
+function createSourcesSettingsLayout(result) {
 
-    result.dictionaries.forEach(function(dictionary) {
+    result.sources.forEach(function(source) {
         let fromTo;
-        let preInstalled = (dictionary.preInstalled == 'true') ? true : false;
-        let isHidden = (dictionary.isHidden == 'true') ? true : false;
+        let preInstalled = (source.preInstalled == 'true') ? true : false;
+        let isHidden = (source.isHidden == 'true') ? true : false;
 
 
         if (preInstalled) {
-            if (dictionary.isGoogleTranslate) {
+            if (source.isGoogleTranslate) {
                 let optionFrom = '';
                 let optionTo = '';
-                dictionariesData[dictionary.id].from.forEach(function(language) {
-                    let selectedFrom = (dictionary.from == language[1]) ? "selected" : "";
-                    let selectedTo = (dictionary.to == language[1]) ? "selected" : "";
+                sourcesData[source.id].from.forEach(function(language) {
+                    let selectedFrom = (source.from == language[1]) ? "selected" : "";
+                    let selectedTo = (source.to == language[1]) ? "selected" : "";
                     optionFrom += `<option ${selectedFrom}  value="${language[1]}">${language[0]}</option>`;
                     optionTo += `<option ${selectedTo} value="${language[1]}">${language[0]}</option>`;
                 });
-                fromTo = `<label> <strong>Select Language (From)</strong> </label><br><select class="dictionary-from">${optionFrom}</select><br><br>
-                <label> <strong>Select Language (To)</strong> </label><br><select class="dictionary-to">${optionTo}</select>`;
+                fromTo = `<label> <strong>Select Language (From)</strong> </label><br><select class="source-from">${optionFrom}</select><br><br>
+                <label> <strong>Select Language (To)</strong> </label><br><select class="source-to">${optionTo}</select>`;
             } else {
                 let optionFromTo = '';
 
-                // dictionariesData is from dictionaries_data.js
-                dictionariesData[dictionary.id].fromTo.forEach(function(language) {
-                    let selectedFromTo = (dictionary.fromTo == language[1]) ? "selected" : "";
+                // sourcesData is from dictionaries_data.js
+                sourcesData[source.id].fromTo.forEach(function(language) {
+                    let selectedFromTo = (source.fromTo == language[1]) ? "selected" : "";
                     optionFromTo += `<option value="${language[1]}" ${selectedFromTo}>${language[0]}</option>`;
                 });
-                fromTo = `<label><strong>Select Language</strong> </label><br><select class="dictionary-from-to">${optionFromTo}</select>`;
+                fromTo = `<label><strong>Select Language</strong> </label><br><select class="source-from-to">${optionFromTo}</select>`;
             }
         }
 
-        let template = templateForDictionary({
-            isGoogleTranslate: dictionary.isGoogleTranslate,
+        let template = templateForSource({
+            isGoogleTranslate: source.isGoogleTranslate,
             preInstalled,
             isHidden,
             fromTo,
-            title: dictionary.title,
-            url: dictionary.url,
-            id: dictionary.id
+            title: source.title,
+            url: source.url,
+            id: source.id
         })
-        dictionariesSettingsElem.insertAdjacentHTML('beforeend', template);
+        sourcesSettingsElem.insertAdjacentHTML('beforeend', template);
     });
-    changeUrlOfPreInstalledDictionaries();
+    changeUrlOfPreInstalledSources();
 
     result.enableDisable.blacklist.forEach(function(blacklist) {
         const websiteTemplate = templateForBlacklistWhitelist(blacklist);
@@ -120,73 +120,73 @@ function createDictionariesSettingsLayout(result) {
     enableDisableGloballyElem.value = result.enableDisable.globally;
     listModeElem.value = result.enableDisable.listMode;
     changeList();
-    showChooseDictionaryOptionsElem.value = result.showChooseDictionaryOptions.toLowerCase();
+    showChooseSourceOptionsElem.value = result.showChooseSourceOptions.toLowerCase();
 }
 
-function getDictionariesFromInputs(dictionaries) {
-    let dictionariesToStore = [];
+function getSourcesFromInputs(sources) {
+    let sourcesToStore = [];
     let error = false;
-    [...dictionaries].forEach(function(dictionary) {
-        let dictionariesToStoreObj = {};
-        let dictionaryTitle = dictionary.querySelector(".dictionary-title").value;
-        let dictionaryId = dictionary.querySelector(".dictionary-id").value;
-        let dictionaryUrl = dictionary.querySelector(".dictionary-url").value;
-        if ((dictionaryTitle.length >= 30) || (dictionaryTitle.length <= 0)) {
+    [...sources].forEach(function(source) {
+        let sourcesToStoreObj = {};
+        let sourceTitle = source.querySelector(".source-title").value;
+        let sourceId = source.querySelector(".source-id").value;
+        let sourceUrl = source.querySelector(".source-url").value;
+        if ((sourceTitle.length >= 30) || (sourceTitle.length <= 0)) {
             let invalidTitleLength = `The title you edited must be between 1 to 30`;
             showFlashMessages([invalidTitleLength], "red");
             console.log('invalidTitleLength: ', invalidTitleLength);
             error = true;
-        } else if (!isValidURL(dictionaryUrl)) {
+        } else if (!isValidURL(sourceUrl)) {
             let invalidUrl = `The URL you edited must be valid`;
             showFlashMessages([invalidUrl], "red");
             // console.log('invalidUrl: ', invalidUrl);
             error = true;
         } else {
-            let dictionaryPreInstalled = dictionary.querySelector(".dictionary-preinstalled").value;
-            let dictionaryIsHidden = dictionary.querySelector('.dictionary-is-hidden');
-            if (dictionaryIsHidden) {
-                if (dictionaryIsHidden.value === "true") {
-                    dictionariesToStoreObj.isHidden = "true";
+            let sourcePreInstalled = source.querySelector(".source-preinstalled").value;
+            let sourceIsHidden = source.querySelector('.source-is-hidden');
+            if (sourceIsHidden) {
+                if (sourceIsHidden.value === "true") {
+                    sourcesToStoreObj.isHidden = "true";
                 }
             }
-            if (dictionaryPreInstalled === 'true') {
-                if (dictionary.id == 'google-translate') {
-                    let dictionaryFrom = dictionary.querySelector(".dictionary-from");
-                    let dictionaryTo = dictionary.querySelector(".dictionary-to");
-                    let dictionaryFromSelected = getSelectedOption(dictionaryFrom)
-                    let dictionaryToSelected = getSelectedOption(dictionaryTo)
-                    dictionariesToStoreObj.from = dictionaryFromSelected
-                    dictionariesToStoreObj.to = dictionaryToSelected
-                    dictionariesToStoreObj.isGoogleTranslate = true;
+            if (sourcePreInstalled === 'true') {
+                if (source.id == 'google-translate') {
+                    let sourceFrom = source.querySelector(".source-from");
+                    let sourceTo = source.querySelector(".source-to");
+                    let sourceFromSelected = getSelectedOption(sourceFrom)
+                    let sourceToSelected = getSelectedOption(sourceTo)
+                    sourcesToStoreObj.from = sourceFromSelected
+                    sourcesToStoreObj.to = sourceToSelected
+                    sourcesToStoreObj.isGoogleTranslate = true;
                 } else {
-                    let dictionaryFromTo = dictionary.querySelector(".dictionary-from-to");
-                    let dictionaryFromToSelected = getSelectedOption(dictionaryFromTo);
-                    dictionariesToStoreObj.fromTo = dictionaryFromToSelected;
+                    let sourceFromTo = source.querySelector(".source-from-to");
+                    let sourceFromToSelected = getSelectedOption(sourceFromTo);
+                    sourcesToStoreObj.fromTo = sourceFromToSelected;
                 }
             }
 
 
 
-            dictionariesToStoreObj.title = dictionaryTitle;
-            dictionariesToStoreObj.id = dictionaryId;
-            dictionariesToStoreObj.url = dictionaryUrl;
-            dictionariesToStoreObj.preInstalled = dictionaryPreInstalled;
-            dictionariesToStore.push(dictionariesToStoreObj);
+            sourcesToStoreObj.title = sourceTitle;
+            sourcesToStoreObj.id = sourceId;
+            sourcesToStoreObj.url = sourceUrl;
+            sourcesToStoreObj.preInstalled = sourcePreInstalled;
+            sourcesToStore.push(sourcesToStoreObj);
         }
     });
-    return { error, dictionariesToStore };
+    return { error, sourcesToStore: sourcesToStore };
 }
 
-function addNewDictionary() {
-    let addNewDictionaryBtnElem = document.querySelector("#add-new-dictionary-btn");
-    let dictionaryTitle = document.querySelector('.add-new-dictionary .dictionary-title');
-    let dictionaryUrl = document.querySelector('.add-new-dictionary .dictionary-url');
-    addNewDictionaryBtnElem.addEventListener('click', function(e) {
+function addNewSource() {
+    let addNewSourceBtnElem = document.querySelector("#add-new-source-btn");
+    let sourceTitle = document.querySelector('.add-new-source .source-title');
+    let sourceUrl = document.querySelector('.add-new-source .source-url');
+    addNewSourceBtnElem.addEventListener('click', function(e) {
         let error = {};
         // let id = ('_' + Math.random().toString(36).substr(2, 9));
 
-        let title = (dictionaryTitle.value).trim();
-        let url = dictionaryUrl.value;
+        let title = (sourceTitle.value).trim();
+        let url = sourceUrl.value;
 
         if ((title.length >= 30) || (title.length <= 0)) {
             error.invalidTitleLength = 'Title length should be between 1 to 30';
@@ -195,16 +195,16 @@ function addNewDictionary() {
             error.invalidUrl = "URL must be valid";
             showFlashMessages([error.invalidUrl], "red")
         } else {
-            let newDictionaryTemplate = templateForDictionary({
+            let newSourceTemplate = templateForSource({
                 title,
                 url,
             });
-            dictionariesSettingsElem.insertAdjacentHTML('afterbegin', newDictionaryTemplate);
-            showFlashMessages(["New dictionary is added, please save the changes."]);
-            dictionaryTitle.value = "";
-            dictionaryUrl.value = "";
-            // add eventListener to newly created dictionary
-            addEventListenerToDictionarySideOptions(true)
+            sourcesSettingsElem.insertAdjacentHTML('afterbegin', newSourceTemplate);
+            showFlashMessages(["New source is added, please save the changes."]);
+            sourceTitle.value = "";
+            sourceUrl.value = "";
+            // add eventListener to newly created source
+            addEventListenerToSourceSideOptions(true)
 
         }
 
@@ -311,7 +311,7 @@ function templateForBlacklistWhitelist(url) {
         `);
 }
 
-function templateForDictionary({
+function templateForSource({
     isGoogleTranslate = false,
     preInstalled = false,
     isHidden = false,
@@ -324,80 +324,80 @@ function templateForDictionary({
 
     // alert(('_' + Math.random().toString(36).substr(2, 9)))
     return `
-  <div ${isGoogleTranslate ? 'id="google-translate"' : ''} class="dictionary" style="">
+  <div ${isGoogleTranslate ? 'id="google-translate"' : ''} class="source" style="">
   <div class="flex-container nowrap" style="justify-content: space-between">
     <div class="column" title="${sanitize(title)}">${sanitize(title)}</div>
     <div class="column" style="text-align: right">
-    <span class="dictionary-edit" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Edit the dictionary"><strong><i class="material-icons">edit</i></strong></span>
-    <span class="dictionary-hide" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Hide the dictionary"><strong><i class="material-icons dictionary-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
-    ${(preInstalled ? '' : '<span class="dictionary-remove" style="font-size: 25px; cursor: pointer; margin-right: 10px;" title="Remove the dictionary"><strong><i class="material-icons">delete_forever</i></strong></span>')}
-    <span class="dictionary-drag" style="font-size: 25px; cursor: grab" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
+    <span class="source-edit" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
+    <span class="source-hide" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
+    ${(preInstalled ? '' : '<span class="source-remove" style="font-size: 25px; cursor: pointer; margin-right: 10px;" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
+    <span class="source-drag" style="font-size: 25px; cursor: grab" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
     </div>
   </div>
-  <div class="dictionary-edited" style="display:none">
+  <div class="source-edited" style="display:none">
   <br>
   <!-- <label><strong>Title </strong></label><br> -->
-  <input type="text" class="dictionary-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
-  <input type="hidden" class="dictionary-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
+  <input type="text" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
+  <input type="hidden" class="source-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
   <!-- <label><strong>URL </strong></label><br> -->
-  <input type="text" class="dictionary-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
-  <input type="hidden" class="dictionary-preinstalled" value="${preInstalled}">
-  <input type="hidden" class="dictionary-is-hidden" value="${isHidden}">
+  <input type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
+  <input type="hidden" class="source-preinstalled" value="${preInstalled}">
+  <input type="hidden" class="source-is-hidden" value="${isHidden}">
   ${( preInstalled ? fromTo + '<br><br>' : '' )}
-  <button class="dictionary-done">Done</button><br>
+  <button class="source-done">Done</button><br>
   </div>
   </div>`;
 }
 
-function addEventListenerToDictionarySideOptions(onJustFirstElement = false) {
+function addEventListenerToSourceSideOptions(onJustFirstElement = false) {
     if (!onJustFirstElement) {
-        allDictionariesElem = dictionariesSettingsElem.querySelectorAll(".dictionary");
-        [...allDictionariesElem].forEach(eventListenerForSideOptions());
+        allSourcesElem = sourcesSettingsElem.querySelectorAll(".source");
+        [...allSourcesElem].forEach(eventListenerForSideOptions());
     } else if (onJustFirstElement) {
-        let firstDictionaryElem = dictionariesSettingsElem.querySelector('.dictionary');
-        (eventListenerForSideOptions())(firstDictionaryElem);
+        let firstSourceElem = sourcesSettingsElem.querySelector('.source');
+        (eventListenerForSideOptions())(firstSourceElem);
     }
 }
 
 function eventListenerForSideOptions() {
-    return function(dictionary) {
-        const dictionaryEditElem = dictionary.querySelector(".dictionary-edit");
-        const dictionaryHideElem = dictionary.querySelector(".dictionary-hide");
-        const dictionaryHideIconElem = dictionaryHideElem.querySelector('.dictionary-hide-icon');
-        const dictionaryRemoveElem = dictionary.querySelector(".dictionary-remove");
-        const dictionaryDoneElem = dictionary.querySelector(".dictionary-done");
+    return function(source) {
+        const sourceEditElem = source.querySelector(".source-edit");
+        const sourceHideElem = source.querySelector(".source-hide");
+        const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
+        const sourceRemoveElem = source.querySelector(".source-remove");
+        const sourceDoneElem = source.querySelector(".source-done");
 
-        dictionaryEditElem.addEventListener('click', function(e) {
-            let dictionaryEditedElem = dictionary.querySelector(".dictionary-edited");
-            if (dictionaryEditedElem.style.display === 'none') {
-                dictionaryEditedElem.style.display = ""
+        sourceEditElem.addEventListener('click', function(e) {
+            let sourceEditedElem = source.querySelector(".source-edited");
+            if (sourceEditedElem.style.display === 'none') {
+                sourceEditedElem.style.display = ""
             } else {
-                dictionaryEditedElem.style.display = "none"
+                sourceEditedElem.style.display = "none"
             }
         });
-        dictionaryHideElem.addEventListener('click', function(e) {
-            let dictionaryIsHiddenElem = dictionary.querySelector('.dictionary-is-hidden');
+        sourceHideElem.addEventListener('click', function(e) {
+            let sourceIsHiddenElem = source.querySelector('.source-is-hidden');
 
-            if (dictionaryIsHiddenElem.value === "true") {
-                dictionaryIsHiddenElem.value = "false"
-                dictionaryHideIconElem.innerText = "visibility";
-                // dictionaryHideElem.style.textDecoration = '';
+            if (sourceIsHiddenElem.value === "true") {
+                sourceIsHiddenElem.value = "false"
+                sourceHideIconElem.innerText = "visibility";
+                // sourceHideElem.style.textDecoration = '';
             } else {
-                dictionaryIsHiddenElem.value = "true"
-                // dictionaryHideElem.style.textDecoration = 'line-through';
-                dictionaryHideIconElem.innerText = "visibility_off";
+                sourceIsHiddenElem.value = "true"
+                // sourceHideElem.style.textDecoration = 'line-through';
+                sourceHideIconElem.innerText = "visibility_off";
 
             }
         });
-        if (dictionaryRemoveElem) {
-            dictionaryRemoveElem.addEventListener('click', function(e) {
-                dictionary.parentNode.removeChild(dictionary);
+        if (sourceRemoveElem) {
+            sourceRemoveElem.addEventListener('click', function(e) {
+                source.parentNode.removeChild(source);
 
             });
         }
-        dictionaryDoneElem.addEventListener('click', function(e) {
-            let dictionaryEditedElem = dictionary.querySelector(".dictionary-edited");
-            dictionaryEditedElem.style.display = "none"
+        sourceDoneElem.addEventListener('click', function(e) {
+            let sourceEditedElem = source.querySelector(".source-edited");
+            sourceEditedElem.style.display = "none"
         });
 
     }
@@ -422,35 +422,35 @@ function eventListenerForWhitelistBlacklistRemoveBtn() {
     }
 }
 
-function changeUrlOfPreInstalledDictionaries() {
-    allDictionariesElem = dictionariesSettingsElem.querySelectorAll(".dictionary");
+function changeUrlOfPreInstalledSources() {
+    allSourcesElem = sourcesSettingsElem.querySelectorAll(".source");
 
-    [...allDictionariesElem].forEach(function(dictionary) {
-        let dictionaryPreinstalledElem = dictionary.querySelector('.dictionary-preinstalled')
-        if (dictionaryPreinstalledElem.value == 'true') {
-            let dictionaryId = dictionary.querySelector('.dictionary-id').value;
-            let dictionaryUrl = dictionary.querySelector('.dictionary-url');
-            if (dictionary.getAttribute("id") == 'google-translate') {
-                let dictionaryFromElem = dictionary.querySelector('.dictionary-from');
-                let dictionaryToElem = dictionary.querySelector('.dictionary-to');
-                dictionaryFromElem.addEventListener('change', function(e) {
-                    let selectedDictionaryFrom = getSelectedOption(dictionaryFromElem);
-                    let selectedDictionaryTo = getSelectedOption(dictionaryToElem);
-                    let newUrl = dictionariesData[dictionaryId].generateUrl(selectedDictionaryFrom, selectedDictionaryTo)
-                    dictionaryUrl.value = newUrl;
+    [...allSourcesElem].forEach(function(source) {
+        let sourcePreinstalledElem = source.querySelector('.source-preinstalled')
+        if (sourcePreinstalledElem.value == 'true') {
+            let sourceId = source.querySelector('.source-id').value;
+            let sourceUrl = source.querySelector('.source-url');
+            if (source.getAttribute("id") == 'google-translate') {
+                let sourceFromElem = source.querySelector('.source-from');
+                let sourceToElem = source.querySelector('.source-to');
+                sourceFromElem.addEventListener('change', function(e) {
+                    let selectedSourceFrom = getSelectedOption(sourceFromElem);
+                    let selectedSourceTo = getSelectedOption(sourceToElem);
+                    let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
+                    sourceUrl.value = newUrl;
                 })
-                dictionaryToElem.addEventListener('change', function(e) {
-                    let selectedDictionaryFrom = getSelectedOption(dictionaryFromElem);
-                    let selectedDictionaryTo = getSelectedOption(dictionaryToElem);
-                    let newUrl = dictionariesData[dictionaryId].generateUrl(selectedDictionaryFrom, selectedDictionaryTo)
-                    dictionaryUrl.value = newUrl;
+                sourceToElem.addEventListener('change', function(e) {
+                    let selectedSourceFrom = getSelectedOption(sourceFromElem);
+                    let selectedSourceTo = getSelectedOption(sourceToElem);
+                    let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
+                    sourceUrl.value = newUrl;
                 })
             } else {
-                let dictionaryFromToElem = dictionary.querySelector('.dictionary-from-to');
-                dictionaryFromToElem.addEventListener('change', function(e) {
-                    let selectedDictionaryFromTo = getSelectedOption(dictionaryFromToElem);
-                    let newUrl = dictionariesData[dictionaryId].generateUrl(selectedDictionaryFromTo)
-                    dictionaryUrl.value = newUrl;
+                let sourceFromToElem = source.querySelector('.source-from-to');
+                sourceFromToElem.addEventListener('change', function(e) {
+                    let selectedSourceFromTo = getSelectedOption(sourceFromToElem);
+                    let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFromTo)
+                    sourceUrl.value = newUrl;
                 })
             }
         }
@@ -497,9 +497,9 @@ function showFlashMessages(messages = [], BGColor = "rgb(34,187,51)") {
 
 }
 
-function sortDictionaries() {
-    Sortable.create(dictionariesSettingsElem, {
-        handle: '.dictionary-drag',
+function sortSources() {
+    Sortable.create(sourcesSettingsElem, {
+        handle: '.source-drag',
         animation: 150
     });
 }

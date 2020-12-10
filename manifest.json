@@ -1,8 +1,14 @@
 {
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{c7ec5939-f508-4e04-8414-ff9a2512e17a}",
+      "strict_min_version": "65.0"
+    }
+  },
   "manifest_version": 2,
-  "name": "Lookup",
-  "description": "Lookup selected texts in popup on your chosen source",
-  "version": "1.0.00",
+  "name": "Lookup In Popup",
+  "description": "Lookup selected texts in popup on your chosen source (website)",
+  "version": "0.0.1",
   "permissions": [
     "storage",
     "webRequest",
@@ -11,7 +17,7 @@
   ],
   "background": {
     "scripts": [
-      "data/internal_libs/dictionaries_data.js",
+      "data/internal_libs/sources_data.js",
       "data/background/background.js"
     ],
     "persistent": true
@@ -19,7 +25,7 @@
   "browser_action": {
     "default_icon": "data/icons/icon16.png",
     "default_title": "Lookup",
-    "default_popup": "data/options/dictionary_for_menu_bar/dictionary_for_menu_bar.html"
+    "default_popup": "data/options/lookup_for_menu_bar/lookup_for_menu_bar.html"
   },
   "options_ui": {
     "page": "data/options/options.html",
@@ -27,8 +33,13 @@
   },
   "icons": {
     "16": "data/icons/icon16.png",
+    "24": "data/icons/icon24.png",
+    "32": "data/icons/icon32.png",
     "48": "data/icons/icon48.png",
-    "128": "data/icons/icon128.png"
+    "64": "data/icons/icon64.png",
+    "128": "data/icons/icon128.png",
+    "256": "data/icons/icon256.png",
+    "512": "data/icons/icon512.png"
   },
   "web_accessible_resources": [
     "data/icons/icon_original.png",
@@ -52,7 +63,7 @@
   "commands": {
     "_execute_browser_action": {
       "suggested_key": {
-        "default": "Alt+M"
+        "default": "Alt+L"
       },
       "description": "Activate the extension"
     }

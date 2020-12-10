@@ -20,6 +20,7 @@ module.exports = {
         "README.md",
         "package.json",
         "package-lock.json",
-        "LICENSE"
+        "LICENSE",
+        "debug.log"
     ],
 };

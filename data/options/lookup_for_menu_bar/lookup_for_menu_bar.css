@@ -17,7 +17,7 @@ body {
 } */
 
 
-.my-dictionary-custom-select {
+.lookup-custom-select {
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
@@ -34,7 +34,7 @@ body {
 }
 
 
-.my-dictionary-panel {
+.lookup-panel {
     font-size: 15px;
     font-weight: normal;
     letter-spacing: normal;
@@ -51,7 +51,7 @@ body {
     justify-content: flex-start;
 }
 
-.my-dictionary-panel .my-dictionary-panel-select {
+.lookup-panel .lookup-panel-select {
 
     /* unset some of the properties */
     display: unset;
@@ -65,7 +65,7 @@ body {
     border-right: 1px solid #ccc !important;
 }
 
-.my-dictionary-form {
+.lookup-form {
     width: 100%;
     flex-grow: 1 !important;
     background: #ffffff !important;
@@ -74,7 +74,7 @@ body {
     display: inline-block !important;
 }
 
-.my-dictionary-query-input {
+.lookup-query-input {
     margin: 0px !important;
     width: 100% !important;
     height: 30px !important;
@@ -87,12 +87,12 @@ body {
     -webkit-box-shadow: none !important;
 }
 
-.my-dictionary-query-input:focus {
+.lookup-query-input:focus {
     font-weight: 600;
 }
 
 
-.my-dictionary-iframe {
+.lookup-iframe {
 
     background: #efefef;
     width: 100%;

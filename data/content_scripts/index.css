@@ -1,5 +1,5 @@
 /* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
-.my-dictionary-popup {
+.lookup-popup {
     background: unset;
     width: 182px;
     height: 30px;
@@ -11,21 +11,21 @@
     border-image: initial;
 }
 
-.my-dictionary-popup:hover {
+.lookup-popup:hover {
     background-color: rgb(248, 248, 248);
     /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px; */
     /* border: 1px solid rgb(198, 198, 198); */
     border-image: initial;
 }
 
-.my-dictionary-popup-icon {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==);
+.lookup-popup-icon {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKQSURBVEhLrZU/aBRBGMX3Ei1EG+0UC4WgcsL927vbPTk4G0UNYiEHFqbRaKMoiBHU4oIpkqAgkjSiYicEURQFEaNgQC1sxCYiITb+QxAEMY3I+XvLzrFedueCyQcvO/N9731vZnbn4hCpRqPRxTMKa8TwYxHw9KdWqy0TSKaAUywWN4NLruu+LhQKs2CG8XNyA+l0eo049Xq92+hsaBlIpKDJKJij4Qsan83n8/vBAcYj5N5R+w76xF2ISWAQbtmhwYNSqfSNBjXN44LaUThNTM9r3snEnKeaX0T8w3YEpIMjhLtdJuyqV/N2XhSqO6ymB1ETg22ZTGZlHDGKUDMIvmgefY/tMAaXwVNWpLiuXBzZQHXf91fA/cnC9tj4qjkQ37D6QzyHMDpoExiIA/cxGLfxVZPBB7ATXONst9oEBqFuDIOHNr5qIs6yg92Qr2KQswkMxBEf7T0bXzUZvOQsT/EcQHTcJhD0hYkD9xWaYRtfNX12ZyBPl8vl9RLpBXYSwVtH8z/svNSJ61Sr1dWQfyMyt/YZWBsUIyGBuTfUb4NJjW2XrXXRWEmfLk8ul8vKiF09Iaffo8PkT5DbJZ6Cxqep/eLZz8VcRSr5HsjAnCmiczJRQ45rI833kTvJ+BjjLdlsdgPzW4znMJzC4CPcTdIqEg00iLy4vYhmaPSZ8QS4AIZpOklOF+sRjY+AT+Tvwn1P7gbS4Gck0UAwJkQ3DXrBFXCfBndoPsTYU5H5cj6EHuZf2V3T87wmuQlK80z+MWglQ2JcRBah3d5Uc4wSTWINFgLz7tTUZvLfBoKaECmbyaIMhKBJgklQX6yBEGfi+57+640viYHQblKpVGTwdskMhNCkix2McT+mXNfd8RehSboUo9ROqgAAAABJRU5ErkJggg==);
     background-size: 19px;
     height: 19px;
     width: 19px;
 }
 
-.my-dictionary-custom-select {
+.lookup-custom-select {
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
@@ -41,15 +41,15 @@
     cursor: pointer;
 }
 
-.my-dictionary-popup-select {
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==) !important;
+.lookup-popup-select {
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKQSURBVEhLrZU/aBRBGMX3Ei1EG+0UC4WgcsL927vbPTk4G0UNYiEHFqbRaKMoiBHU4oIpkqAgkjSiYicEURQFEaNgQC1sxCYiITb+QxAEMY3I+XvLzrFedueCyQcvO/N9731vZnbn4hCpRqPRxTMKa8TwYxHw9KdWqy0TSKaAUywWN4NLruu+LhQKs2CG8XNyA+l0eo049Xq92+hsaBlIpKDJKJij4Qsan83n8/vBAcYj5N5R+w76xF2ISWAQbtmhwYNSqfSNBjXN44LaUThNTM9r3snEnKeaX0T8w3YEpIMjhLtdJuyqV/N2XhSqO6ymB1ETg22ZTGZlHDGKUDMIvmgefY/tMAaXwVNWpLiuXBzZQHXf91fA/cnC9tj4qjkQ37D6QzyHMDpoExiIA/cxGLfxVZPBB7ATXONst9oEBqFuDIOHNr5qIs6yg92Qr2KQswkMxBEf7T0bXzUZvOQsT/EcQHTcJhD0hYkD9xWaYRtfNX12ZyBPl8vl9RLpBXYSwVtH8z/svNSJ61Sr1dWQfyMyt/YZWBsUIyGBuTfUb4NJjW2XrXXRWEmfLk8ul8vKiF09Iaffo8PkT5DbJZ6Cxqep/eLZz8VcRSr5HsjAnCmiczJRQ45rI833kTvJ+BjjLdlsdgPzW4znMJzC4CPcTdIqEg00iLy4vYhmaPSZ8QS4AIZpOklOF+sRjY+AT+Tvwn1P7gbS4Gck0UAwJkQ3DXrBFXCfBndoPsTYU5H5cj6EHuZf2V3T87wmuQlK80z+MWglQ2JcRBah3d5Uc4wSTWINFgLz7tTUZvLfBoKaECmbyaIMhKBJgklQX6yBEGfi+57+640viYHQblKpVGTwdskMhNCkix2McT+mXNfd8RehSboUo9ROqgAAAABJRU5ErkJggg==) !important;
     width: 182px !important;
     font-size: 15px !important;
     border: 1.5px solid #ccc !important;
     display: block !important;
 }
 
-.my-dictionary-panel {
+.lookup-panel {
     font-size: 15px;
     font-weight: normal;
     letter-spacing: normal;
@@ -66,10 +66,10 @@
     background: #ffffff;
 }
 
-.my-dictionary-panel-extra-options {
+.lookup-panel-extra-options {
 
     background-color: #ececfe;
-    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAQAAABKfvVzAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAAAmJLR0QA/4ePzL8AAAAJcEhZcwAAC4kAAAuJATfJy60AAAAHdElNRQfjBxYQBg2vm2+UAAABT0lEQVQ4y+XTv2pUQRQG8N+d3TWQSArFKESwSBdFLBbT5gUsop02PkGC5CGEpBMsrS0sAmJIa7o0CykEFcSgsEYSBUmRJdmbmRT3bnZzXSFb+zXDnHO+82fON4yIrDyDOXNqQmmNkoAok8nse+s31EvCghW/3PbVrgy3XNcSNH3TlplxzzOxV6fhnRdu2vZYcEmwbNOkKS1PBcGiLZf7FRomfXQg6YqOkYs6UmnhUCzarw9Mkw3MBHdNnJs3VQnnnbPeGDNRhPVRNxw/JGuOPbF3McK6D3ZEr3y/GKHjE/hSdYRRN/2fE07kkpN/xMVSOmd7SJpy18xrqFWCk6553SJZoaBxG+7YEaSqdiRXTfvsudeDFWpeWv0rN+SWPPBIu7gWhK4/rsgdDSUcyfp/rSfqh1b91KmIvBj3hlnblr0fbGlN232NoS+URHotjYxT6ClcrRIiuNgAAAAldEVYdGRhdGU6Y3JlYXRlADIwMTktMDctMjJUMTY6MDY6MTMrMDA6MDAABncPAAAAJXRFWHRkYXRlOm1vZGlmeQAyMDE5LTA3LTIyVDE2OjA2OjEzKzAwOjAwcVvPswAAAABJRU5ErkJggg==);
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKQSURBVEhLrZU/aBRBGMX3Ei1EG+0UC4WgcsL927vbPTk4G0UNYiEHFqbRaKMoiBHU4oIpkqAgkjSiYicEURQFEaNgQC1sxCYiITb+QxAEMY3I+XvLzrFedueCyQcvO/N9731vZnbn4hCpRqPRxTMKa8TwYxHw9KdWqy0TSKaAUywWN4NLruu+LhQKs2CG8XNyA+l0eo049Xq92+hsaBlIpKDJKJij4Qsan83n8/vBAcYj5N5R+w76xF2ISWAQbtmhwYNSqfSNBjXN44LaUThNTM9r3snEnKeaX0T8w3YEpIMjhLtdJuyqV/N2XhSqO6ymB1ETg22ZTGZlHDGKUDMIvmgefY/tMAaXwVNWpLiuXBzZQHXf91fA/cnC9tj4qjkQ37D6QzyHMDpoExiIA/cxGLfxVZPBB7ATXONst9oEBqFuDIOHNr5qIs6yg92Qr2KQswkMxBEf7T0bXzUZvOQsT/EcQHTcJhD0hYkD9xWaYRtfNX12ZyBPl8vl9RLpBXYSwVtH8z/svNSJ61Sr1dWQfyMyt/YZWBsUIyGBuTfUb4NJjW2XrXXRWEmfLk8ul8vKiF09Iaffo8PkT5DbJZ6Cxqep/eLZz8VcRSr5HsjAnCmiczJRQ45rI833kTvJ+BjjLdlsdgPzW4znMJzC4CPcTdIqEg00iLy4vYhmaPSZ8QS4AIZpOklOF+sRjY+AT+Tvwn1P7gbS4Gck0UAwJkQ3DXrBFXCfBndoPsTYU5H5cj6EHuZf2V3T87wmuQlK80z+MWglQ2JcRBah3d5Uc4wSTWINFgLz7tTUZvLfBoKaECmbyaIMhKBJgklQX6yBEGfi+57+640viYHQblKpVGTwdskMhNCkix2McT+mXNfd8RehSboUo9ROqgAAAABJRU5ErkJggg==);
     background-position: calc(100% - 99%) center;
     /* background-position: calc(100%) center; */
     background-repeat: no-repeat;
@@ -80,21 +80,21 @@
     flex: 0 1 auto;
 }
 
-.my-dictionary-panel-extra-options * {
+.lookup-panel-extra-options * {
     padding: 5px;
     cursor: pointer;
 }
 
-.my-dictionary-panel-extra-options *:hover {
+.lookup-panel-extra-options *:hover {
     background: lightblue;
 }
 
-.my-dictionary-panel-close:hover {
+.lookup-panel-close:hover {
     background: red;
     color: #fff;
 }
 
-.my-dictionary-panel-maximized {
+.lookup-panel-maximized {
     width: 98% !important;
 }
 
@@ -104,7 +104,7 @@
     flex: 0 1 auto;
 }
 
-.my-dictionary-panel .my-dictionary-panel-select {
+.lookup-panel .lookup-panel-select {
 
     /* unset some of the properties */
     display: unset;
@@ -118,7 +118,7 @@
     border-right: 1px solid #ccc !important;
 }
 
-.my-dictionary-form {
+.lookup-form {
     width: 100%;
     flex-grow: 1 !important;
     background: #ffffff !important;
@@ -127,7 +127,7 @@
     display: inline-block !important;
 }
 
-.my-dictionary-query-input {
+.lookup-query-input {
     margin: 0px !important;
     width: 100% !important;
     height: 30px !important;
@@ -140,12 +140,12 @@
     -webkit-box-shadow: none !important;
 }
 
-.my-dictionary-query-input:focus {
+.lookup-query-input:focus {
     font-weight: 600;
 }
 
 
-.my-dictionary-iframe {
+.lookup-iframe {
 
     background: #efefef;
     width: 100%;
@@ -175,7 +175,7 @@
 
 @media (max-width: 768px) {
 
-    .my-dictionary-panel {
+    .lookup-panel {
         width: 80%;
     }
 }

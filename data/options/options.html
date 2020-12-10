@@ -13,38 +13,38 @@
 <body>
     <div class="flash-messages"></div>
     <nav id="top-menu-bar">
-        <a href="dictionary_for_menu_bar/dictionary_for_menu_bar.html" class="settings-page-link">My Dictionary</a>
+        <a href="lookup_for_menu_bar/lookup_for_menu_bar.html" class="settings-page-link">Lookup</a>
         <a href="options.html" class="settings-page-link">Settings</a>
-        <a href="https://github.com/harry-private/my_dictionary" target="_blank" class="settings-page-link">Github</a>
+        <a href="https://github.com/harry-private/lookup" target="_blank" class="settings-page-link">Github</a>
     </nav>
     <div class="main-settings">
         <!-- <span style="display: inline-block; padding: 15px; background: palevioletred;">Note: no changes will be applied until you click on the "Save Settings" button below.</span> -->
 
-        <div class="add-new-dictionary main-settings-segment">
-            <div class="header">Add New Dictionary</div>
+        <div class="add-new-source main-settings-segment">
+            <div class="header">Add New Source</div>
 
             <div class="second-settings-segment">
                 <!-- <label><strong>Title</strong></label><br> -->
-                <input type="text" class="dictionary-title" placeholder="Title"><br><br>
+                <input type="text" class="source-title" placeholder="Title"><br><br>
                 <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
-                <input type="text" class="dictionary-url" placeholder="https://somewebsite/search/%s">
+                <input type="text" class="source-url" placeholder="https://somewebsite/search/%s">
                 <br>
                 <span>*Add <strong>%s</strong> where the query will go</span>
                 <br>
                 <br>
-                <button id="add-new-dictionary-btn">Add Dictionary</button>
+                <button id="add-new-source-btn">Add Source</button>
             </div>
         </div>
 
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header">Added Dictionaries</div>
+                <div class="header">Added Sources</div>
                 <div class="second-settings-segment">
-                    <h3>Dictionaries</h3>
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First dictionary in the list will be the default dictionary</strong></span><br><br> -->
+                    <h3>Sources</h3>
+                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
 
-                    <div id="dictionaries-settings" class=""></div>
+                    <div id="sources-settings" class=""></div>
                 </div>
             </div>
         </div>
@@ -99,7 +99,7 @@
                 <div class="second-settings-segment">
                     <h3>Trigger Key</h3>
 
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First dictionary in the list will be the default dictionary</strong></span><br><br> -->
+                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
                     <select name="" id="trigger-key">
                         <option value="none">None</option>
                         <option value="ctrlKey">Ctrl</option>
@@ -109,10 +109,10 @@
                 </div>
                 <br>
                 <div class="second-settings-segment">
-                    <h3>Show "Choose Dictionary Options" menu</h3>
+                    <h3>Show "Choose Source Options" menu</h3>
 
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First dictionary in the list will be the default dictionary</strong></span><br><br> -->
-                    <select name="" id="show-choose-dictionary-options">
+                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
+                    <select name="" id="show-choose-source-options">
                         <option value="yes">Yes</option>
                         <option value="no">No</option>
                     </select>
@@ -129,7 +129,7 @@
     <div class="help"></div> -->
     <div id="save-settings" style="position: fixed; z-index: 100; bottom: 28px; right:16px"><button>Save Settings</button></div>
     <script src="/data/external_libs/sortable.min.js"></script>
-    <script src="/data/internal_libs/dictionaries_data.js"></script>
+    <script src="/data/internal_libs/sources_data.js"></script>
     <script src="options.js"></script>
 
 </body>

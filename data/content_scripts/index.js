@@ -1,16 +1,16 @@
 // import 'babel-polyfill'
 (async () => {
     'use strict'
-    class Dictionary {
+    class Lookup {
         _constructor() {
-            // this.dictionaries = {};
+            // this.sources = {};
             this.body = document.body;
             this.html = document.documentElement;
             this.popup = document.createElement('div');
             this.popupSelect = document.createElement('select');
-            this.popup.classList.add('my-dictionary-popup');
-            this.popupSelect.classList.add('my-dictionary-popup-select');
-            this.popupSelect.classList.add('my-dictionary-custom-select');
+            this.popup.classList.add('lookup-popup');
+            this.popupSelect.classList.add('lookup-popup-select');
+            this.popupSelect.classList.add('lookup-custom-select');
             this.isAdded = false;
             this.iframe;
             this.panel;
@@ -19,14 +19,14 @@
             this.panelQueryInput = null;
             this.panelMaximized = false;
             this.selectedText = "";
-            this.selectedDictionary;
-            // appending "my-dictionary-" because StackOverflow has the popup class, so won't work there
+            this.selectedSource;
+            // appending "source-" because StackOverflow has the popup class, so won't work there
             this.createFixedPositionElement()
         }
         async getDataFromLocalStorage() {
             let localStorageDataPromise = async () => {
                 return new Promise(resolve => {
-                    chrome.storage.sync.get(['dictionaries', "triggerKey", "enableDisable", "showChooseDictionaryOptions"], result => {
+                    chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
                         resolve(result);
                     })
                 })
@@ -34,7 +34,7 @@
             this.localStorageData = await localStorageDataPromise();
         }
         createPopup() {
-            this.popupSelect.innerHTML = `${(this.dictionariesOptionsForSelect())}`;
+            this.popupSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
             this.popup.appendChild(this.popupSelect);
         }
 
@@ -101,6 +101,7 @@
 
         removePopup() {
             if (this.isAdded) {
+                console.log("removed")
                 if (this.body.removeChild(this.popup)) { this.isAdded = false; }
             }
         }
@@ -113,17 +114,16 @@
             }
             return true;
         }
-        dictionariesOptionsForSelect() {
-            let options = '<option selected disabled>Choose Dictionary</option>';
-            this.localStorageData.dictionaries.forEach(function(dictionary) {
-                if (!dictionary.isHidden) {
-                    options += `<option data-url="${dictionary.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${dictionary.title}</option>`
+        sourcesOptionsForSelect() {
+            let options = '<option selected disabled>Choose Source</option>';
+            this.localStorageData.sources.forEach(function(source) {
+                if (!source.isHidden) {
+                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
                 }
             });
             return options;
         }
         showPopup(event) {
-
             // unset some of the styles that was set in the narrow width to center the popup
             this.popup.style.marginLeft = "unset";
             this.popup.style.position = "absolute";
@@ -166,86 +166,86 @@
 
             if (this.body.appendChild(this.popup)) { this.isAdded = true; }
         }
-        showChooseDictionaryOptions() {
-            return (this.localStorageData.showChooseDictionaryOptions == 'yes' ? true : false);
+        showChooseSourceOptions() {
+            return (this.localStorageData.showChooseSourceOptions == 'yes' ? true : false);
         }
         createPanel(event) {
             this.panel = document.createElement("div");
             this.panel.insertAdjacentHTML("afterbegin", `
-              <div class="my-dictionary-panel-extra-options">
-                <span class="my-dictionary-panel-back" title="Go back">🠈</span>
-                <span class="my-dictionary-panel-forward" title="Go forward">🠊</span>
-                <span class="my-dictionary-panel-maximize-restore" title="Maximize">🗖</span>
-                <span class="my-dictionary-panel-close" title="Close the panel">🗙</span>
+              <div class="lookup-panel-extra-options">
+                <span class="lookup-panel-back" title="Go back">🠈</span>
+                <span class="lookup-panel-forward" title="Go forward">🠊</span>
+                <span class="lookup-panel-maximize-restore" title="Maximize">🗖</span>
+                <span class="lookup-panel-close" title="Close the panel">🗙</span>
               </div>
               <div class="panel-select-panel-input-container">
-                <select class="my-dictionary-panel-select my-dictionary-custom-select">${this.dictionariesOptionsForSelect()}</select>
-                <form class="my-dictionary-form" title="Type your query and press Enter">
-                  <input class="my-dictionary-query-input" placeholder="Type your query and press Enter" value="${this.selectedText.trim()}" autofocus>
+                <select class="lookup-panel-select lookup-custom-select">${this.sourcesOptionsForSelect()}</select>
+                <form class="lookup-form" title="Type your query and press Enter">
+                  <input class="lookup-query-input" placeholder="Type your query and press Enter" value="${this.selectedText.trim()}" autofocus>
                 </form>
               </div>
           `);
-            this.panel.classList.add("my-dictionary-panel");
+            this.panel.classList.add("lookup-panel");
             if (this.panelMaximized) {
-                this.panel.classList.add('my-dictionary-panel-maximized');
+                this.panel.classList.add('lookup-panel-maximized');
             }
             this.fixedPositionElement.style.display = 'block';
-            this.panelSelect = this.panel.querySelector('.my-dictionary-panel-select');
-            this.panelQueryForm = this.panel.querySelector('.my-dictionary-form');
-            this.panelQueryInput = this.panel.querySelector('.my-dictionary-query-input');
-            this.panel.querySelector('.my-dictionary-panel-select')
-                .addEventListener('change', this.changeDictionary());
+            this.panelSelect = this.panel.querySelector('.lookup-panel-select');
+            this.panelQueryForm = this.panel.querySelector('.lookup-form');
+            this.panelQueryInput = this.panel.querySelector('.lookup-query-input');
+            this.panel.querySelector('.lookup-panel-select')
+                .addEventListener('change', this.changeSource());
             this.addEventListenerToPanelExtraOption();
             this.body.appendChild(this.panel);
         }
         createIFrame() {
             let url;
-            if (this.showChooseDictionaryOptions()) {
-                this.selectedDictionary = this.popupSelect.options[this.popupSelect.selectedIndex];
-                let selectedDictionaryUrl = this.selectedDictionary.dataset.url;
-                url = this.createDictionaryUrlForIFrame(selectedDictionaryUrl, this.selectedText.trim())
+            if (this.showChooseSourceOptions()) {
+                this.selectedSource = this.popupSelect.options[this.popupSelect.selectedIndex];
+                let selectedSourceUrl = this.selectedSource.dataset.url;
+                url = this.createSourceUrlForIFrame(selectedSourceUrl, this.selectedText.trim())
             } else {
-                let firstDictionaryUrl = this.localStorageData.dictionaries[0].url;
-                url = this.createDictionaryUrlForIFrame(firstDictionaryUrl, this.selectedText.trim())
+                let firstSourceUrl = this.localStorageData.sources[0].url;
+                url = this.createSourceUrlForIFrame(firstSourceUrl, this.selectedText.trim())
             }
             this.iframe = document.createElement('iframe');
-            this.iframe.classList.add('my-dictionary-iframe');
+            this.iframe.classList.add('lookup-iframe');
             this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
             this.panel.appendChild(this.iframe);
         }
-        changeDictionary() {
+        changeSource() {
             if (!this.panel) { return; }
             this.panelSelect.addEventListener("change", () => {
                 let query = this.panelQueryInput.value.trim();
                 if (!query) { return; }
-                let selectedDictionary = this.panelSelect.options[this.panelSelect.selectedIndex];
-                let selectedDictionaryUrl = selectedDictionary.dataset.url;
-                let url = this.createDictionaryUrlForIFrame(selectedDictionaryUrl, query);
+                let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
+                let selectedSourceUrl = selectedSource.dataset.url;
+                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
                 this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
             });
 
         }
-        changeDictionaryQuery() {
+        changeQuery() {
             if (!this.panel) { return; }
             let queryOld = this.panelQueryInput.value.trim();
             this.panelQueryForm.addEventListener("submit", (e) => {
                 e.preventDefault();
                 let query = this.panelQueryInput.value.trim();
                 if (query == "" || query === queryOld) { return; }
-                let selectedDictionary = this.panelSelect.options[this.panelSelect.selectedIndex];
-                let selectedDictionaryUrl = selectedDictionary.dataset.url;
-                if (!selectedDictionaryUrl) {
-                    if (this.showChooseDictionaryOptions()) {
-                        selectedDictionaryUrl = this.selectedDictionary.dataset.url;
+                let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
+                let selectedSourceUrl = selectedSource.dataset.url;
+                if (!selectedSourceUrl) {
+                    if (this.showChooseSourceOptions()) {
+                        selectedSourceUrl = this.selectedSource.dataset.url;
                     } else {
-                        selectedDictionaryUrl = this.localStorageData.dictionaries[0].url;
+                        selectedSourceUrl = this.localStorageData.sources[0].url;
                     }
                 }
-                let url = this.createDictionaryUrlForIFrame(selectedDictionaryUrl, query);
+                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
                 this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
             });
         }
-        createDictionaryUrlForIFrame(url, query) {
+        createSourceUrlForIFrame(url, query) {
             if ((url).includes("%s")) {
                 return url.replace("%s", query);
             } else {
@@ -254,10 +254,10 @@
         }
 
         addEventListenerToPanelExtraOption() {
-            let panelClose = this.panel.querySelector(".my-dictionary-panel-close");
-            let panelMaximizeRestore = this.panel.querySelector(".my-dictionary-panel-maximize-restore");
-            let panelBack = this.panel.querySelector(".my-dictionary-panel-back");
-            let panelForward = this.panel.querySelector(".my-dictionary-panel-forward");
+            let panelClose = this.panel.querySelector(".lookup-panel-close");
+            let panelMaximizeRestore = this.panel.querySelector(".lookup-panel-maximize-restore");
+            let panelBack = this.panel.querySelector(".lookup-panel-back");
+            let panelForward = this.panel.querySelector(".lookup-panel-forward");
 
             panelClose.addEventListener('click', () => {
                 this.body.removeChild(this.panel) && (this.panel = null);
@@ -266,8 +266,8 @@
 
             panelMaximizeRestore.addEventListener('click', () => {
 
-                this.panel.classList.toggle('my-dictionary-panel-maximized');
-                if (this.panel.classList.contains('my-dictionary-panel-maximized')) {
+                this.panel.classList.toggle('lookup-panel-maximized');
+                if (this.panel.classList.contains('lookup-panel-maximized')) {
                     this.panelMaximized = true;
                     panelMaximizeRestore.innerHTML = '🗗';
                     panelMaximizeRestore.setAttribute('title', 'Restore to default');
@@ -293,59 +293,59 @@
             return hostname.replace(/^www\./, '');
         }
     }
-    let dictionary = new Dictionary();
-    await dictionary.getDataFromLocalStorage();
+    let lookup = new Lookup();
+    await lookup.getDataFromLocalStorage();
 
-    if (dictionary.isGloballyDisabled()) return;
+    if (lookup.isGloballyDisabled()) return;
 
-    if (!dictionary.isCurrentWebsiteIsAllowed()) return;
+    if (!lookup.isCurrentWebsiteIsAllowed()) return;
 
-    dictionary._constructor();
+    lookup._constructor();
 
     document.body.addEventListener('keyup', function keyPress(e) {
         if (e.key === "Escape") {
-            dictionary.removePopup();
-            if (dictionary.panel) {
-                dictionary.body.removeChild(dictionary.panel) && (dictionary.panel = null);
-                dictionary.fixedPositionElement.style.display = 'none';
+            lookup.removePopup();
+            if (lookup.panel) {
+                lookup.body.removeChild(lookup.panel) && (lookup.panel = null);
+                lookup.fixedPositionElement.style.display = 'none';
             }
         }
     });
 
     document.body.addEventListener("mouseup", (mouseupEvent) => {
 
-        if (mouseupEvent.target.classList.contains('my-dictionary-popup-select') ||
-            mouseupEvent.target.closest(".my-dictionary-popup-select") ||
-            mouseupEvent.target.closest(".my-dictionary-panel")) { return; }
-        if (dictionary.removePanelWhenClickedOutside(mouseupEvent)) {
+        if (mouseupEvent.target.classList.contains('lookup-popup-select') ||
+            mouseupEvent.target.closest(".lookup-popup-select") ||
+            mouseupEvent.target.closest(".lookup-panel")) { return; }
+        if (lookup.removePanelWhenClickedOutside(mouseupEvent)) {
             return;
         }
         setTimeout(() => {
-            dictionary.getSelectedText();
-            dictionary.removePopup();
+            lookup.getSelectedText();
+            lookup.removePopup();
             // if triggerKey is not pressed don't execute rest of the code
-            if (!dictionary.isTriggerKeyPressed(mouseupEvent)) { return; }
+            if (!lookup.isTriggerKeyPressed(mouseupEvent)) { return; }
 
 
             // if no text is selected or clicked element is popup, don't execute the rest of the code
-            if (!dictionary.isSelectedText(mouseupEvent)) { return; }
+            if (!lookup.isSelectedText(mouseupEvent)) { return; }
 
-            if (!dictionary.showChooseDictionaryOptions()) {
-                dictionary.createPanel(mouseupEvent);
-                dictionary.createIFrame();
-                dictionary.changeDictionaryQuery();
+            if (!lookup.showChooseSourceOptions()) {
+                lookup.createPanel(mouseupEvent);
+                lookup.createIFrame();
+                lookup.changeQuery();
                 return;
             }
 
-            dictionary.createPopup()
-            dictionary.showPopup(mouseupEvent);
-            dictionary.popupSelect.onchange = (evt) => {
-                dictionary.removePopup()
+            lookup.createPopup();
+            lookup.showPopup(mouseupEvent);
+            lookup.popupSelect.onchange = (evt) => {
+                lookup.removePopup()
                 evt.stopPropagation();
                 evt.preventDefault();
-                dictionary.createPanel(mouseupEvent);
-                dictionary.createIFrame();
-                dictionary.changeDictionaryQuery();
+                lookup.createPanel(mouseupEvent);
+                lookup.createIFrame();
+                lookup.changeQuery();
             }
         })
     });

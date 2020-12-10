@@ -349,18 +349,19 @@ healthchecksdb
 MigrationBackup/
 
 # extension
-my_dictionary.zip
-my_dictionary - 1.zip
+lookup.zip
+lookup - 1.zip
 
 
 #screen shots
 
 screenshot/
 
-#Firefox_my_dictionary.zip
-#Chrome_my_dictionary.zip
+#Firefox_lookup.zip
+#Chrome_lookup.zip
 
 firefox_build/
 chrome_build/
 
 HOWTO.md
+debug.log
