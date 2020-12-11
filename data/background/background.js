@@ -110,3 +110,22 @@ function firsTime() {
         showChooseSourceOptions: 'yes'
     });
 }
+
+
+
+// handling the messages 
+
+chrome.runtime.onMessage.addListener(function(request, sender, response) {
+    console.log(sender);
+    if (request.method === 'open-lookup-popup') {
+        chrome.windows.create({
+                focused: true,
+                // state: "maximized",
+                height: (window.screen.height - 10),
+                width: 600,
+                type: "popup",
+                url: request.url,
+            },
+            (window) => { console.log(window); });
+    }
+});

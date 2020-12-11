@@ -12,12 +12,6 @@
             this.popupSelect.classList.add('lookup-popup-select');
             this.popupSelect.classList.add('lookup-custom-select');
             this.isAdded = false;
-            this.iframe;
-            this.panel;
-            this.panelSelect = null;
-            this.panelQueryForm = null;
-            this.panelQueryInput = null;
-            this.panelMaximized = false;
             this.selectedText = "";
             this.selectedSource;
             // appending "source-" because StackOverflow has the popup class, so won't work there
@@ -73,14 +67,7 @@
             this.fixedPositionElement.classList.add('create-fixed-Position-element');
             this.body.appendChild(this.fixedPositionElement);
         }
-        removePanelWhenClickedOutside(event) {
-            if (this.panel && event.target !== this.panel && !this.panel.contains(event.target)) {
-                this.body.removeChild(this.panel) && (this.panel = null);
-                this.fixedPositionElement.style.display = 'none';
-                return true;
-            }
-            return false;
-        }
+
 
         getSelectedText() {
             // this.selectedText = this.selection.toString().replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, ' ').trim();
@@ -101,7 +88,6 @@
 
         removePopup() {
             if (this.isAdded) {
-                console.log("removed")
                 if (this.body.removeChild(this.popup)) { this.isAdded = false; }
             }
         }
@@ -169,83 +155,28 @@
         showChooseSourceOptions() {
             return (this.localStorageData.showChooseSourceOptions == 'yes' ? true : false);
         }
-        createPanel(event) {
-            this.panel = document.createElement("div");
-            this.panel.insertAdjacentHTML("afterbegin", `
-              <div class="lookup-panel-extra-options">
-                <span class="lookup-panel-back" title="Go back">🠈</span>
-                <span class="lookup-panel-forward" title="Go forward">🠊</span>
-                <span class="lookup-panel-maximize-restore" title="Maximize">🗖</span>
-                <span class="lookup-panel-close" title="Close the panel">🗙</span>
-              </div>
-              <div class="panel-select-panel-input-container">
-                <select class="lookup-panel-select lookup-custom-select">${this.sourcesOptionsForSelect()}</select>
-                <form class="lookup-form" title="Type your query and press Enter">
-                  <input class="lookup-query-input" placeholder="Type your query and press Enter" value="${this.selectedText.trim()}" autofocus>
-                </form>
-              </div>
-          `);
-            this.panel.classList.add("lookup-panel");
-            if (this.panelMaximized) {
-                this.panel.classList.add('lookup-panel-maximized');
-            }
-            this.fixedPositionElement.style.display = 'block';
-            this.panelSelect = this.panel.querySelector('.lookup-panel-select');
-            this.panelQueryForm = this.panel.querySelector('.lookup-form');
-            this.panelQueryInput = this.panel.querySelector('.lookup-query-input');
-            this.panel.querySelector('.lookup-panel-select')
-                .addEventListener('change', this.changeSource());
-            this.addEventListenerToPanelExtraOption();
-            this.body.appendChild(this.panel);
-        }
-        createIFrame() {
+
+
+        createWindowPopup(event) {
             let url;
             if (this.showChooseSourceOptions()) {
                 this.selectedSource = this.popupSelect.options[this.popupSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
-                url = this.createSourceUrlForIFrame(selectedSourceUrl, this.selectedText.trim())
+                url = this.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
             } else {
                 let firstSourceUrl = this.localStorageData.sources[0].url;
-                url = this.createSourceUrlForIFrame(firstSourceUrl, this.selectedText.trim())
+                url = this.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
             }
-            this.iframe = document.createElement('iframe');
-            this.iframe.classList.add('lookup-iframe');
-            this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
-            this.panel.appendChild(this.iframe);
-        }
-        changeSource() {
-            if (!this.panel) { return; }
-            this.panelSelect.addEventListener("change", () => {
-                let query = this.panelQueryInput.value.trim();
-                if (!query) { return; }
-                let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
-                this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
+            chrome.runtime.sendMessage({
+                method: 'open-lookup-popup',
+                // url: encodeURIComponent(url)
+                url: url
             });
+        }
 
-        }
-        changeQuery() {
-            if (!this.panel) { return; }
-            let queryOld = this.panelQueryInput.value.trim();
-            this.panelQueryForm.addEventListener("submit", (e) => {
-                e.preventDefault();
-                let query = this.panelQueryInput.value.trim();
-                if (query == "" || query === queryOld) { return; }
-                let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                if (!selectedSourceUrl) {
-                    if (this.showChooseSourceOptions()) {
-                        selectedSourceUrl = this.selectedSource.dataset.url;
-                    } else {
-                        selectedSourceUrl = this.localStorageData.sources[0].url;
-                    }
-                }
-                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
-                this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
-            });
-        }
-        createSourceUrlForIFrame(url, query) {
+
+
+        createSourceUrlForNewWindow(url, query) {
             if ((url).includes("%s")) {
                 return url.replace("%s", query);
             } else {
@@ -253,40 +184,6 @@
             }
         }
 
-        addEventListenerToPanelExtraOption() {
-            let panelClose = this.panel.querySelector(".lookup-panel-close");
-            let panelMaximizeRestore = this.panel.querySelector(".lookup-panel-maximize-restore");
-            let panelBack = this.panel.querySelector(".lookup-panel-back");
-            let panelForward = this.panel.querySelector(".lookup-panel-forward");
-
-            panelClose.addEventListener('click', () => {
-                this.body.removeChild(this.panel) && (this.panel = null);
-                this.fixedPositionElement.style.display = 'none';
-            });
-
-            panelMaximizeRestore.addEventListener('click', () => {
-
-                this.panel.classList.toggle('lookup-panel-maximized');
-                if (this.panel.classList.contains('lookup-panel-maximized')) {
-                    this.panelMaximized = true;
-                    panelMaximizeRestore.innerHTML = '🗗';
-                    panelMaximizeRestore.setAttribute('title', 'Restore to default');
-                } else {
-                    this.panelMaximized = false;
-                    panelMaximizeRestore.innerHTML = '🗖';
-                    panelMaximizeRestore.setAttribute('title', 'Maximize');
-
-                }
-
-            });
-            panelBack.addEventListener('click', () => {
-                history.back();
-            })
-            panelForward.addEventListener('click', () => {
-                history.forward();
-            })
-
-        }
 
         removeWWWBeginningOfHostName(hostname) {
             // console.log(hostname);
@@ -305,21 +202,15 @@
     document.body.addEventListener('keyup', function keyPress(e) {
         if (e.key === "Escape") {
             lookup.removePopup();
-            if (lookup.panel) {
-                lookup.body.removeChild(lookup.panel) && (lookup.panel = null);
-                lookup.fixedPositionElement.style.display = 'none';
-            }
+
         }
     });
 
     document.body.addEventListener("mouseup", (mouseupEvent) => {
 
         if (mouseupEvent.target.classList.contains('lookup-popup-select') ||
-            mouseupEvent.target.closest(".lookup-popup-select") ||
-            mouseupEvent.target.closest(".lookup-panel")) { return; }
-        if (lookup.removePanelWhenClickedOutside(mouseupEvent)) {
-            return;
-        }
+            mouseupEvent.target.closest(".lookup-popup-select")) { return; }
+
         setTimeout(() => {
             lookup.getSelectedText();
             lookup.removePopup();
@@ -331,9 +222,7 @@
             if (!lookup.isSelectedText(mouseupEvent)) { return; }
 
             if (!lookup.showChooseSourceOptions()) {
-                lookup.createPanel(mouseupEvent);
-                lookup.createIFrame();
-                lookup.changeQuery();
+                lookup.createWindowPopup(mouseupEvent);
                 return;
             }
 
@@ -343,9 +232,7 @@
                 lookup.removePopup()
                 evt.stopPropagation();
                 evt.preventDefault();
-                lookup.createPanel(mouseupEvent);
-                lookup.createIFrame();
-                lookup.changeQuery();
+                lookup.createWindowPopup(mouseupEvent);
             }
         })
     });

@@ -10,6 +10,7 @@
   "description": "Lookup selected texts in popup on your chosen source (website)",
   "version": "0.0.1",
   "permissions": [
+    "tabs",
     "storage",
     "webRequest",
     "webRequestBlocking",
@@ -43,7 +44,6 @@
   },
   "web_accessible_resources": [
     "data/icons/icon_original.png",
-    "data/iframe/iframe.html",
     "data/icons/loading.gif"
   ],
   "content_scripts": [

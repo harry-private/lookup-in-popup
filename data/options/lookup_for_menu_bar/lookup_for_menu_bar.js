@@ -6,7 +6,6 @@
             this.body = document.body;
             this.html = document.documentElement;
 
-            this.iframe;
             this.panel;
             this.panelSelect = null;
             this.panelQueryFrom = null;
@@ -50,11 +49,7 @@
                 .addEventListener('change', this.changeSource());
             this.body.appendChild(this.panel);
         }
-        createIFrame() {
-            this.iframe = document.createElement('iframe');
-            this.iframe.classList.add('lookup-iframe');
-            this.panel.appendChild(this.iframe);
-        }
+
         changeSource(e) {
             if (!this.panel) { return; }
             this.panelSelect.addEventListener("change", () => {
@@ -62,8 +57,12 @@
                 if (!query) { return; }
                 let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;
-                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
-                this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
+                let url = this.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                chrome.runtime.sendMessage({
+                    method: 'open-lookup-popup',
+                    // url: encodeURIComponent(url)
+                    url: url
+                });
             });
 
         }
@@ -81,11 +80,15 @@
                 if (!selectedSourceUrl) {
                     selectedSourceUrl = this.selectedSource.dataset.url;
                 }
-                let url = this.createSourceUrlForIFrame(selectedSourceUrl, query);
-                this.iframe.src = chrome.runtime.getURL('data/iframe/iframe.html?url=' + encodeURIComponent(url));
+                let url = this.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                chrome.runtime.sendMessage({
+                    method: 'open-lookup-popup',
+                    // url: encodeURIComponent(url)
+                    url: url
+                });
             });
         }
-        createSourceUrlForIFrame(url, query) {
+        createSourceUrlForNewWindow(url, query) {
             if ((url).includes("%s")) {
                 return url.replace("%s", query);
             } else {
@@ -100,6 +103,5 @@
 
 
     lookup.createPanel();
-    lookup.createIFrame();
     lookup.changeQuery();
 })();
