@@ -1,44 +1,3 @@
-chrome.webRequest.onBeforeSendHeaders.addListener(
-    function(details) {
-        return { requestHeaders: details.requestHeaders };
-    }, { urls: ["<all_urls>"] },
-    ["blocking", "requestHeaders"]
-);
-
-
-
-chrome.webRequest.onHeadersReceived.addListener(function(info) {
-        let initiator = (info.initiator || info.originUrl);
-        if (
-            (initiator == "https://twitter.com/sw.js" && info.type == "xmlhttprequest") ||
-            (initiator == "https://twitter.com" && info.type == "xmlhttprequest") ||
-            (initiator == 'https://github.com') ||
-            (info.type == 'sub_frame')
-        ) {
-            var headers = info.responseHeaders;
-            for (var i = headers.length - 1; i >= 0; --i) {
-                var header = headers[i].name.toLowerCase();
-                if (header == 'x-frame-options' || header == 'frame-options') {
-                    headers.splice(i, 1); // Remove header
-                }
-                if (header == 'content-security-policy') {
-                    headers.splice(i, 1); // Remove header
-                }
-            }
-            return {
-                responseHeaders: headers
-            };
-        }
-    }, {
-        urls: ["<all_urls>"], // Pattern to match all http(s) pages
-        // types: ["sub_frame", 'xmlhttprequest', "script", "websocket"]
-    },
-    ['blocking', 'responseHeaders']
-);
-// chrome.webRequest.onCompleted(function() {
-//     alert();
-// })
-
 chrome.runtime.onInstalled.addListener(function() {
     chrome.storage.sync.get(['sources', 'triggerKey', 'enableDisable'], result => {
         if (!('sources' in result)) {
@@ -108,24 +67,97 @@ function firsTime() {
             whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
         },
         showChooseSourceOptions: 'yes'
+    }, function() {
+        // createLookupContextMenu();
     });
 }
 
 
 
+function openLookupPopup(url) {
+    chrome.windows.create({
+            // state: "maximized",
+            height: (window.screen.height),
+            width: 600,
+            left: (screen.width / 2) - (600 / 2),
+            type: "popup",
+            url: url,
+            top: 0,
+        },
+        (win) => {
+            console.log(win);
+            if (/Firefox/.test(navigator.userAgent)) {
+
+                chrome.windows.update(win.id, {
+                    // focused: true,
+                    height: (window.screen.height - 30),
+                    top: 0
+                });
+            }
+        });
+}
 // handling the messages 
 
 chrome.runtime.onMessage.addListener(function(request, sender, response) {
     console.log(sender);
     if (request.method === 'open-lookup-popup') {
-        chrome.windows.create({
-                focused: true,
-                // state: "maximized",
-                height: (window.screen.height - 10),
-                width: 600,
-                type: "popup",
-                url: request.url,
-            },
-            (window) => { console.log(window); });
+        openLookupPopup(request.url);
+    } else if (request.method === 'lookup-popup-close') {
+        chrome.tabs.remove(sender.tab.id);
     }
 });
+
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    createLookupContextMenu();
+});
+
+
+
+function createLookupContextMenu() {
+    chrome.contextMenus.removeAll(function() {
+        chrome.contextMenus.create({
+            // parentId: 'open-lookup',
+            id: "lookup-popup",
+            title: "Lookup \"%s\"",
+            contexts: ["selection"],
+            onclick: function(info, tab) {},
+        });
+
+        chrome.storage.sync.get(['sources'], result => {
+            if (('sources' in result)) {
+                result.sources.forEach(function(source) {
+                    if (!source.isHidden) {
+                        // options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+                        chrome.contextMenus.create({
+
+                            parentId: 'lookup-popup',
+                            title: source.title,
+                            contexts: ["selection"],
+                            onclick: function(info, tab) {
+                                let url = createSourceUrlForNewWindow(source.url, info.selectionText);
+                                console.log(url);
+                                openLookupPopup(url);
+
+                            },
+                        });
+                    }
+                });
+            }
+        });
+
+    });
+
+
+}
+
+createLookupContextMenu();
+
+
+
+function createSourceUrlForNewWindow(url, query) {
+    if ((url).includes("%s")) {
+        return url.replace("%s", query);
+    } else {
+        return `${url}/?${query}`;
+    }
+}

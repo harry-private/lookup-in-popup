@@ -14,11 +14,19 @@
       "afterbegin"
     ],
     "cSpell.words": [
+      "Pangasinan",
       "beforeend",
       "flexbox",
       "longman",
       "xlink",
       "xmlhttprequest"
-    ]
+    ],
+        // Specify paths/files to ignore.
+    "cSpell.ignorePaths": [
+        "node_modules",        // this will ignore anything the node_modules directory
+        "vscode-extension",    //
+        ".git",                // Ignore the .git directory
+        "**/data/internal_libs/sources_data.js"
+    ],
 
 }

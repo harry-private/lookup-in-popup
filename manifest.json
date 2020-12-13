@@ -12,9 +12,9 @@
   "permissions": [
     "tabs",
     "storage",
-    "webRequest",
-    "webRequestBlocking",
-    "<all_urls>"
+    "<all_urls>",
+    "activeTab",
+    "contextMenus"
   ],
   "background": {
     "scripts": [

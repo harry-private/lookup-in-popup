@@ -1,4 +1,4 @@
-let googelTraslateLanguages = [
+let googleTranslateLanguages = [
     ["Auto Detect", "auto"],
     ["Afrikaans", "af"],
     ["Albanian", "sq"],
@@ -509,8 +509,8 @@ let sourcesData = {
         generateUrl: function(from, to) {
             return `https://translate.google.com/?view=home&op=translate&sl=${from}&tl=${to}&text=%s`
         },
-        "from": googelTraslateLanguages,
-        "to": googelTraslateLanguages,
+        "from": googleTranslateLanguages,
+        "to": googleTranslateLanguages,
 
     },
     "cambridge": {
