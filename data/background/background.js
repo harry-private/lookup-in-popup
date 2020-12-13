@@ -151,7 +151,7 @@ function createLookupContextMenu() {
 
 }
 
-function createLookupContextMenuForLinksImage() {
+function createLookupContextMenuForLinkImage() {
     chrome.contextMenus.create({
         // parentId: 'open-lookup',
         // id: "lookup-popup",
@@ -171,7 +171,7 @@ chrome.contextMenus.create({
     contexts: ["selection"]
 });
 
-createLookupContextMenuForLinksImage();
+createLookupContextMenuForLinkImage();
 createLookupContextMenu();
 
 
