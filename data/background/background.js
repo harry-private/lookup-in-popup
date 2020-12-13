@@ -114,7 +114,8 @@ chrome.storage.onChanged.addListener(function(changes, namespace) {
 
 
 function createLookupContextMenu() {
-    chrome.contextMenus.removeAll(function() {
+
+    chrome.contextMenus.remove('lookup-popup', function() {
         chrome.contextMenus.create({
             // parentId: 'open-lookup',
             id: "lookup-popup",
@@ -150,6 +151,27 @@ function createLookupContextMenu() {
 
 }
 
+function createLookupContextMenuForLinksImage() {
+    chrome.contextMenus.create({
+        // parentId: 'open-lookup',
+        // id: "lookup-popup",
+        title: "Lookup in popup",
+        contexts: ["link", "image", "video", "audio"],
+        onclick: function(info, tab) {
+            openLookupPopup(info.linkUrl);
+        },
+    });
+}
+
+// I am creating this, because the first time when browser starts or the extension is installed, 
+// the "lookup-popup" id won't be available, and removing it will cause an error
+chrome.contextMenus.create({
+    id: "lookup-popup",
+    title: 'Lookup',
+    contexts: ["selection"]
+});
+
+createLookupContextMenuForLinksImage();
 createLookupContextMenu();
 
 
