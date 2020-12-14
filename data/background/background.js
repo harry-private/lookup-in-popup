@@ -87,13 +87,26 @@ function openLookupPopup(url) {
         (win) => {
             console.log(win);
             if (/Firefox/.test(navigator.userAgent)) {
-
                 chrome.windows.update(win.id, {
                     // focused: true,
                     height: (window.screen.height - 30),
                     top: 0
                 });
             }
+
+            // this setInterval and all is for firefox
+            let waitForProperUrl = setInterval(function() {
+                chrome.tabs.get(win.tabs[0].id, function(tab) {
+                    if (tab.url !== "about:blank") {
+                        clearInterval(waitForProperUrl);
+                        chrome.tabs.executeScript(win.tabs[0].id, {
+                            file: "/data/content_scripts/extend.js"
+                        });
+                    }
+                });
+            }, 1000);
+
+
         });
 }
 // handling the messages 

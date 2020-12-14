@@ -175,16 +175,7 @@
         }
 
 
-        closeOnEsc() {
 
-            window.addEventListener('keyup', e => {
-                if (e.code === 'Escape') {
-                    chrome.runtime.sendMessage({
-                        method: 'lookup-popup-close'
-                    });
-                }
-            });
-        }
 
         createSourceUrlForNewWindow(url, query) {
             if ((url).includes("%s")) {
@@ -201,7 +192,6 @@
         }
     }
     let lookup = new Lookup();
-    lookup.closeOnEsc();
     await lookup.getDataFromLocalStorage();
 
     if (lookup.isGloballyDisabled()) return;
