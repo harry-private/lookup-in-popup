@@ -6,6 +6,31 @@ chrome.runtime.onInstalled.addListener(function() {
     });
 });
 
+// handling the messages 
+chrome.runtime.onMessage.addListener(function(request, sender, response) {
+    console.log(sender);
+    if (request.method === 'open-lookup-popup') {
+        openLookupPopup(request.url);
+    } else if (request.method === 'lookup-popup-close') {
+        chrome.tabs.remove(sender.tab.id);
+    }
+});
+
+chrome.storage.onChanged.addListener(function(changes, namespace) {
+    createLookupContextMenu();
+});
+
+// I am creating this, because the first time when browser starts or the extension is installed, 
+// the "lookup-popup" id won't be available, and removing it will cause an error
+chrome.contextMenus.create({
+    id: "lookup-popup",
+    title: 'Lookup',
+    contexts: ["selection"]
+});
+
+createLookupContextMenuForLinkImage();
+createLookupContextMenu();
+
 
 function firsTime() {
     chrome.storage.sync.set({
@@ -73,7 +98,6 @@ function firsTime() {
 }
 
 
-
 function openLookupPopup(url) {
     chrome.windows.create({
             // state: "maximized",
@@ -109,22 +133,6 @@ function openLookupPopup(url) {
 
         });
 }
-// handling the messages 
-
-chrome.runtime.onMessage.addListener(function(request, sender, response) {
-    console.log(sender);
-    if (request.method === 'open-lookup-popup') {
-        openLookupPopup(request.url);
-    } else if (request.method === 'lookup-popup-close') {
-        chrome.tabs.remove(sender.tab.id);
-    }
-});
-
-chrome.storage.onChanged.addListener(function(changes, namespace) {
-    createLookupContextMenu();
-});
-
-
 
 function createLookupContextMenu() {
 
@@ -175,19 +183,6 @@ function createLookupContextMenuForLinkImage() {
         },
     });
 }
-
-// I am creating this, because the first time when browser starts or the extension is installed, 
-// the "lookup-popup" id won't be available, and removing it will cause an error
-chrome.contextMenus.create({
-    id: "lookup-popup",
-    title: 'Lookup',
-    contexts: ["selection"]
-});
-
-createLookupContextMenuForLinkImage();
-createLookupContextMenu();
-
-
 
 function createSourceUrlForNewWindow(url, query) {
     if ((url).includes("%s")) {
