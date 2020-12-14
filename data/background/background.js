@@ -98,7 +98,9 @@ function firsTime() {
 }
 
 
-function openLookupPopup(url) {
+// queryType "lookupPopupLinkImage" | "lookupPopupSelection"(default)
+
+function openLookupPopup(url, queryType = "lookupPopupSelection") {
     chrome.windows.create({
             // state: "maximized",
             height: (window.screen.height),
@@ -123,6 +125,11 @@ function openLookupPopup(url) {
                 chrome.tabs.get(win.tabs[0].id, function(tab) {
                     if (tab.url !== "about:blank") {
                         clearInterval(waitForProperUrl);
+                        chrome.tabs.executeScript(win.tabs[0].id, {
+                            code: `
+                                  window.lookupPopupQueryType = "${queryType}";
+                                `
+                        });
                         chrome.tabs.executeScript(win.tabs[0].id, {
                             file: "/data/content_scripts/extend.js"
                         });
@@ -179,7 +186,7 @@ function createLookupContextMenuForLinkImage() {
         title: "Lookup in popup",
         contexts: ["link", "image", "video", "audio"],
         onclick: function(info, tab) {
-            openLookupPopup(info.linkUrl);
+            openLookupPopup(info.linkUrl, "lookupPopupLinkImage");
         },
     });
 }
