@@ -11,7 +11,7 @@
             this.panelQueryFrom = null;
             this.panelQueryInput = null;
         }
-        async getSourcesFromLocalStorage() {
+        async getDataFromLocalStorage() {
             let sourcesPromise = async () => {
                 return new Promise(resolve => {
                     chrome.storage.sync.get(['sources', "triggerKey", "enable_disable"], result => {
@@ -99,7 +99,7 @@
     }
 
     let lookup = new Lookup();
-    await lookup.getSourcesFromLocalStorage();
+    await lookup.getDataFromLocalStorage();
 
 
     lookup.createPanel();

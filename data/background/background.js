@@ -98,9 +98,9 @@ function firsTime() {
 }
 
 
-// queryType "lookupPopupLinkImage" | "lookupPopupSelection"(default)
+// queryType "linkImage" | "selection"(default)
 
-function openLookupPopup(url, queryType = "lookupPopupSelection") {
+function openLookupPopup(url, queryType = "selection") {
     chrome.windows.create({
             // state: "maximized",
             height: (window.screen.height),
@@ -186,7 +186,7 @@ function createLookupContextMenuForLinkImage() {
         title: "Lookup in popup",
         contexts: ["link", "image", "video", "audio"],
         onclick: function(info, tab) {
-            openLookupPopup(info.linkUrl, "lookupPopupLinkImage");
+            openLookupPopup(info.linkUrl, "linkImage");
         },
     });
 }
