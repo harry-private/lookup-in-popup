@@ -12,14 +12,7 @@
             this.panelQueryInput = null;
         }
         async getDataFromLocalStorage() {
-            let sourcesPromise = async () => {
-                return new Promise(resolve => {
-                    chrome.storage.sync.get(['sources', "triggerKey", "enable_disable"], result => {
-                        resolve(result);
-                    })
-                })
-            }
-            this.localData = await sourcesPromise();
+            this.localData = await lookupUtility.localStorageDataPromise();
         }
         sourcesOptionsForSelect() {
             let options = '';

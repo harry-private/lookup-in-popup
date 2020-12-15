@@ -18,6 +18,7 @@
   ],
   "background": {
     "scripts": [
+      "data/internal_libs/lookup-utility.js",
       "data/internal_libs/sources_data.js",
       "data/background/background.js"
     ],

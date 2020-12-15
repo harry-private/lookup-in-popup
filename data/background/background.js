@@ -1,9 +1,8 @@
-chrome.runtime.onInstalled.addListener(function() {
-    chrome.storage.sync.get(['sources', 'triggerKey', 'enableDisable'], result => {
-        if (!('sources' in result)) {
-            firsTime();
-        }
-    });
+chrome.runtime.onInstalled.addListener(async function() {
+    let localStorageData = await lookupUtility.localStorageDataPromise();
+    if (!('sources' in localStorageData)) {
+        firsTime();
+    }
 });
 
 // handling the messages 
@@ -143,7 +142,7 @@ function openLookupPopup(url, queryType = "selection") {
 
 function createLookupContextMenu() {
 
-    chrome.contextMenus.remove('lookup-popup', function() {
+    chrome.contextMenus.remove('lookup-popup', async function() {
         chrome.contextMenus.create({
             // parentId: 'open-lookup',
             id: "lookup-popup",
@@ -152,28 +151,27 @@ function createLookupContextMenu() {
             onclick: function(info, tab) {},
         });
 
-        chrome.storage.sync.get(['sources'], result => {
-            if (('sources' in result)) {
-                result.sources.forEach(function(source) {
-                    if (!source.isHidden) {
-                        // options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
-                        chrome.contextMenus.create({
 
-                            parentId: 'lookup-popup',
-                            title: source.title,
-                            contexts: ["selection"],
-                            onclick: function(info, tab) {
-                                let url = createSourceUrlForNewWindow(source.url, info.selectionText);
-                                console.log(url);
-                                openLookupPopup(url);
+        let localStorageData = await lookupUtility.localStorageDataPromise();
+        if (('sources' in localStorageData)) {
+            localStorageData.sources.forEach(function(source) {
+                if (!source.isHidden) {
+                    // options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+                    chrome.contextMenus.create({
 
-                            },
-                        });
-                    }
-                });
-            }
-        });
+                        parentId: 'lookup-popup',
+                        title: source.title,
+                        contexts: ["selection"],
+                        onclick: function(info, tab) {
+                            let url = createSourceUrlForNewWindow(source.url, info.selectionText);
+                            console.log(url);
+                            openLookupPopup(url);
 
+                        },
+                    });
+                }
+            });
+        }
     });
 
 

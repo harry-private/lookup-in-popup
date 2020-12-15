@@ -18,14 +18,7 @@
             this.createFixedPositionElement()
         }
         async getDataFromLocalStorage() {
-            let localStorageDataPromise = async () => {
-                return new Promise(resolve => {
-                    chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
-                        resolve(result);
-                    })
-                })
-            }
-            this.localStorageData = await localStorageDataPromise();
+            this.localStorageData = await lookupUtility.localStorageDataPromise();
         }
         createPopup() {
             this.popupSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
