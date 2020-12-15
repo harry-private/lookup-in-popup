@@ -163,7 +163,7 @@ function createLookupContextMenu() {
                         title: source.title,
                         contexts: ["selection"],
                         onclick: function(info, tab) {
-                            let url = createSourceUrlForNewWindow(source.url, info.selectionText);
+                            let url = lookupUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
                             console.log(url);
                             openLookupPopup(url);
 
@@ -187,12 +187,4 @@ function createLookupContextMenuForLinkImage() {
             openLookupPopup(info.linkUrl, "linkImage");
         },
     });
-}
-
-function createSourceUrlForNewWindow(url, query) {
-    if ((url).includes("%s")) {
-        return url.replace("%s", query);
-    } else {
-        return `${url}/?${query}`;
-    }
 }

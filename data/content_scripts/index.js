@@ -41,7 +41,7 @@
         isCurrentWebsiteIsAllowed() {
             // blacklist/whitelist check
             let allowed = true;
-            let currentWebsiteUrl = window.location.protocol + "//" + this.removeWWWBeginningOfHostName(window.location.hostname);
+            let currentWebsiteUrl = window.location.protocol + "//" + lookupUtility.removeWWWBeginningOfHostname(window.location.hostname);
             if (this.localStorageData.enableDisable.listMode == "blacklist-mode") {
                 if (this.localStorageData.enableDisable.blacklist.includes(currentWebsiteUrl)) {
                     allowed = false;
@@ -155,10 +155,10 @@
             if (this.showChooseSourceOptions()) {
                 this.selectedSource = this.popupSelect.options[this.popupSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
-                url = this.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
+                url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
             } else {
                 let firstSourceUrl = this.localStorageData.sources[0].url;
-                url = this.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
+                url = lookupUtility.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
             }
             chrome.runtime.sendMessage({
                 method: 'open-lookup-popup',
@@ -170,19 +170,8 @@
 
 
 
-        createSourceUrlForNewWindow(url, query) {
-            if ((url).includes("%s")) {
-                return url.replace("%s", query);
-            } else {
-                return `${url}/?${query}`;
-            }
-        }
 
 
-        removeWWWBeginningOfHostName(hostname) {
-            // console.log(hostname);
-            return hostname.replace(/^www\./, '');
-        }
     }
     let lookup = new Lookup();
     await lookup.getDataFromLocalStorage();

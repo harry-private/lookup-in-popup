@@ -137,7 +137,7 @@
                 showFlashMessages([invalidTitleLength], "red");
                 console.log('invalidTitleLength: ', invalidTitleLength);
                 error = true;
-            } else if (!isValidURL(sourceUrl)) {
+            } else if (!lookupUtility.isValidURL(sourceUrl)) {
                 let invalidUrl = `The URL you edited must be valid`;
                 showFlashMessages([invalidUrl], "red");
                 // console.log('invalidUrl: ', invalidUrl);
@@ -192,7 +192,7 @@
             if ((title.length >= 30) || (title.length <= 0)) {
                 error.invalidTitleLength = 'Title length should be between 1 to 30';
                 showFlashMessages([error.invalidTitleLength], "red")
-            } else if (!isValidURL(url)) {
+            } else if (!lookupUtility.isValidURL(url)) {
                 error.invalidUrl = "URL must be valid";
                 showFlashMessages([error.invalidUrl], "red")
             } else {
@@ -256,7 +256,7 @@
     function addWebsiteInList() {
         listUrlAddElem.addEventListener("click", () => {
 
-            if (!isValidURL(listUrlInputElem.value)) {
+            if (!lookupUtility.isValidURL(listUrlInputElem.value)) {
                 let invalidUrl = `The URL is invalid.`;
                 showFlashMessages([invalidUrl], "red");
             } else {
@@ -284,14 +284,14 @@
         let whitelistWebsite;
         blacklist.forEach(function(website) {
             blacklistWebsite = new URL(website.innerText);
-            blacklistWebsite = blacklistWebsite.protocol + '//' + removeWWWBeginningOfHostname(blacklistWebsite.hostname);
+            blacklistWebsite = blacklistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(blacklistWebsite.hostname);
             blacklistWebsites.push(blacklistWebsite.toLowerCase());
         });
         whitelist.forEach(function(website) {
             whitelistWebsite = new URL(website.innerText);
-            whitelistWebsite = whitelistWebsite.protocol + '//' + removeWWWBeginningOfHostname(whitelistWebsite.hostname);
+            whitelistWebsite = whitelistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(whitelistWebsite.hostname);
 
-            whitelistWebsites.push(removeWWWBeginningOfHostname(whitelistWebsite.toLowerCase()));
+            whitelistWebsites.push(lookupUtility.removeWWWBeginningOfHostname(whitelistWebsite.toLowerCase()));
         });
         // remove duplicates 
         uniqueBlacklistWebsites = [...new Set(blacklistWebsites)];
@@ -462,17 +462,8 @@
 
     ///////// utilities 
 
-    function removeWWWBeginningOfHostname(hostname) {
-        // console.log(hostname);
-        return hostname.replace(/^www\./, '');
-    }
 
-    function isValidURL(string) {
-        // http(s) is optional in first regex
-        // let res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-        let res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
-        return (res !== null);
-    };
+
 
     function isObjEmpty(obj) {
         // if (Object.entries(obj).length === 0 && obj.constructor === Object) {

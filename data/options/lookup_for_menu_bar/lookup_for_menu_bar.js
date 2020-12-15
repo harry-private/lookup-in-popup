@@ -50,7 +50,7 @@
                 if (!query) { return; }
                 let selectedSource = this.panelSelect.options[this.panelSelect.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;
-                let url = this.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 chrome.runtime.sendMessage({
                     method: 'open-lookup-popup',
                     // url: encodeURIComponent(url)
@@ -73,7 +73,7 @@
                 if (!selectedSourceUrl) {
                     selectedSourceUrl = this.selectedSource.dataset.url;
                 }
-                let url = this.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 chrome.runtime.sendMessage({
                     method: 'open-lookup-popup',
                     // url: encodeURIComponent(url)
@@ -81,13 +81,7 @@
                 });
             });
         }
-        createSourceUrlForNewWindow(url, query) {
-            if ((url).includes("%s")) {
-                return url.replace("%s", query);
-            } else {
-                return `${url}/?${query}`;
-            }
-        }
+
 
     }
 

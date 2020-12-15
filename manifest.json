@@ -53,6 +53,7 @@
         "<all_urls>"
       ],
       "js": [
+        "data/internal_libs/lookup-utility.js",
         "data/content_scripts/index.js"
       ],
       "css": [
