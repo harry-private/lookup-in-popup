@@ -2,8 +2,13 @@
 (async () => {
     'use strict'
     class Lookup {
-        _constructor() {
+        async _constructor() {
             // this.sources = {};
+            this.localStorageData = await lookupUtility.localStorageDataPromise();
+
+            if (this.isGloballyDisabled()) return;
+
+            if (!this.isCurrentWebsiteIsAllowed()) return;
             this.body = document.body;
             this.html = document.documentElement;
             this.popup = document.createElement('div');
@@ -15,11 +20,16 @@
             this.selectedText = "";
             this.selectedSource;
             // appending "source-" because StackOverflow has the popup class, so won't work there
-            this.createFixedPositionElement()
+
+            this.run();
         }
-        async getDataFromLocalStorage() {
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+
+        run() {
+            this.createFixedPositionElement();
+            this.addKeyupListenerToBody();
+            this.addMouseupListenerToBody();
         }
+
         createPopup() {
             this.popupSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
             this.popup.appendChild(this.popupSelect);
@@ -167,56 +177,49 @@
             });
         }
 
+        addMouseupListenerToBody() {
+            document.body.addEventListener("mouseup", (mouseupEvent) => {
+
+                if (mouseupEvent.target.classList.contains('lookup-popup-select') ||
+                    mouseupEvent.target.closest(".lookup-popup-select")) { return; }
+
+                setTimeout(() => {
+                    this.getSelectedText();
+                    this.removePopup();
+                    // if triggerKey is not pressed don't execute rest of the code
+                    if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
 
 
+                    // if no text is selected or clicked element is popup, don't execute the rest of the code
+                    if (!this.isSelectedText(mouseupEvent)) { return; }
 
+                    if (!this.showChooseSourceOptions()) {
+                        this.createWindowPopup(mouseupEvent);
+                        return;
+                    }
 
+                    this.createPopup();
+                    this.showPopup(mouseupEvent);
+                    this.popupSelect.onchange = (evt) => {
+                        this.removePopup();
+                        evt.stopPropagation();
+                        evt.preventDefault();
+                        this.createWindowPopup(mouseupEvent);
+                    };
+                });
+            });
+        }
+
+        addKeyupListenerToBody() {
+            document.body.addEventListener('keyup', e => {
+                if (e.code === 'Escape') {
+                    this.removePopup();
+
+                }
+            });
+        }
 
     }
     let lookup = new Lookup();
-    await lookup.getDataFromLocalStorage();
-
-    if (lookup.isGloballyDisabled()) return;
-
-    if (!lookup.isCurrentWebsiteIsAllowed()) return;
-
-    lookup._constructor();
-
-    document.body.addEventListener('keyup', function keyPress(e) {
-        if (e.key === "Escape") {
-            lookup.removePopup();
-
-        }
-    });
-
-    document.body.addEventListener("mouseup", (mouseupEvent) => {
-
-        if (mouseupEvent.target.classList.contains('lookup-popup-select') ||
-            mouseupEvent.target.closest(".lookup-popup-select")) { return; }
-
-        setTimeout(() => {
-            lookup.getSelectedText();
-            lookup.removePopup();
-            // if triggerKey is not pressed don't execute rest of the code
-            if (!lookup.isTriggerKeyPressed(mouseupEvent)) { return; }
-
-
-            // if no text is selected or clicked element is popup, don't execute the rest of the code
-            if (!lookup.isSelectedText(mouseupEvent)) { return; }
-
-            if (!lookup.showChooseSourceOptions()) {
-                lookup.createWindowPopup(mouseupEvent);
-                return;
-            }
-
-            lookup.createPopup();
-            lookup.showPopup(mouseupEvent);
-            lookup.popupSelect.onchange = (evt) => {
-                lookup.removePopup()
-                evt.stopPropagation();
-                evt.preventDefault();
-                lookup.createWindowPopup(mouseupEvent);
-            }
-        })
-    });
+    await lookup._constructor();
 })();
