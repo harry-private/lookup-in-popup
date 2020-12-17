@@ -1,12 +1,21 @@
 class LookupUtility {
 
+    constructor() {
+        this._localStorageData = null; //private
+    }
+
     async localStorageDataPromise() {
-        console.log("Local Storage");
-        return new Promise(resolve => {
-            chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
-                resolve(result);
-            })
-        })
+        // one instance per page
+        if (!this._localStorageData) {
+            console.log("Local Storage");
+            return this._localStorageData = await new Promise(resolve => {
+                chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
+                    resolve(result);
+                })
+            });
+        } else {
+            return this._localStorageData;
+        }
     }
     removeWWWBeginningOfHostname(hostname) {
         // console.log(hostname);

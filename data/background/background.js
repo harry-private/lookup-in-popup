@@ -7,7 +7,6 @@
         }
 
         run() {
-            this.onInstalled();
             // handling the messages 
             this.messagesHandler();
             this.storageOnchange();
@@ -24,12 +23,10 @@
             this.createLookupContextMenuForLinkImage();
         }
 
-        onInstalled() {
-            chrome.runtime.onInstalled.addListener(() => {
-                if (!('sources' in this.localStorageData)) {
-                    this.firsTime();
-                }
-            });
+        onInstalledListener() {
+            if (!('sources' in this.localStorageData)) {
+                this.firsTime();
+            }
         }
 
         firsTime() {
@@ -206,5 +203,5 @@
 
     let lookupBackground = new LookupBackground();
     await lookupBackground._constructor();
-
+    chrome.runtime.onInstalled.addListener(lookupBackground.onInstalledListener());
 })()
