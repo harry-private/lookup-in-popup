@@ -4,8 +4,8 @@
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
-            this.extend = {
-                lookupPopupWindow: false
+            this.lookupPopupWindow = {
+                popupWindow: false
             };
         }
 
@@ -115,7 +115,7 @@
         }
 
         openLookupPopup(url) {
-            this.extend.lookupPopupWindow = true;
+            this.lookupPopupWindow.popupWindow = true;
             chrome.windows.create({
                     // state: "maximized",
                     height: (window.screen.height),
@@ -142,7 +142,7 @@
                                 clearInterval(waitForProperUrl);
                                 chrome.tabs.executeScript(win.tabs[0].id, {
                                     code: `
-                                  window.lookupPopupExtend = ${JSON.stringify(this.extend)}
+                                  window.lookupPopupWindow = ${JSON.stringify(this.lookupPopupWindow)}
                                 `
                                 });
                             }

@@ -18,7 +18,7 @@
   ],
   "background": {
     "scripts": [
-      "data/internal_libs/lookup-utility.js",
+      "data/internal_libs/lookup_utility.js",
       "data/internal_libs/sources_data.js",
       "data/background/background.js"
     ],
@@ -53,9 +53,9 @@
         "<all_urls>"
       ],
       "js": [
-        "data/internal_libs/lookup-utility.js",
+        "data/internal_libs/lookup_utility.js",
         "data/content_scripts/index.js",
-        "data/content_scripts/extend.js"
+        "data/content_scripts/lookup_popup_window.js"
       ],
       "css": [
         "data/content_scripts/index.css"

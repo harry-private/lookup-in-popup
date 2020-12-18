@@ -1,6 +1,6 @@
 (async () => {
     'use strict'
-    class LookupExtend {
+    class LookupPopupWindow {
 
         closeOnEsc() {
             window.addEventListener('keyup', e => {
@@ -13,12 +13,12 @@
         }
     }
 
-    if (window.lookupPopupExtend && window.lookupPopupExtend.lookupPopupWindow) {
-        let lookupExtend = new LookupExtend();
+    if (window.lookupPopupWindow && window.lookupPopupWindow.popupWindow) {
+        let lookupPopWindow = new LookupPopupWindow();
 
-        lookupExtend.closeOnEsc();
+        lookupPopWindow.closeOnEsc();
 
         console.log(lookupUtility.isValidURL("https://test.vom"));
-        console.log(window.lookupPopupExtend);
+        console.log(window.lookupPopupWindow);
     }
 })();
