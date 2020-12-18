@@ -13,9 +13,12 @@
         }
     }
 
-    let lookupExtend = new LookupExtend();
+    if (window.lookupPopupExtend && window.lookupPopupExtend.lookupPopupWindow) {
+        let lookupExtend = new LookupExtend();
 
-    console.log(window.lookupPopupQueryType);
-    lookupExtend.closeOnEsc();
+        lookupExtend.closeOnEsc();
 
+        console.log(lookupUtility.isValidURL("https://test.vom"));
+        console.log(window.lookupPopupExtend);
+    }
 })();

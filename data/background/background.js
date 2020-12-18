@@ -4,6 +4,9 @@
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
+            this.extend = {
+                lookupPopupWindow: false
+            };
         }
 
         run() {
@@ -111,8 +114,8 @@
             });
         }
 
-        // queryType "linkImage" | "selection"(default)
-        openLookupPopup(url, queryType = "selection") {
+        openLookupPopup(url) {
+            this.extend.lookupPopupWindow = true;
             chrome.windows.create({
                     // state: "maximized",
                     height: (window.screen.height),
@@ -133,17 +136,14 @@
                     }
 
                     // this setInterval and all is for firefox
-                    let waitForProperUrl = setInterval(function() {
-                        chrome.tabs.get(win.tabs[0].id, function(tab) {
+                    let waitForProperUrl = setInterval(() => {
+                        chrome.tabs.get(win.tabs[0].id, (tab) => {
                             if (tab.url !== "about:blank") {
                                 clearInterval(waitForProperUrl);
                                 chrome.tabs.executeScript(win.tabs[0].id, {
                                     code: `
-                                  window.lookupPopupQueryType = "${queryType}";
+                                  window.lookupPopupExtend = ${JSON.stringify(this.extend)}
                                 `
-                                });
-                                chrome.tabs.executeScript(win.tabs[0].id, {
-                                    file: "/data/content_scripts/extend.js"
                                 });
                             }
                         });
@@ -193,7 +193,7 @@
                 title: "Lookup in popup",
                 contexts: ["link", "image", "video", "audio"],
                 onclick: (info, tab) => {
-                    this.openLookupPopup(info.linkUrl, "linkImage");
+                    this.openLookupPopup(info.linkUrl);
                 },
             });
         }
