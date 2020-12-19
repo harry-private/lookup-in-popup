@@ -173,7 +173,8 @@
             chrome.runtime.sendMessage({
                 method: 'open-lookup-popup',
                 // url: encodeURIComponent(url)
-                url: url
+                url: url,
+                query: this.selectedText.trim()
             });
         }
 

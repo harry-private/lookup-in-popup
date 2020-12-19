@@ -1,10 +1,81 @@
 (async () => {
+    chrome.runtime.onInstalled.addListener(async () => {
+        let localStorageData = await lookupUtility.localStorageDataPromise();
+        if (!('sources' in localStorageData)) {
+            firstTime();
+        }
+    });
+
+    function firstTime() {
+        chrome.storage.sync.set({
+            sources: [{
+                    "preInstalled": "true",
+                    "id": "googleTranslate",
+                    "title": "Google Translate",
+                    "isGoogleTranslate": true,
+                    "from": "auto", //default
+                    "to": "en", //default
+                    "url": sourcesData.googleTranslate.generateUrl("auto", "en")
+                },
+                {
+                    "preInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
+                    "id": "google",
+                    "title": "Google",
+                    "url": "https://www.google.com/search?q=%s"
+
+                }, {
+                    "preInstalled": "true",
+                    "id": "cambridge",
+                    "title": "Cambridge",
+                    "fromTo": "english",
+                    "url": sourcesData.cambridge.generateUrl("english")
+                }, {
+                    "preInstalled": "true",
+                    "id": "oxford",
+                    "title": "Oxford",
+                    "fromTo": "en",
+                    "url": sourcesData.oxford.generateUrl("en")
+                }, {
+                    "preInstalled": "true",
+                    "id": "collins",
+                    "title": "Collins",
+                    "fromTo": "english",
+                    "url": sourcesData.collins.generateUrl("english")
+                }, {
+                    "preInstalled": "true",
+                    "id": "longman",
+                    "title": "Longman",
+                    "fromTo": "english",
+                    "url": sourcesData.longman.generateUrl("english")
+                },
+                {
+                    "preInstalled": "true",
+                    "id": "wikipedia",
+                    "title": "Wikipedia",
+                    "fromTo": "english",
+                    "url": sourcesData.wikipedia.generateUrl("en")
+                },
+
+            ],
+            sourcesHidden: [],
+            triggerKey: "none",
+            enableDisable: {
+                globally: "enable", //disabled|enabled
+                listMode: "blacklist-mode", //blacklist-mode|whitelist-mode
+                blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
+                whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
+            },
+            showChooseSourceOptions: 'yes'
+        }, function() {
+            // createLookupContextMenu();
+        });
+    }
     class LookupBackground {
 
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
-            this.openedLookupPopupWindowId = [];
+            this.openedLookupPopupWindowIds = {};
             this.lookupPopupWindowOptions = {
                 // popupWindow: false
                 // test: "poipoipoiopoi"
@@ -29,70 +100,7 @@
         }
 
 
-        firsTime() {
-            chrome.storage.sync.set({
-                sources: [{
-                        "preInstalled": "true",
-                        "id": "googleTranslate",
-                        "title": "Google Translate",
-                        "isGoogleTranslate": true,
-                        "from": "auto", //default
-                        "to": "en", //default
-                        "url": sourcesData.googleTranslate.generateUrl("auto", "en")
-                    },
-                    {
-                        "preInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
-                        "id": "google",
-                        "title": "Google",
-                        "url": "https://www.google.com/search?q=%s"
 
-                    }, {
-                        "preInstalled": "true",
-                        "id": "cambridge",
-                        "title": "Cambridge",
-                        "fromTo": "english",
-                        "url": sourcesData.cambridge.generateUrl("english")
-                    }, {
-                        "preInstalled": "true",
-                        "id": "oxford",
-                        "title": "Oxford",
-                        "fromTo": "en",
-                        "url": sourcesData.oxford.generateUrl("en")
-                    }, {
-                        "preInstalled": "true",
-                        "id": "collins",
-                        "title": "Collins",
-                        "fromTo": "english",
-                        "url": sourcesData.collins.generateUrl("english")
-                    }, {
-                        "preInstalled": "true",
-                        "id": "longman",
-                        "title": "Longman",
-                        "fromTo": "english",
-                        "url": sourcesData.longman.generateUrl("english")
-                    },
-                    {
-                        "preInstalled": "true",
-                        "id": "wikipedia",
-                        "title": "Wikipedia",
-                        "fromTo": "english",
-                        "url": sourcesData.wikipedia.generateUrl("en")
-                    },
-
-                ],
-                sourcesHidden: [],
-                triggerKey: "none",
-                enableDisable: {
-                    globally: "enable", //disabled|enabled
-                    listMode: "blacklist-mode", //blacklist-mode|whitelist-mode
-                    blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
-                    whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
-                },
-                showChooseSourceOptions: 'yes'
-            }, function() {
-                // createLookupContextMenu();
-            });
-        }
 
         storageOnchange() {
             chrome.storage.onChanged.addListener((changes, namespace) => {
@@ -104,11 +112,11 @@
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("sender", sender);
                 if (request.method === 'open-lookup-popup') {
-                    this.openLookupPopup(request.url);
+                    this.openLookupPopup(request.url, request.query);
                 } else if (request.method === 'lookup-popup-close') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
-                    if (this.openedLookupPopupWindowId.includes(sender.tab.windowId)) {
+                    if (sender.tab.windowId in this.openedLookupPopupWindowIds) {
                         sendResponse("lookupPopupWindow");
 
                     }
@@ -116,8 +124,8 @@
             });
         }
 
-        openLookupPopup(url) {
-            console.log(this.openedLookupPopupWindowId);
+        openLookupPopup(url, query = null) {
+            console.log(this.openedLookupPopupWindowIds);
             chrome.windows.create({
                     // state: "maximized",
                     height: (window.screen.height),
@@ -129,7 +137,10 @@
                 },
                 (win) => {
                     console.log(win);
-                    this.openedLookupPopupWindowId.push(win.tabs[0].windowId);
+                    // this.openedLookupPopupWindowIds.push(win.tabs[0].windowId);
+                    this.openedLookupPopupWindowIds[win.tabs[0].windowId] = {
+                        "query": query
+                    }
                     if (/Firefox/.test(navigator.userAgent)) {
                         chrome.windows.update(win.id, {
                             // focused: true,
@@ -163,7 +174,7 @@
                                 contexts: ["selection"],
                                 onclick: (info, tab) => {
                                     let url = lookupUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
-                                    this.openLookupPopup(url);
+                                    this.openLookupPopup(url, info.selectionText.trim());
 
                                 },
                             });
@@ -192,9 +203,5 @@
 
     let lookupBackground = new LookupBackground();
     await lookupBackground._constructor();
-    chrome.runtime.onInstalled.addListener(() => {
-        if (!('sources' in lookupBackground.localStorageData)) {
-            this.firsTime();
-        }
-    });
+
 })()
