@@ -1,4 +1,14 @@
-(async () => {
+chrome.runtime.sendMessage({
+    method: 'extend',
+    // url: encodeURIComponent(url)
+    // url: url
+}, (res) => {
+    if (res === "lookupPopupWindow") {
+        lookupPopupWindowRun();
+    }
+});
+
+let lookupPopupWindowRun = async (lookupPopupWindowOptions) => {
     'use strict'
     class LookupPopupWindow {
 
@@ -11,14 +21,32 @@
                 }
             });
         }
+        insertNavbar() {
+            // create a div 
+            // insert it on top
+
+            document.body.insertAdjacentHTML('afterbegin',
+                `
+                  <div style="background:White; position:fixed; z-index:9999; left:40%; top:0">
+                    <p>
+                      Inserted HTML
+                    </p>
+                  </div>
+                `
+            );
+        }
     }
 
-    if (window.lookupPopupWindow && window.lookupPopupWindow.popupWindow) {
-        let lookupPopWindow = new LookupPopupWindow();
+    let lookupPopWindow = new LookupPopupWindow();
 
-        lookupPopWindow.closeOnEsc();
+    lookupPopWindow.closeOnEsc();
+    window.addEventListener('DOMContentLoaded', (event) => {
+        // console.log('DOM fully loaded and parsed');
+        lookupPopWindow.insertNavbar();
+    });
 
-        console.log(lookupUtility.isValidURL("https://test.vom"));
-        console.log(window.lookupPopupWindow);
-    }
-})();
+    // console.log(lookupUtility.isValidURL("https://test.vom"));
+
+};
+
+// console.log(openedWithExecuteScript);

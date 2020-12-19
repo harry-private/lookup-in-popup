@@ -4,8 +4,10 @@
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
-            this.lookupPopupWindow = {
-                popupWindow: false
+            this.openedLookupPopupWindowId = [];
+            this.lookupPopupWindowOptions = {
+                // popupWindow: false
+                // test: "poipoipoiopoi"
             };
         }
 
@@ -104,18 +106,23 @@
         }
 
         messagesHandler() {
-            chrome.runtime.onMessage.addListener((request, sender, response) => {
-                console.log(sender);
+            chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+                console.log("sender", sender);
                 if (request.method === 'open-lookup-popup') {
                     this.openLookupPopup(request.url);
                 } else if (request.method === 'lookup-popup-close') {
                     chrome.tabs.remove(sender.tab.id);
+                } else if (request.method === "extend") {
+                    if (this.openedLookupPopupWindowId.includes(sender.tab.windowId)) {
+                        sendResponse("lookupPopupWindow");
+
+                    }
                 }
             });
         }
 
         openLookupPopup(url) {
-            this.lookupPopupWindow.popupWindow = true;
+            console.log(this.openedLookupPopupWindowId);
             chrome.windows.create({
                     // state: "maximized",
                     height: (window.screen.height),
@@ -127,6 +134,7 @@
                 },
                 (win) => {
                     console.log(win);
+                    this.openedLookupPopupWindowId.push(win.tabs[0].windowId);
                     if (/Firefox/.test(navigator.userAgent)) {
                         chrome.windows.update(win.id, {
                             // focused: true,
@@ -140,11 +148,13 @@
                         chrome.tabs.get(win.tabs[0].id, (tab) => {
                             if (tab.url !== "about:blank") {
                                 clearInterval(waitForProperUrl);
-                                chrome.tabs.executeScript(win.tabs[0].id, {
-                                    code: `
-                                  window.lookupPopupWindow = ${JSON.stringify(this.lookupPopupWindow)}
-                                `
-                                });
+                                // chrome.tabs.executeScript(win.tabs[0].id, {
+                                //     code: `
+                                //       let openedWithExecuteScript = true;
+                                //       alert("Lookup Popup Window execute script");
+                                //       lookupPopupWindowRun(${JSON.stringify(this.lookupPopupWindowOptions)});
+                                //     `
+                                // });
                             }
                         });
                     }, 1000);
