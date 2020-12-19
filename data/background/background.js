@@ -28,11 +28,6 @@
             this.createLookupContextMenuForLinkImage();
         }
 
-        onInstalledListener() {
-            if (!('sources' in this.localStorageData)) {
-                this.firsTime();
-            }
-        }
 
         firsTime() {
             chrome.storage.sync.set({
@@ -144,20 +139,28 @@
                     }
 
                     // this setInterval and all is for firefox
-                    let waitForProperUrl = setInterval(() => {
-                        chrome.tabs.get(win.tabs[0].id, (tab) => {
-                            if (tab.url !== "about:blank") {
-                                clearInterval(waitForProperUrl);
-                                // chrome.tabs.executeScript(win.tabs[0].id, {
-                                //     code: `
-                                //       let openedWithExecuteScript = true;
-                                //       alert("Lookup Popup Window execute script");
-                                //       lookupPopupWindowRun(${JSON.stringify(this.lookupPopupWindowOptions)});
-                                //     `
-                                // });
-                            }
-                        });
-                    }, 1000);
+                    // let waitForProperUrl = setInterval(() => {
+                    //     chrome.tabs.get(win.tabs[0].id, (tab) => {
+                    //         if (tab.url !== "about:blank") {
+                    //             clearInterval(waitForProperUrl);
+                    //             // chrome.tabs.executeScript(win.tabs[0].id, {
+                    //             //     code: `
+                    //             //       let openedWithExecuteScript = true;
+                    //             //       alert("Lookup Popup Window execute script");
+                    //             //       lookupPopupWindowRun(${JSON.stringify(this.lookupPopupWindowOptions)});
+                    //             //     `
+                    //             // });
+                    //         }
+                    //     });
+                    // }, 1000);
+
+                    chrome.tabs.executeScript(win.tabs[0].id, {
+                        code: `
+                          // let openedWithExecuteScript = true;
+                          alert("Lookup Popup Window execute script");
+                          // lookupPopupWindowRun(${JSON.stringify(this.lookupPopupWindowOptions)});
+                        `
+                    });
 
                 });
         }
@@ -213,5 +216,9 @@
 
     let lookupBackground = new LookupBackground();
     await lookupBackground._constructor();
-    chrome.runtime.onInstalled.addListener(lookupBackground.onInstalledListener());
+    chrome.runtime.onInstalled.addListener(() => {
+        if (!('sources' in lookupBackground.localStorageData)) {
+            this.firsTime();
+        }
+    });
 })()
