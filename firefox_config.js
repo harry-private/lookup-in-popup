@@ -5,9 +5,13 @@ module.exports = {
     build: {
         overwriteDest: true,
     },
-    // run: {
-    //     firefox: "nightly",
-    // },
+    run: {
+        browserConsole: true,
+        startUrl: [
+            "https://en.wikipedia.org/wiki/Main_Page",
+            "about:debugging#/runtime/this-firefox"
+        ]
+    },
     "artifactsDir": "firefox_build",
     ignoreFiles: [
         ".gitignore",

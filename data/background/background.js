@@ -78,7 +78,7 @@
             this.openedLookupPopupWindowIds = {};
             this.lookupPopupWindowOptions = {
                 // popupWindow: false
-                // test: "poipoipoiopoi"
+                // test: "pop pop"
             };
         }
 

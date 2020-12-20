@@ -5,9 +5,19 @@ module.exports = {
     build: {
         overwriteDest: true,
     },
-    // run: {
-    //     firefox: "nightly",
-    // },
+    run: {
+        // firefox: "nightly",
+        // target: ['chromium'],
+        // browserConsole: true,
+        startUrl: [
+            "https://en.wikipedia.org/wiki/Main_Page",
+            "chrome://extensions/",
+        ],
+        args: [
+            "--auto-open-devtools-for-tabs=true",
+            "-start-maximized=true"
+        ]
+    },
     "artifactsDir": "chrome_build",
     ignoreFiles: [
         ".gitignore",
