@@ -14,8 +14,8 @@ module.exports = {
             "chrome://extensions/",
         ],
         args: [
-            "--auto-open-devtools-for-tabs=true",
-            "-start-maximized=true"
+            // "--auto-open-devtools-for-tabs=true",
+            // "-start-maximized=true"
         ]
     },
     "artifactsDir": "chrome_build",
