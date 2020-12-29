@@ -17,12 +17,11 @@ body {
 } */
 
 
-.lookup-custom-select {
+/* .lookup-custom-select {
     -webkit-appearance: none;
     -moz-appearance: none;
     background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
     background-position: calc(100% - 5px) center;
-    /* background-position: calc(100%) center; */
     background-repeat: no-repeat;
     padding: 0 0 0 5px;
     outline: none !important;
@@ -31,10 +30,10 @@ body {
     color: #000000;
     height: 30px;
     cursor: pointer;
-}
+} */
 
 
-.lookup-panel {
+.navbar {
     font-size: 15px;
     font-weight: normal;
     letter-spacing: normal;
@@ -46,27 +45,40 @@ body {
 
 
 
-.panel-select-panel-input-container {
+.formContainer {
     display: flex;
     justify-content: flex-start;
 }
 
-.lookup-panel .lookup-panel-select {
+.select {
 
     /* unset some of the properties */
     display: unset;
     /* background: #ffffff !important; */
     flex-grow: 1;
+    position: sticky;
     font-size: 15px !important;
     border: none !important;
-    position: sticky;
+    border-left: 1px solid #ccc !important;
     width: 100%;
     height: 30px;
     padding: 0 20px 0px 5px !important;
-    border-left: 1px solid #ccc !important;
+
+    font-family: Verdana, sans-serif;
+    margin: 0 !important;
+    appearance: auto !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    background: transparent !important;
+    background: #ffffff !important;
+    background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
+    background-repeat: no-repeat !important;
+    background-position-x: 100% !important;
+    background-position-y: 50% !important;
+
 }
 
-.lookup-form {
+.form {
     width: 100%;
     flex-grow: 1 !important;
     background: #ffffff !important;
@@ -75,7 +87,7 @@ body {
     display: inline-block !important;
 }
 
-.lookup-query-input {
+.input {
     background: #ffffff !important;
     margin: 0px !important;
     width: 100% !important;
@@ -87,31 +99,18 @@ body {
     outline: none !important;
     box-shadow: none !important;
     -webkit-box-shadow: none !important;
-}
-
-.lookup-query-input:focus {
-    font-weight: 600;
-}
-
-
-
-
-/* for links */
-
-input {
     outline: none;
     border: none;
     border-bottom: 2px solid #aba8a8;
 }
 
-input:focus {
+.input:focus {
+    font-weight: 600;
     border-bottom-color: red;
+
 }
 
-
-
-
-
+/* for links */
 #top-menu-bar {
     text-align: center;
 }
