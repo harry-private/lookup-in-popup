@@ -1,6 +1,10 @@
-// import 'babel-polyfill'
 (async () => {
     'use strict'
+    // CONSIDER Adding bubble on mouseOver on links
+    // CONSIDER Changing the createPopup, and showPopup to createBubble, showBubble 
+    /* CONSIDER Changing the with of the bubble
+     ** after changing the width in css, also change the width of bubbleWidth in showBubble()
+     */
     class Lookup {
         async _constructor() {
             // this.sources = {};

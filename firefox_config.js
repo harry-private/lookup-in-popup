@@ -6,7 +6,7 @@ module.exports = {
         overwriteDest: true,
     },
     run: {
-        browserConsole: true,
+        // browserConsole: true,
         startUrl: [
             "https://en.wikipedia.org/wiki/Main_Page",
             "about:debugging#/runtime/this-firefox"

@@ -1,16 +1,24 @@
 chrome.runtime.sendMessage({
     method: 'extend',
-    // url: encodeURIComponent(url)
-    // url: url
 }, (res) => {
-    if (res === "lookupPopupWindow") {
-        lookupPopupWindowRun();
+    if (res) {
+        console.log('res: ', res);
+        lookupPopupWindowRun(res);
     }
 });
 
-let lookupPopupWindowRun = async (lookupPopupWindowOptions) => {
+let lookupPopupWindowRun = async (res) => {
     'use strict'
     class LookupPopupWindow {
+
+
+        async _constructor(res) {
+            // res comes from background 
+            this.res = res;
+            this.localStorageData = await lookupUtility.localStorageDataPromise();
+
+
+        }
 
         closeOnEsc() {
             window.addEventListener('keyup', e => {
@@ -21,32 +29,52 @@ let lookupPopupWindowRun = async (lookupPopupWindowOptions) => {
                 }
             });
         }
+        insertEmptySpace() {
+            document.body.insertAdjacentHTML('beforeend',
+                `
+            <div class="lookupPopupWindowEmptySpace"></div>
+          `
+            );
+        }
         insertNavbar() {
-            // create a div 
-            // insert it on top
-
             document.body.insertAdjacentHTML('afterbegin',
                 `
-                  <div style="background:White; position:fixed; z-index:9999; left:40%; top:0">
-                    <p>
-                      Inserted HTML
-                    </p>
+                  <div class="lookup-popup-window-menu-bar">
+                  <button class="lookup-popup-window-menu-bar-toggle">❮</button>
+                  <!-- ❯ arrow -->
+                  <div class="lookup-popup-window-menu-bar-collapse">
+                      <div class="lookup-popup-window-menu-bar-extra">
+                          <button class="lookup-popup-window-back">🠈</button>
+                          <button class="lookup-popup-window-forward">🠊</button>
+                          <button class="lookup-popup-window-reload">⭮</button>
+                      </div>
+                      <div class="lookup-popup-window-menu-bar-form-container">
+                          <form class="lookup-popup-window-menu-bar-form" title="Type your query and press Enter">
+                              <input class="lookup-popup-window-menu-bar-input" placeholder="Type your query and press Enter" value="${this.res.query}" autofocus>
+                          </form>
+                          <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
+                      </div>
+                    </div>
                   </div>
                 `
             );
         }
+        sourcesOptionsForSelect() {
+            let options = '';
+            this.localStorageData.sources.forEach(function(source) {
+                if (!source.isHidden) {
+                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+                }
+            });
+            return options;
+        }
     }
 
-    let lookupPopWindow = new LookupPopupWindow();
-
-    lookupPopWindow.closeOnEsc();
+    let lookupPopupWindow = new LookupPopupWindow();
+    lookupPopupWindow.closeOnEsc();
+    await lookupPopupWindow._constructor(res);
     window.addEventListener('DOMContentLoaded', (event) => {
-        // console.log('DOM fully loaded and parsed');
-        lookupPopWindow.insertNavbar();
+        lookupPopupWindow.insertEmptySpace();
+        lookupPopupWindow.insertNavbar();
     });
-
-    // console.log(lookupUtility.isValidURL("https://test.vom"));
-
 };
-
-// console.log(openedWithExecuteScript);

@@ -55,6 +55,7 @@ body {
 
     /* unset some of the properties */
     display: unset;
+    /* background: #ffffff !important; */
     flex-grow: 1;
     font-size: 15px !important;
     border: none !important;
@@ -62,7 +63,7 @@ body {
     width: 100%;
     height: 30px;
     padding: 0 20px 0px 5px !important;
-    border-right: 1px solid #ccc !important;
+    border-left: 1px solid #ccc !important;
 }
 
 .lookup-form {
@@ -75,6 +76,7 @@ body {
 }
 
 .lookup-query-input {
+    background: #ffffff !important;
     margin: 0px !important;
     width: 100% !important;
     height: 30px !important;

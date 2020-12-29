@@ -1,4 +1,8 @@
+/* CONSIDER Deleting selectors or classes that are no longer needed */
+
 /* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
+
+/* TODO Improve bubble styling, cross websites */
 .lookup-popup {
     background: unset;
     width: 182px;
@@ -48,6 +52,7 @@
     border: 1.5px solid #ccc !important;
     display: block !important;
 }
+
 
 .lookup-panel {
     font-size: 15px;

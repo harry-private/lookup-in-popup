@@ -87,6 +87,7 @@ button:focus {
 }
 
 input[type=text] {
+    background: #ffffff !important;
     width: 100%;
     padding: 12px;
     margin: 8px 0;
@@ -94,6 +95,7 @@ input[type=text] {
 }
 
 select {
+    background: #ffffff !important;
     width: 100%;
     padding: 12px 15px;
     /* border: none; */

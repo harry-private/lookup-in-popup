@@ -72,20 +72,20 @@
     }
     class LookupBackground {
 
+
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
-            this.openedLookupPopupWindowIds = {};
-            this.lookupPopupWindowOptions = {
-                // popupWindow: false
-                // test: "pop pop"
-            };
+            // {[WindId(number):{query:""}],[WindId(number):{query:""}]}
+            this.openedLookupPopupWindows = {};
+
         }
 
         run() {
             // handling the messages 
-            this.messagesHandler();
-            this.storageOnchange();
+            this.onMessages();
+            this.onStorageChange();
+            this.onWindowRemoved();
 
             // I am creating it, because the first time this id("lookup-popup") won't exist,
             // and it will cause an error, when removing it, because the function which creates it,
@@ -102,30 +102,30 @@
 
 
 
-        storageOnchange() {
+        onStorageChange() {
             chrome.storage.onChanged.addListener((changes, namespace) => {
                 this.createLookupContextMenu();
             });
         }
 
-        messagesHandler() {
+        onMessages() {
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("sender", sender);
                 if (request.method === 'open-lookup-popup') {
-                    this.openLookupPopup(request.url, request.query);
+                    this.openLookupPopupWindow(request.url, request.query);
                 } else if (request.method === 'lookup-popup-close') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
-                    if (sender.tab.windowId in this.openedLookupPopupWindowIds) {
-                        sendResponse("lookupPopupWindow");
+                    if (sender.tab.windowId in this.openedLookupPopupWindows) {
+                        sendResponse(this.openedLookupPopupWindows[sender.tab.windowId]);
 
                     }
                 }
             });
         }
 
-        openLookupPopup(url, query = null) {
-            console.log(this.openedLookupPopupWindowIds);
+        openLookupPopupWindow(url, query = "") {
+            console.log(this.openedLookupPopupWindows);
             chrome.windows.create({
                     // state: "maximized",
                     height: (window.screen.height),
@@ -137,8 +137,7 @@
                 },
                 (win) => {
                     console.log(win);
-                    // this.openedLookupPopupWindowIds.push(win.tabs[0].windowId);
-                    this.openedLookupPopupWindowIds[win.tabs[0].windowId] = {
+                    this.openedLookupPopupWindows[win.tabs[0].windowId] = {
                         "query": query
                     }
                     if (/Firefox/.test(navigator.userAgent)) {
@@ -152,6 +151,12 @@
                 });
         }
 
+        onWindowRemoved() {
+            chrome.windows.onRemoved.addListener((windowId) => {
+                delete this.openedLookupPopupWindows[windowId];
+            });
+
+        }
         createLookupContextMenu() {
 
             chrome.contextMenus.remove('lookup-popup', async () => {
@@ -174,7 +179,7 @@
                                 contexts: ["selection"],
                                 onclick: (info, tab) => {
                                     let url = lookupUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
-                                    this.openLookupPopup(url, info.selectionText.trim());
+                                    this.openLookupPopupWindow(url, info.selectionText.trim());
 
                                 },
                             });
@@ -193,7 +198,7 @@
                 title: "Lookup in popup",
                 contexts: ["link", "image", "video", "audio"],
                 onclick: (info, tab) => {
-                    this.openLookupPopup(info.linkUrl);
+                    this.openLookupPopupWindow(info.linkUrl);
                 },
             });
         }
