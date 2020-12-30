@@ -24,7 +24,7 @@ let lookupPopupWindowRun = async (res) => {
             window.addEventListener('keyup', e => {
                 if (e.code === 'Escape') {
                     chrome.runtime.sendMessage({
-                        method: 'lookup-popup-close'
+                        method: 'close-lookup-popup-window'
                     });
                 }
             });

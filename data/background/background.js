@@ -111,9 +111,9 @@
         onMessages() {
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 console.log("sender", sender);
-                if (request.method === 'open-lookup-popup') {
+                if (request.method === 'open-lookup-popup-window') {
                     this.openLookupPopupWindow(request.url, request.query);
-                } else if (request.method === 'lookup-popup-close') {
+                } else if (request.method === 'close-lookup-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
                     if (sender.tab.windowId in this.openedLookupPopupWindows) {

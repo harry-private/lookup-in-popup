@@ -53,7 +53,7 @@
                 let selectedSourceUrl = selectedSource.dataset.url;
                 let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup',
+                    method: 'open-lookup-popup-window',
                     // url: encodeURIComponent(url)
                     url,
                     query
@@ -77,7 +77,7 @@
                 }
                 let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup',
+                    method: 'open-lookup-popup-window',
                     // url: encodeURIComponent(url)
                     url,
                     query

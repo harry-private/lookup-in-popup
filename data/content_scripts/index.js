@@ -1,10 +1,7 @@
 (async () => {
     'use strict'
     // CONSIDER Adding bubble on mouseOver on links
-    // CONSIDER Changing the createPopup, and showPopup to createBubble, showBubble 
-    /* CONSIDER Changing the with of the bubble
-     ** after changing the width in css, also change the width of bubbleWidth in showBubble()
-     */
+
     class Lookup {
         async _constructor() {
             // this.sources = {};
@@ -15,28 +12,24 @@
             if (!this.isCurrentWebsiteIsAllowed()) return;
             this.body = document.body;
             this.html = document.documentElement;
-            this.popup = document.createElement('div');
-            this.popupSelect = document.createElement('select');
-            this.popup.classList.add('lookup-popup');
-            this.popupSelect.classList.add('lookup-popup-select');
-            this.popupSelect.classList.add('lookup-custom-select');
+            this.bubble = document.createElement('div');
+            this.bubbleSelect = document.createElement('select');
+            this.bubble.classList.add('lookup-bubble');
+            this.bubbleSelect.classList.add('lookup-bubble-select');
             this.isAdded = false;
             this.selectedText = "";
             this.selectedSource;
-            // appending "source-" because StackOverflow has the popup class, so won't work there
-
             this.run();
         }
 
         run() {
-            this.createFixedPositionElement();
             this.addKeyupListenerToBody();
             this.addMouseupListenerToBody();
         }
 
-        createPopup() {
-            this.popupSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
-            this.popup.appendChild(this.popupSelect);
+        createBubble() {
+            this.bubbleSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
+            this.bubble.appendChild(this.bubbleSelect);
         }
 
         isTriggerKeyPressed(mouseupEvent) {
@@ -68,13 +61,6 @@
             return allowed;
         }
 
-        // this element will be used for black background
-        createFixedPositionElement() {
-            this.fixedPositionElement = document.createElement('div');
-            this.fixedPositionElement.classList.add('create-fixed-Position-element');
-            this.body.appendChild(this.fixedPositionElement);
-        }
-
 
         getSelectedText() {
             // this.selectedText = this.selection.toString().replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, ' ').trim();
@@ -93,22 +79,22 @@
             }
         }
 
-        removePopup() {
+        removeBubble() {
             if (this.isAdded) {
-                if (this.body.removeChild(this.popup)) { this.isAdded = false; }
+                if (this.body.removeChild(this.bubble)) { this.isAdded = false; }
             }
         }
         isSelectedText(event) {
             // if (!this.selectedText || event.target === this.popup || this.selectedText.includes(' ')) {
             //     return false;
             // }
-            if (!this.selectedText.trim() || event.target === this.popup) {
+            if (!this.selectedText.trim() || event.target === this.bubble) {
                 return false;
             }
             return true;
         }
         sourcesOptionsForSelect() {
-            let options = '<option selected disabled>Choose Source</option>';
+            let options = '<option selected disabled></option>';
             this.localStorageData.sources.forEach(function(source) {
                 if (!source.isHidden) {
                     options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
@@ -116,58 +102,58 @@
             });
             return options;
         }
-        showPopup(event) {
+        showBubble(event) {
             // unset some of the styles that was set in the narrow width to center the popup
-            this.popup.style.marginLeft = "unset";
-            this.popup.style.position = "absolute";
+            this.bubble.style.marginLeft = "unset";
+            this.bubble.style.position = "absolute";
 
             let offsetX = 15;
             let offsetY = 10;
 
             // this width and height represent the width and height defined in the index.css
-            let popupWidth = 182;
-            let popupHeight = 30;
+            let bubbleWidth = 32;
+            let bubbleHeight = 30;
             let scrollWidthX = window.innerHeight - document.documentElement.clientHeight;
             let scrollWidthY = window.innerWidth - document.documentElement.clientWidth;
 
-            this.popup.style.top = `${event.pageY + offsetY}px`;
-            this.popup.style.left = `${event.pageX + offsetX}px`;
+            this.bubble.style.top = `${event.pageY + offsetY}px`;
+            this.bubble.style.left = `${event.pageX + offsetX}px`;
 
-            if ((event.x + popupWidth + offsetX + scrollWidthX) >= window.innerWidth) {
-                this.popup.style.left = `${event.pageX - popupWidth - offsetX}px`;
+            if ((event.x + bubbleWidth + offsetX + scrollWidthX) >= window.innerWidth) {
+                this.bubble.style.left = `${event.pageX - bubbleWidth - offsetX}px`;
             }
 
-            if (event.y + popupHeight + offsetY + scrollWidthY >= window.innerHeight) {
-                this.popup.style.top = `${event.pageY - popupHeight - offsetY}px`;
+            if (event.y + bubbleHeight + offsetY + scrollWidthY >= window.innerHeight) {
+                this.bubble.style.top = `${event.pageY - bubbleHeight - offsetY}px`;
             }
 
-            if ((event.x + popupWidth + offsetX + scrollWidthX) >= window.innerWidth &&
-                (event.x - popupWidth - scrollWidthX <= 0)) {
-                // center the popup
-                this.popup.style.top = `${event.y + offsetY}px`;
-                this.popup.style.left = "50%";
+            if ((event.x + bubbleWidth + offsetX + scrollWidthX) >= window.innerWidth &&
+                (event.x - bubbleWidth - scrollWidthX <= 0)) {
+                // center the bubble
+                this.bubble.style.top = `${event.y + offsetY}px`;
+                this.bubble.style.left = "50%";
                 // unset the below 2 styles at top
-                this.popup.style.position = "fixed";
-                this.popup.style.marginLeft = `-${popupWidth / 2}px`; // -91px
+                this.bubble.style.position = "fixed";
+                this.bubble.style.marginLeft = `-${bubbleWidth / 2}px`;
 
-                if (event.y + popupHeight + offsetY + scrollWidthY >= window.innerHeight) {
-                    this.popup.style.top = `${event.y - popupHeight - offsetY}px`;
+                if (event.y + bubbleHeight + offsetY + scrollWidthY >= window.innerHeight) {
+                    this.bubble.style.top = `${event.y - bubbleHeight - offsetY}px`;
                 }
 
             }
 
 
-            if (this.body.appendChild(this.popup)) { this.isAdded = true; }
+            if (this.body.appendChild(this.bubble)) { this.isAdded = true; }
         }
         showChooseSourceOptions() {
             return (this.localStorageData.showChooseSourceOptions == 'yes' ? true : false);
         }
 
 
-        createWindowPopup(event) {
+        createLookupPopupWindow(event) {
             let url;
             if (this.showChooseSourceOptions()) {
-                this.selectedSource = this.popupSelect.options[this.popupSelect.selectedIndex];
+                this.selectedSource = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
                 url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
             } else {
@@ -175,7 +161,7 @@
                 url = lookupUtility.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
             }
             chrome.runtime.sendMessage({
-                method: 'open-lookup-popup',
+                method: 'open-lookup-popup-window',
                 // url: encodeURIComponent(url)
                 url: url,
                 query: this.selectedText.trim()
@@ -185,31 +171,31 @@
         addMouseupListenerToBody() {
             document.body.addEventListener("mouseup", (mouseupEvent) => {
 
-                if (mouseupEvent.target.classList.contains('lookup-popup-select') ||
-                    mouseupEvent.target.closest(".lookup-popup-select")) { return; }
+                if (mouseupEvent.target.classList.contains('lookup-bubble-select') ||
+                    mouseupEvent.target.closest(".lookup-bubble-select")) { return; }
 
                 setTimeout(() => {
                     this.getSelectedText();
-                    this.removePopup();
+                    this.removeBubble();
                     // if triggerKey is not pressed don't execute rest of the code
                     if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
 
 
-                    // if no text is selected or clicked element is popup, don't execute the rest of the code
+                    // if no text is selected or clicked element is bubble, don't execute the rest of the code
                     if (!this.isSelectedText(mouseupEvent)) { return; }
 
                     if (!this.showChooseSourceOptions()) {
-                        this.createWindowPopup(mouseupEvent);
+                        this.createLookupPopupWindow(mouseupEvent);
                         return;
                     }
 
-                    this.createPopup();
-                    this.showPopup(mouseupEvent);
-                    this.popupSelect.onchange = (evt) => {
-                        this.removePopup();
+                    this.createBubble();
+                    this.showBubble(mouseupEvent);
+                    this.bubbleSelect.onchange = (evt) => {
+                        this.removeBubble();
                         evt.stopPropagation();
                         evt.preventDefault();
-                        this.createWindowPopup(mouseupEvent);
+                        this.createLookupPopupWindow(mouseupEvent);
                     };
                 });
             });
@@ -218,7 +204,7 @@
         addKeyupListenerToBody() {
             document.body.addEventListener('keyup', e => {
                 if (e.code === 'Escape') {
-                    this.removePopup();
+                    this.removeBubble();
 
                 }
             });

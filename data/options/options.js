@@ -463,10 +463,6 @@
 
 
         isObjEmpty(obj) {
-            // if (Object.entries(obj).length === 0 && obj.constructor === Object) {
-            //   return true;
-            // }
-            // return false;
             return (Object.entries(obj).length === 0 && obj.constructor === Object) ? true : false
         }
 
