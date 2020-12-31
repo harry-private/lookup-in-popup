@@ -100,10 +100,11 @@ let lookupPopupWindowRun = async (res) => {
                 let selectedSource = this.select.options[this.select.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;
                 let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+
+                location.href = url;
+                // return;
                 chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup-window',
-                    // url: encodeURIComponent(url)
-                    url,
+                    method: 'update_opened_lookup_popup_window_data',
                     query
                 });
             }
@@ -112,10 +113,8 @@ let lookupPopupWindowRun = async (res) => {
         querySubmitted() {
             if (!this.navBar) { return; }
 
-            console.log('this.form: ', this.form);
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
-                console.log("lkj")
                 let query = this.input.value.trim();
 
                 let selectedSource = this.select.options[this.select.selectedIndex];
@@ -124,10 +123,10 @@ let lookupPopupWindowRun = async (res) => {
                     selectedSourceUrl = this.selectedSource.dataset.url;
                 }
                 let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                location.href = url;
+                // return;
                 chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup-window',
-                    // url: encodeURIComponent(url)
-                    url,
+                    method: 'update_opened_lookup_popup_window_data',
                     query
                 });
             });

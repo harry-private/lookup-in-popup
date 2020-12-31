@@ -113,6 +113,8 @@
                 console.log("sender", sender);
                 if (request.method === 'open-lookup-popup-window') {
                     this.openLookupPopupWindow(request.url, request.query);
+                } else if (request.method === 'update_opened_lookup_popup_window_data') {
+                    this.updateOpenedLookupPopupWindowData(request.query, sender)
                 } else if (request.method === 'close-lookup-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
@@ -151,6 +153,10 @@
                 });
         }
 
+        updateOpenedLookupPopupWindowData(query, sender) {
+            this.openedLookupPopupWindows[sender.tab.windowId]["query"] = query;
+
+        }
         onWindowRemoved() {
             chrome.windows.onRemoved.addListener((windowId) => {
                 delete this.openedLookupPopupWindows[windowId];
