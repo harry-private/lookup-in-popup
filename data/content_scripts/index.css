@@ -42,6 +42,7 @@
     color: #000000 !important;
     cursor: pointer !important;
     background-color: #ffffff !important;
-
+    background-repeat: no-repeat;
+    background-position: calc(100% - 5px) center !important;
 
 }

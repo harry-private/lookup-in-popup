@@ -52,11 +52,9 @@
       "matches": [
         "<all_urls>"
       ],
+      "run_at": "document_start",
       "js": [
-        "data/content_scripts/index.js"
-      ],
-      "css": [
-        "data/content_scripts/index.css"
+        "data/internal_libs/lookup_utility.js"
       ],
       "all_frames": true
     },
@@ -66,13 +64,24 @@
       ],
       "run_at": "document_start",
       "js": [
-        "data/internal_libs/lookup_utility.js",
         "data/content_scripts/lookup_popup_window.js"
       ],
       "css": [
         "data/content_scripts/lookup_popup_window.css"
       ],
       "all_frames": false
+    },
+    {
+      "matches": [
+        "<all_urls>"
+      ],
+      "js": [
+        "data/content_scripts/index.js"
+      ],
+      "css": [
+        "data/content_scripts/index.css"
+      ],
+      "all_frames": true
     }
   ],
   "commands": {

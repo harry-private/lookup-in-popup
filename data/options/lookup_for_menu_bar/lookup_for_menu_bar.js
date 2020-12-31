@@ -63,13 +63,10 @@
         }
         querySubmitted() {
             if (!this.navBar) { return; }
-            let queryOld = this.input.value.trim();
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
                 let query = this.input.value.trim();
-                if (query == "" || query === queryOld) { return; }
-
                 let selectedSource = this.select.options[this.select.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;
                 if (!selectedSourceUrl) {
