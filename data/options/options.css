@@ -121,7 +121,7 @@ select:focus {
 
 .main-settings-segment {
     background: #ffffff;
-    /* flex-grow: 1; */
+    /* flex: 1; */
     min-width: 300px;
     border: 1px solid ccc;
     border-radius: 8px;

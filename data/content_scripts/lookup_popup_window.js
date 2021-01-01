@@ -68,8 +68,9 @@ let lookupPopupWindowRun = async (res) => {
                       <div class="lookup-popup-window-menu-bar-form-container">
                           <form class="lookup-popup-window-menu-bar-form"  action="" title="Type your query and press Enter">
                               <input class="lookup-popup-window-menu-bar-input" placeholder="Type your query and press Enter" value="${this.res.query}" autofocus>
+                              <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
+                              <button class="lookup-popup-window-menu-bar-submit"></button>
                           </form>
-                          <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
                       </div>
                     </div>
                 `
@@ -78,7 +79,6 @@ let lookupPopupWindowRun = async (res) => {
             this.select = this.navBar.querySelector('.lookup-popup-window-menu-bar-select');
             this.form = this.navBar.querySelector('.lookup-popup-window-menu-bar-form');
             this.input = this.navBar.querySelector('.lookup-popup-window-menu-bar-input');
-            this.select.addEventListener('change', this.sourceChanged());
             this.body.appendChild(this.navBar);
 
         }
@@ -92,30 +92,14 @@ let lookupPopupWindowRun = async (res) => {
             return options;
         }
 
-        sourceChanged(e) {
-            return () => {
-                if (!this.navBar) { return; }
-                let query = this.input.value.trim();
-                if (!query) { return; }
-                let selectedSource = this.select.options[this.select.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
 
-                location.href = url;
-                // return;
-                chrome.runtime.sendMessage({
-                    method: 'update_opened_lookup_popup_window_data',
-                    query
-                });
-            }
-
-        }
         querySubmitted() {
             if (!this.navBar) { return; }
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
                 let query = this.input.value.trim();
+                if (query == "") { return; }
 
                 let selectedSource = this.select.options[this.select.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;

@@ -32,41 +32,26 @@
               <div class="formContainer">
                 <form class="form" title="Type your query and press Enter">
                   <input class="input" placeholder="Type your query and press Enter" autofocus>
+                  <select class="select">${this.sourcesOptionsForSelect()}</select>
+                  <button class="submit"></button>
                 </form>
-                <select class="select">${this.sourcesOptionsForSelect()}</select>
               </div>
             `);
             this.navBar.classList.add("navbar");
             this.select = this.navBar.querySelector('.select');
             this.form = this.navBar.querySelector('.form');
             this.input = this.navBar.querySelector('.input');
-            this.select.addEventListener('change', this.sourceChanged());
             this.body.appendChild(this.navBar);
         }
 
-        sourceChanged(e) {
-            return () => {
-                if (!this.navBar) { return; }
-                let query = this.input.value.trim();
-                if (!query) { return; }
-                let selectedSource = this.select.options[this.select.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
-                chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup-window',
-                    // url: encodeURIComponent(url)
-                    url,
-                    query
-                });
-            }
 
-        }
         querySubmitted() {
             if (!this.navBar) { return; }
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
                 let query = this.input.value.trim();
+                if (query == "") { return; }
                 let selectedSource = this.select.options[this.select.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;
                 if (!selectedSourceUrl) {

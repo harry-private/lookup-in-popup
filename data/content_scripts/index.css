@@ -22,15 +22,16 @@
 }
 
 .lookup-bubble-select {
-    padding: 0 !important;
+    padding: 16px !important;
+    width: 0 !important;
     transition: unset !important;
-    background-size: unset !important;
+    background-size: 20px !important;
     z-index: 999999999 !important;
     background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAKQSURBVEhLrZU/aBRBGMX3Ei1EG+0UC4WgcsL927vbPTk4G0UNYiEHFqbRaKMoiBHU4oIpkqAgkjSiYicEURQFEaNgQC1sxCYiITb+QxAEMY3I+XvLzrFedueCyQcvO/N9731vZnbn4hCpRqPRxTMKa8TwYxHw9KdWqy0TSKaAUywWN4NLruu+LhQKs2CG8XNyA+l0eo049Xq92+hsaBlIpKDJKJij4Qsan83n8/vBAcYj5N5R+w76xF2ISWAQbtmhwYNSqfSNBjXN44LaUThNTM9r3snEnKeaX0T8w3YEpIMjhLtdJuyqV/N2XhSqO6ymB1ETg22ZTGZlHDGKUDMIvmgefY/tMAaXwVNWpLiuXBzZQHXf91fA/cnC9tj4qjkQ37D6QzyHMDpoExiIA/cxGLfxVZPBB7ATXONst9oEBqFuDIOHNr5qIs6yg92Qr2KQswkMxBEf7T0bXzUZvOQsT/EcQHTcJhD0hYkD9xWaYRtfNX12ZyBPl8vl9RLpBXYSwVtH8z/svNSJ61Sr1dWQfyMyt/YZWBsUIyGBuTfUb4NJjW2XrXXRWEmfLk8ul8vKiF09Iaffo8PkT5DbJZ6Cxqep/eLZz8VcRSr5HsjAnCmiczJRQ45rI833kTvJ+BjjLdlsdgPzW4znMJzC4CPcTdIqEg00iLy4vYhmaPSZ8QS4AIZpOklOF+sRjY+AT+Tvwn1P7gbS4Gck0UAwJkQ3DXrBFXCfBndoPsTYU5H5cj6EHuZf2V3T87wmuQlK80z+MWglQ2JcRBah3d5Uc4wSTWINFgLz7tTUZvLfBoKaECmbyaIMhKBJgklQX6yBEGfi+57+640viYHQblKpVGTwdskMhNCkix2McT+mXNfd8RehSboUo9ROqgAAAABJRU5ErkJggg==') !important;
-    width: 32px !important;
     height: 30px !important;
     font-size: 15px !important;
-    border: 1.5px solid #ccc !important;
+    border: none !important;
+    border-color: rgb(29 27 27 / 29%) !important;
     border-radius: 25px !important;
     display: block !important;
     box-shadow: 0 10px 6px -6px #777 !important;
@@ -39,10 +40,11 @@
     -moz-appearance: none !important;
     outline: none !important;
     margin: 0 !important;
-    color: #000000 !important;
     cursor: pointer !important;
-    background-color: #ffffff !important;
     background-repeat: no-repeat;
-    background-position: calc(100% - 5px) center !important;
+    /* background-position: calc(100% - 5px) center !important; */
+    background-position-x: 50% !important;
+    background-position-y: 50% !important;
+
 
 }
