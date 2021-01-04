@@ -71,13 +71,14 @@
 
 
         getSelectedText() {
+            this.selectedText = "";
             // this.selectedText = this.selection.toString().replace(/[\.\*\?;!()\+,\[:\]<>^_`\[\]{}~\\\/\"\'=]/g, ' ').trim();
             // this.selectedText = this.selection.toString();
             let activeEl = document.activeElement;
             let activeElTagName = activeEl ? activeEl.tagName.toLowerCase() : null;
             if (
                 (activeElTagName == "textarea") || (activeElTagName == "input" &&
-                    /^(?:text|search|tel|url)$/i.test(activeEl.type)) &&
+                    /^(?:text|search|tel|url|email)$/i.test(activeEl.type)) &&
                 (typeof activeEl.selectionStart == "number")
             ) {
                 this.selectedText = activeEl.value.slice(activeEl.selectionStart, activeEl.selectionEnd);
@@ -178,32 +179,35 @@
 
         addMouseupListenerToBody() {
             document.body.addEventListener("mouseup", (mouseupEvent) => {
-
                 if (mouseupEvent.target.classList.contains('lookup-bubble-select') ||
                     mouseupEvent.target.closest(".lookup-bubble-select")) { return; }
 
-                this.getSelectedText();
-                this.removeBubble();
-                // if triggerKey is not pressed don't execute rest of the code
-                if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
+                // setTimeout is important
+                setTimeout(() => {
 
-
-                // if no text is selected or clicked element is bubble, don't execute the rest of the code
-                if (!this.isSelectedText(mouseupEvent)) { return; }
-
-                if (!this.showChooseSourceOptions()) {
-                    this.createLookupPopupWindow(mouseupEvent);
-                    return;
-                }
-
-                this.createBubble();
-                this.showBubble(mouseupEvent);
-                this.bubbleSelect.onchange = (evt) => {
+                    this.getSelectedText();
                     this.removeBubble();
-                    evt.stopPropagation();
-                    evt.preventDefault();
-                    this.createLookupPopupWindow(mouseupEvent);
-                };
+                    // if triggerKey is not pressed don't execute rest of the code
+                    if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
+
+
+                    // if no text is selected or clicked element is bubble, don't execute the rest of the code
+                    if (!this.isSelectedText(mouseupEvent)) { return; }
+
+                    if (!this.showChooseSourceOptions()) {
+                        this.createLookupPopupWindow(mouseupEvent);
+                        return;
+                    }
+
+                    this.createBubble();
+                    this.showBubble(mouseupEvent);
+                    this.bubbleSelect.onchange = (evt) => {
+                        this.removeBubble();
+                        evt.stopPropagation();
+                        evt.preventDefault();
+                        this.createLookupPopupWindow(mouseupEvent);
+                    };
+                });
             });
         }
 
