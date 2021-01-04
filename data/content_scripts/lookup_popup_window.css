@@ -21,7 +21,6 @@
     box-sizing: border-box !important;
     margin: 0 !important;
     width: 100% !important;
-    border: 1px solid #dcdcdc !important;
 
 }
 
@@ -33,13 +32,21 @@
 
 }
 
+.lookup-popup-window-menu-bar-toggle span {
+    transition: transform 0.15s cubic-bezier(0.42, 0, 1, 0.4);
+    display: inline-block;
+}
 
 .lookup-popup-window-menu-bar-toggle {
+    background: #eee !important;
     -webkit-appearance: button !important;
     font-weight: 900 !important;
     padding: 5px !important;
     border: 0 !important;
-    border-right: 1px solid #ccc !important;
+    /* border-right: 1px solid #ccc !important; */
+    border: 1px solid #dcdcdc !important;
+    border-radius: 0 !important;
+
 }
 
 .lookup-popup-window-menu-bar-toggle:hover {
@@ -59,6 +66,7 @@
 }
 
 .lookup-popup-window-menu-bar-collapse {
+    border: 1px solid #dcdcdc !important;
     padding: 5px !important;
     display: flex !important;
     background: #eee !important;
@@ -224,6 +232,8 @@
     cursor: text !important;
 }
 
+
+
 @media (max-width: 400px) {
 
 
@@ -254,4 +264,11 @@
     .lookup-popup-window-menu-bar-select {
         flex: 1 !important;
     }
+}
+
+
+/* It should be at the bottom */
+
+.hide {
+    display: none !important;
 }

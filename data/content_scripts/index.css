@@ -22,6 +22,7 @@
 }
 
 .lookup-bubble-select {
+    box-sizing: border-box !important;
     padding: 16px !important;
     width: 0 !important;
     transition: unset !important;
@@ -45,6 +46,5 @@
     /* background-position: calc(100% - 5px) center !important; */
     background-position-x: 50% !important;
     background-position-y: 50% !important;
-
-
+    background-color: #ffffff !important;
 }

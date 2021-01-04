@@ -17,24 +17,39 @@ let lookupPopupWindowRun = async (res) => {
             this.res = res;
             this.localStorageData = await lookupUtility.localStorageDataPromise();
 
-            this.navBar;
+            this.navbar;
             this.select = null;
             this.from = null;
             this.input = null;
+            this.toggleMenuBtn = null;
+            this.isMenuHidden = false;
+            this.backBtn = null;
+            this.forwardBtn = null;
+            this.reloadBtn = null;
             this.run();
 
         }
 
         run() {
             lookupPopupWindow.closeOnEsc();
-            window.addEventListener('DOMContentLoaded', (event) => {
-                this.body = document.body;
-                this.html = document.documentElement;
 
-                this.insertEmptySpace();
-                this.insertNavbar();
-                this.querySubmitted();
+            let observer = new MutationObserver(() => {
+                if (document.body) {
+                    this.body = document.body;
+                    this.html = document.documentElement;
+
+                    this.insertEmptySpace();
+                    this.insertNavbar();
+                    this.querySubmitted();
+                    this.addEventListenerToToggleMenuBtn();
+                    this.addEventListenerToBackBtn();
+                    this.addEventListenerToForwardBtn();
+                    this.addEventListenerToReloadBtn();
+
+                    observer.disconnect();
+                }
             });
+            observer.observe(document.body || document.documentElement, { childList: true });
         }
         closeOnEsc() {
             window.addEventListener('keyup', e => {
@@ -53,11 +68,13 @@ let lookupPopupWindowRun = async (res) => {
             );
         }
         insertNavbar() {
-            this.navBar = document.createElement("div");
+            this.navbar = document.createElement("div");
 
-            this.navBar.insertAdjacentHTML('afterbegin',
+            this.navbar.insertAdjacentHTML('afterbegin',
                 `
-                  <button class="lookup-popup-window-menu-bar-toggle">❮</button>
+                  <button class="lookup-popup-window-menu-bar-toggle">
+                  <span>❮</span>
+                  </button>
                   <!-- ❯ arrow -->
                   <div class="lookup-popup-window-menu-bar-collapse">
                       <div class="lookup-popup-window-menu-bar-extra">
@@ -75,11 +92,27 @@ let lookupPopupWindowRun = async (res) => {
                     </div>
                 `
             );
-            this.navBar.classList.add("lookup-popup-window-menu-bar");
-            this.select = this.navBar.querySelector('.lookup-popup-window-menu-bar-select');
-            this.form = this.navBar.querySelector('.lookup-popup-window-menu-bar-form');
-            this.input = this.navBar.querySelector('.lookup-popup-window-menu-bar-input');
-            this.body.appendChild(this.navBar);
+            this.navbar.classList.add("lookup-popup-window-menu-bar");
+            this.select = this.navbar.querySelector('.lookup-popup-window-menu-bar-select');
+            this.form = this.navbar.querySelector('.lookup-popup-window-menu-bar-form');
+            this.input = this.navbar.querySelector('.lookup-popup-window-menu-bar-input');
+            this.toggleMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-toggle');
+            this.toggleMenuBtnIcon = this.toggleMenuBtn.querySelector('span');
+            this.backBtn = this.navbar.querySelector('.lookup-popup-window-back');
+            this.forwardBtn = this.navbar.querySelector('.lookup-popup-window-forward');
+            this.reloadBtn = this.navbar.querySelector('.lookup-popup-window-reload');
+            this.lookupPopupWindowMenuBarCollapse = this.navbar.querySelector('.lookup-popup-window-menu-bar-collapse');
+
+
+            if (this.res.navbarState == "hidden") {
+                this.isMenuHidden = true;
+                this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
+                this.lookupPopupWindowMenuBarCollapse.classList.add('hide');
+            }
+
+
+            this.body.appendChild(this.navbar);
+
 
         }
         sourcesOptionsForSelect() {
@@ -94,7 +127,7 @@ let lookupPopupWindowRun = async (res) => {
 
 
         querySubmitted() {
-            if (!this.navBar) { return; }
+            if (!this.navbar) { return; }
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
@@ -111,8 +144,48 @@ let lookupPopupWindowRun = async (res) => {
                 // return;
                 chrome.runtime.sendMessage({
                     method: 'update_opened_lookup_popup_window_data',
-                    query
+                    changeData: ['query', query]
                 });
+            });
+        }
+
+        addEventListenerToToggleMenuBtn() {
+            this.toggleMenuBtn.addEventListener('click', (e) => {
+                if (!this.isMenuHidden) {
+                    this.isMenuHidden = true;
+                    this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
+                    console.log(this.toggleMenuBtnIcon);
+                    this.lookupPopupWindowMenuBarCollapse.classList.add('hide');
+                    chrome.runtime.sendMessage({
+                        method: 'update_opened_lookup_popup_window_data',
+                        changeData: ['navbarState', "hidden"]
+                    });
+                } else {
+                    this.isMenuHidden = false;
+                    this.toggleMenuBtnIcon.style.transform = 'rotate(0deg)';
+                    this.lookupPopupWindowMenuBarCollapse.classList.remove('hide');
+                    chrome.runtime.sendMessage({
+                        method: 'update_opened_lookup_popup_window_data',
+                        changeData: ['navbarState', "visible"]
+                    });
+                }
+            });
+
+        }
+
+        addEventListenerToBackBtn() {
+            this.backBtn.addEventListener("click", (e) => {
+                window.history.back();
+            });
+        }
+        addEventListenerToForwardBtn() {
+            this.forwardBtn.addEventListener("click", (e) => {
+                window.history.forward();
+            });
+        }
+        addEventListenerToReloadBtn() {
+            this.reloadBtn.addEventListener("click", (e) => {
+                location.reload();
             });
         }
     }

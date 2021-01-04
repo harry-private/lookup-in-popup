@@ -76,7 +76,14 @@
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
             this.run();
-            // {[WindId(number):{query:""}],[WindId(number):{query:""}]}
+
+            /*[
+                    [WindId = {
+                            query: "",
+                            navbarState: "visible|hidden|removed"
+                        }]
+                ]*/
+
             this.openedLookupPopupWindows = {};
 
         }
@@ -114,7 +121,7 @@
                 if (request.method === 'open-lookup-popup-window') {
                     this.openLookupPopupWindow(request.url, request.query);
                 } else if (request.method === 'update_opened_lookup_popup_window_data') {
-                    this.updateOpenedLookupPopupWindowData(request.query, sender)
+                    this.updateOpenedLookupPopupWindowData(request.changeData, sender)
                 } else if (request.method === 'close-lookup-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
@@ -140,7 +147,8 @@
                 (win) => {
                     console.log(win);
                     this.openedLookupPopupWindows[win.tabs[0].windowId] = {
-                        "query": query
+                        query: query,
+                        navbarState: "visible"
                     }
                     if (/Firefox/.test(navigator.userAgent)) {
                         chrome.windows.update(win.id, {
@@ -153,9 +161,14 @@
                 });
         }
 
-        updateOpenedLookupPopupWindowData(query, sender) {
-            this.openedLookupPopupWindows[sender.tab.windowId]["query"] = query;
+        updateOpenedLookupPopupWindowData(changeData, sender) {
+            if (changeData[0] == 'query') {
+                this.openedLookupPopupWindows[sender.tab.windowId]["query"] = changeData[1];
+            }
+            if (changeData[0] == 'navbarState') {
+                this.openedLookupPopupWindows[sender.tab.windowId]["navbarState"] = changeData[1];
 
+            }
         }
         onWindowRemoved() {
             chrome.windows.onRemoved.addListener((windowId) => {

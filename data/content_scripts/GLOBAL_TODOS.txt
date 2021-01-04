@@ -1,9 +1,14 @@
-// TODO Change "Choose Source Options" to bubble or something
+// FIX Sometimes bubble doesn't hide when selections is discarded by clicking somewhere on
+       the page.
 
-// TODO Hide bubble after some time when no action is made
+// TODO Hide bubble after some time when no action is made.
+
+// TODO Remove unnecessary comments, especially form css files.
+
+// TODO Add better description for the extension in both manifest.json, and package.json.
 
 // CONSIDER Adding an option where a window mode (incognito, or normal) can be set for all,
-            or for specific site/source
+            or for specific site/source.
 
 // CONSIDER Adding context menu item for page, where current page(website) can be open
             in popup window

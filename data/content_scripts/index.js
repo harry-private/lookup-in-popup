@@ -10,21 +10,29 @@
             if (this.isGloballyDisabled()) return;
 
             if (!this.isCurrentWebsiteIsAllowed()) return;
-            this.body = document.body;
-            this.html = document.documentElement;
-            this.bubble = document.createElement('div');
-            this.bubbleSelect = document.createElement('select');
-            this.bubble.classList.add('lookup-bubble');
-            this.bubbleSelect.classList.add('lookup-bubble-select');
-            this.isAdded = false;
-            this.selectedText = "";
-            this.selectedSource;
-            this.run();
+
+            let observer = new MutationObserver(() => {
+                if (document.body) {
+                    this.body = document.body;
+                    this.html = document.documentElement;
+                    this.bubble = document.createElement('div');
+                    this.bubbleSelect = document.createElement('select');
+                    this.bubble.classList.add('lookup-bubble');
+                    this.bubbleSelect.classList.add('lookup-bubble-select');
+                    this.isAdded = false;
+                    this.selectedText = "";
+                    this.selectedSource;
+                    this.run();
+
+                    observer.disconnect();
+                }
+            });
+            observer.observe(document.body || document.documentElement, { childList: true });
         }
 
         run() {
             this.addKeyupListenerToBody();
-            this.addMouseupListenerToBody();
+            this.addMouseupListenerToBody(); // main
         }
 
         createBubble() {
@@ -174,30 +182,28 @@
                 if (mouseupEvent.target.classList.contains('lookup-bubble-select') ||
                     mouseupEvent.target.closest(".lookup-bubble-select")) { return; }
 
-                setTimeout(() => {
-                    this.getSelectedText();
+                this.getSelectedText();
+                this.removeBubble();
+                // if triggerKey is not pressed don't execute rest of the code
+                if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
+
+
+                // if no text is selected or clicked element is bubble, don't execute the rest of the code
+                if (!this.isSelectedText(mouseupEvent)) { return; }
+
+                if (!this.showChooseSourceOptions()) {
+                    this.createLookupPopupWindow(mouseupEvent);
+                    return;
+                }
+
+                this.createBubble();
+                this.showBubble(mouseupEvent);
+                this.bubbleSelect.onchange = (evt) => {
                     this.removeBubble();
-                    // if triggerKey is not pressed don't execute rest of the code
-                    if (!this.isTriggerKeyPressed(mouseupEvent)) { return; }
-
-
-                    // if no text is selected or clicked element is bubble, don't execute the rest of the code
-                    if (!this.isSelectedText(mouseupEvent)) { return; }
-
-                    if (!this.showChooseSourceOptions()) {
-                        this.createLookupPopupWindow(mouseupEvent);
-                        return;
-                    }
-
-                    this.createBubble();
-                    this.showBubble(mouseupEvent);
-                    this.bubbleSelect.onchange = (evt) => {
-                        this.removeBubble();
-                        evt.stopPropagation();
-                        evt.preventDefault();
-                        this.createLookupPopupWindow(mouseupEvent);
-                    };
-                });
+                    evt.stopPropagation();
+                    evt.preventDefault();
+                    this.createLookupPopupWindow(mouseupEvent);
+                };
             });
         }
 
