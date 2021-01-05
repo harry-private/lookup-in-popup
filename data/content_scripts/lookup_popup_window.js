@@ -32,7 +32,7 @@ let lookupPopupWindowRun = async (res) => {
 
         run() {
             lookupPopupWindow.closeOnEsc();
-
+            if (this.res.navbarState == "removed") { return }
             let observer = new MutationObserver(() => {
                 if (document.body) {
                     this.body = document.body;
@@ -42,6 +42,7 @@ let lookupPopupWindowRun = async (res) => {
                     this.insertNavbar();
                     this.querySubmitted();
                     this.addEventListenerToToggleMenuBtn();
+                    this.addEventListenerToRemoveMenuBtn();
                     this.addEventListenerToBackBtn();
                     this.addEventListenerToForwardBtn();
                     this.addEventListenerToReloadBtn();
@@ -90,6 +91,9 @@ let lookupPopupWindowRun = async (res) => {
                           </form>
                       </div>
                     </div>
+                    <button class="lookup-popup-window-menu-bar-remove">
+                    <span>✖</span>
+                    </button>
                 `
             );
             this.navbar.classList.add("lookup-popup-window-menu-bar");
@@ -97,6 +101,7 @@ let lookupPopupWindowRun = async (res) => {
             this.form = this.navbar.querySelector('.lookup-popup-window-menu-bar-form');
             this.input = this.navbar.querySelector('.lookup-popup-window-menu-bar-input');
             this.toggleMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-toggle');
+            this.removeMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-remove');
             this.toggleMenuBtnIcon = this.toggleMenuBtn.querySelector('span');
             this.backBtn = this.navbar.querySelector('.lookup-popup-window-back');
             this.forwardBtn = this.navbar.querySelector('.lookup-popup-window-forward');
@@ -156,6 +161,7 @@ let lookupPopupWindowRun = async (res) => {
                     this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
                     console.log(this.toggleMenuBtnIcon);
                     this.lookupPopupWindowMenuBarCollapse.classList.add('hide');
+                    this.removeMenuBtn.classList.add('hide');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',
                         changeData: ['navbarState', "hidden"]
@@ -164,6 +170,7 @@ let lookupPopupWindowRun = async (res) => {
                     this.isMenuHidden = false;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(0deg)';
                     this.lookupPopupWindowMenuBarCollapse.classList.remove('hide');
+                    this.removeMenuBtn.classList.remove('hide');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',
                         changeData: ['navbarState', "visible"]
@@ -171,6 +178,16 @@ let lookupPopupWindowRun = async (res) => {
                 }
             });
 
+        }
+        addEventListenerToRemoveMenuBtn() {
+            this.removeMenuBtn.addEventListener('click', (e) => {
+                this.navbar.remove();
+                chrome.runtime.sendMessage({
+                    method: 'update_opened_lookup_popup_window_data',
+                    changeData: ['navbarState', "removed"]
+                });
+
+            });
         }
 
         addEventListenerToBackBtn() {

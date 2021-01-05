@@ -32,12 +32,18 @@
 
 }
 
-.lookup-popup-window-menu-bar-toggle span {
-    transition: transform 0.15s cubic-bezier(0.42, 0, 1, 0.4);
+.lookup-popup-window-menu-bar-toggle span,
+.lookup-popup-window-menu-bar-remove span {
+    color: inherit !important;
+    /* this won't affect the remove span */
+    transition: transform 0.25s cubic-bezier(0.42, 0, 1, 0.4);
     display: inline-block;
 }
 
-.lookup-popup-window-menu-bar-toggle {
+
+
+.lookup-popup-window-menu-bar-toggle,
+.lookup-popup-window-menu-bar-remove {
     background: #eee !important;
     -webkit-appearance: button !important;
     font-weight: 900 !important;
@@ -58,7 +64,22 @@
 
 }
 
-.lookup-popup-window-menu-bar-toggle:focus {
+.lookup-popup-window-menu-bar-remove:hover {
+    color: #fff8f8 !important;
+    background-color: red !important;
+    border-radius: unset !important;
+    padding: 5px !important;
+    cursor: pointer;
+
+}
+
+/* .lookup-popup-window-menu-bar-toggle:hover span,
+.lookup-popup-window-menu-bar-remove:hover span {
+    transform: scale(1.5) !important;
+} */
+
+.lookup-popup-window-menu-bar-toggle:focus,
+.lookup-popup-window-menu-bar-remove:focus {
     /* border: none !important; */
     outline: none !important;
     text-transform: none !important;

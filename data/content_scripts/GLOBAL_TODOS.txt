@@ -1,6 +1,3 @@
-// FIX Sometimes bubble doesn't hide when selections is discarded by clicking somewhere on
-       the page.
-
 // TODO Hide bubble after some time when no action is made.
 
 // TODO Remove unnecessary comments, especially form css files.
