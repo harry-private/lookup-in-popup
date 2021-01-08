@@ -1,3 +1,10 @@
+// TODO Change "lookup_popup_window.js|css" to "popup_window.js|css",
+        Change css selector names in "popup_window.css", from "lookup-popup-window-*" to "popup-window"
+        Change "index.js|css" to "lookup-in-pop.js|css",
+        Change "lookup_for_menu_bar.js|css"" to "lookup_in_pop_for_menu_bar.js|css",
+        Change javascript classes from "lookup" to "lookupInPopup" in "lookup_in_popup.js", and ""   
+
+
 // TODO Hide bubble after some time when no action is made.
 
 // TODO Remove unnecessary comments, especially form css files.

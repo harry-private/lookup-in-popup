@@ -24,15 +24,17 @@
             <div class="header">Add New Source</div>
 
             <div class="second-settings-segment">
-                <!-- <label><strong>Title</strong></label><br> -->
-                <input type="text" class="source-title" placeholder="Title"><br><br>
-                <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
-                <input type="text" class="source-url" placeholder="https://somewebsite/search/%s">
-                <br>
-                <span>*Add <strong>%s</strong> where the query will go</span>
-                <br>
-                <br>
-                <button id="add-new-source-btn">Add Source</button>
+                <form id="add-new-source-form">
+                    <!-- <label><strong>Title</strong></label><br> -->
+                    <input type="text" name="title" class="source-title" placeholder="Title"><br><br>
+                    <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
+                    <input type="text" name="url" class="source-url" placeholder="https://somewebsite/search/%s">
+                    <br>
+                    <span>*Add <strong>%s</strong> where the query will go</span>
+                    <br>
+                    <br>
+                    <button>Add Source</button>
+                </form>
             </div>
         </div>
 

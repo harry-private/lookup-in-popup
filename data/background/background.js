@@ -75,15 +75,20 @@
 
         async _constructor() {
             this.localStorageData = await lookupUtility.localStorageDataPromise();
+
+            this.tempSettings = {
+                popupWindowMultipleAllowed: false,
+                popupWindowState: "", // maximized, or fullscreen (these two cannot be combined with 'left', 'top', 'width', or 'height')
+                popupWindowHeight: "", // in px. empty means default
+                popupWindowWidth: "", // in px. empty means default
+                popupWindowTop: "", // in px. empty means default
+                popupWindowLeft: "", // in px. empty means default
+
+            }
+
             this.run();
 
-            /*[
-                    [WindId = {
-                            query: "",
-                            navbarState: "visible|hidden|removed"
-                        }]
-                ]*/
-
+            /*[[WindId = { windowId: 6, tabId: 8, query: "", navbarState: "visible|hidden|removed" }]]*/
             this.openedLookupPopupWindows = {};
 
         }
@@ -117,11 +122,10 @@
 
         onMessages() {
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-                console.log("sender", sender);
                 if (request.method === 'open-lookup-popup-window') {
                     this.openLookupPopupWindow(request.url, request.query);
                 } else if (request.method === 'update_opened_lookup_popup_window_data') {
-                    this.updateOpenedLookupPopupWindowData(request.changeData, sender)
+                    this.updateOpenedLookupPopupWindowData(request.changeData, sender.tab.windowId)
                 } else if (request.method === 'close-lookup-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
@@ -134,39 +138,93 @@
         }
 
         openLookupPopupWindow(url, query = "") {
-            console.log(this.openedLookupPopupWindows);
-            chrome.windows.create({
-                    // state: "maximized",
-                    height: (window.screen.height),
-                    width: 600,
-                    left: (screen.width / 2) - (600 / 2),
-                    type: "popup",
-                    url: url,
-                    top: 0,
-                },
+            // windowCreateOptions
+
+
+            let windowOptionsObj = this.windowCreateOptions(url);
+
+            if (!this.tempSettings.popupWindowMultipleAllowed) {
+                let openedWindow;
+                if (!lookupUtility.isObjEmpty(this.openedLookupPopupWindows)) {
+                    openedWindow = this.openedLookupPopupWindows[Object.keys(this.openedLookupPopupWindows)[0]];
+                    this.updateOpenedLookupPopupWindowData(['query', query], openedWindow.windowId);
+                    chrome.tabs.update(openedWindow.tabId, { url: url }, () => {});
+                    chrome.windows.update(openedWindow.windowId, { focused: true }, () => {});
+
+                    return;
+                }
+            }
+
+            console.log(windowOptionsObj);
+            chrome.windows.create(
+                windowOptionsObj,
                 (win) => {
-                    console.log(win);
-                    this.openedLookupPopupWindows[win.tabs[0].windowId] = {
+                    this.openedLookupPopupWindows[win.id] = {
+                        windowId: win.tabs[0].windowId,
+                        tabId: win.tabs[0].id,
                         query: query,
                         navbarState: "visible"
                     }
-                    if (/Firefox/.test(navigator.userAgent)) {
-                        chrome.windows.update(win.id, {
-                            // focused: true,
-                            height: (window.screen.height - 30),
-                            top: 0
-                        });
+
+                    // if state is "maximized", or "fullscreen" don't run the firefox specific update
+                    if (!(this.tempSettings.popupWindowState == "maximized") || (this.tempSettings.popupWindowState == "fullscreen")) {
+                        if (/Firefox/.test(navigator.userAgent)) {
+                            chrome.windows.update(win.id, {
+                                // focused: true,
+                                height: windowOptionsObj.height - 30,
+                                top: 0
+                            });
+                        }
                     }
+
 
                 });
         }
 
-        updateOpenedLookupPopupWindowData(changeData, sender) {
+        windowCreateOptions(url) {
+            let windowOptionsObj = {};
+            let defaultWidth = 600;
+            windowOptionsObj.url = url;
+            windowOptionsObj.type = "popup";
+            if ((this.tempSettings.popupWindowState == "maximized") || (this.tempSettings.popupWindowState == "fullscreen")) {
+                windowOptionsObj.state = this.tempSettings.popupWindowState;
+            } else {
+
+                windowOptionsObj.state = "normal";
+
+                if ((this.tempSettings.popupWindowHeight || this.tempSettings.popupWindowHeight.length !== 0) && !isNaN(this.tempSettings.popupWindowHeight)) {
+                    windowOptionsObj.height = parseInt(this.tempSettings.popupWindowHeight);
+                } else {
+                    windowOptionsObj.height = (window.screen.height);
+                }
+
+                if ((this.tempSettings.popupWindowWidth || this.tempSettings.popupWindowWidth.length !== 0) && !isNaN(this.tempSettings.popupWindowWidth)) {
+                    windowOptionsObj.width = parseInt(this.tempSettings.popupWindowWidth);
+                } else {
+                    windowOptionsObj.width = defaultWidth;
+                }
+
+                if ((this.tempSettings.popupWindowTop || this.tempSettings.popupWindowTop.length !== 0) && !isNaN(this.tempSettings.popupWindowTop)) {
+                    windowOptionsObj.top = parseInt(this.tempSettings.popupWindowTop);
+                } else {
+                    windowOptionsObj.top = 0;
+                }
+
+                if ((this.tempSettings.popupWindowLeft || this.tempSettings.popupWindowLeft.length !== 0) && !isNaN(this.tempSettings.popupWindowLeft)) {
+                    windowOptionsObj.left = parseInt(this.tempSettings.popupWindowLeft);
+                } else {
+                    windowOptionsObj.left = (screen.width / 2) - (defaultWidth / 2);
+                }
+            }
+            return windowOptionsObj;
+        }
+
+        updateOpenedLookupPopupWindowData(changeData, windowId) {
             if (changeData[0] == 'query') {
-                this.openedLookupPopupWindows[sender.tab.windowId]["query"] = changeData[1];
+                this.openedLookupPopupWindows[windowId]["query"] = changeData[1];
             }
             if (changeData[0] == 'navbarState') {
-                this.openedLookupPopupWindows[sender.tab.windowId]["navbarState"] = changeData[1];
+                this.openedLookupPopupWindows[windowId]["navbarState"] = changeData[1];
 
             }
         }

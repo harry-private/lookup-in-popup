@@ -181,10 +181,13 @@
         }
 
         addNewSource() {
-            let addNewSourceBtnElem = document.querySelector("#add-new-source-btn");
+            let addNewSourceFormElem = document.querySelector("#add-new-source-form");
+            let addNewSourceFormData = new FormData(addNewSourceFormElem);
+
             let sourceTitle = document.querySelector('.add-new-source .source-title');
             let sourceUrl = document.querySelector('.add-new-source .source-url');
-            addNewSourceBtnElem.addEventListener('click', (e) => {
+            addNewSourceFormElem.addEventListener('submit', (e) => {
+                e.preventDefault();
                 let error = {};
                 // let id = ('_' + Math.random().toString(36).substr(2, 9));
 
@@ -211,7 +214,7 @@
 
                 }
 
-                if (!this.isObjEmpty(error)) {
+                if (!lookupUtility.isObjEmpty(error)) {
                     // console.log(error)
 
                 }
@@ -325,30 +328,31 @@
 
 
 
-            return `
-    <div ${isGoogleTranslate ? 'id="google-translate"' : ''} class="source" style="">
-    <div class="flex-container nowrap" style="justify-content: space-between">
-      <div class="column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
-      <div class="column" style="text-align: right">
-      <span class="source-edit" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
-      <span class="source-hide" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
-      ${(preInstalled ? '' : '<span class="source-remove" style="font-size: 25px; cursor: pointer; margin-right: 10px;" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
-      <span class="source-drag" style="font-size: 25px; cursor: grab" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
-      </div>
-    </div>
-    <div class="source-edited" style="display:none">
-    <br>
-    <!-- <label><strong>Title </strong></label><br> -->
-    <input type="text" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
-    <input type="hidden" class="source-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
-    <!-- <label><strong>URL </strong></label><br> -->
-    <input type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
-    <input type="hidden" class="source-preinstalled" value="${preInstalled}">
-    <input type="hidden" class="source-is-hidden" value="${isHidden}">
-    ${( preInstalled ? fromTo + '<br><br>' : '' )}
-    <button class="source-done">Done</button><br>
-    </div>
-    </div>`;
+            return (`
+                    <div ${isGoogleTranslate ? 'id="google-translate"' : ''} class="source" style="">
+                    <div class="flex-container nowrap" style="justify-content: space-between">
+                      <div class="column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
+                      <div class="column" style="text-align: right">
+                      <span class="source-edit" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
+                      <span class="source-hide" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
+                      ${(preInstalled ? '' : '<span class="source-remove" style="font-size: 25px; cursor: pointer; margin-right: 10px;" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
+                      <span class="source-drag" style="font-size: 25px; cursor: grab" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
+                      </div>
+                    </div>
+                    <div class="source-edited" style="display:none">
+                    <br>
+                    <!-- <label><strong>Title </strong></label><br> -->
+                    <input type="text" data-preinstalled="${preInstalled}" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
+                    <input type="hidden" class="source-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
+                    <!-- <label><strong>URL </strong></label><br> -->
+                    <input type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
+                    <input type="hidden" class="source-preinstalled" value="${preInstalled}">
+                    <input type="hidden" class="source-is-hidden" value="${isHidden}">
+                    ${( preInstalled ? fromTo + '<br><br>' : '' )}
+                    <button class="source-done">Done</button><br>
+                    </div>
+                  </div>
+                  `);
         }
 
         addEventListenerToSourceSideOptions(onJustFirstElement = false) {
@@ -459,11 +463,6 @@
             });
 
             // fromToElem.addEventListener('change', function(e) {alert("You are disgusting!")})
-        }
-
-
-        isObjEmpty(obj) {
-            return (Object.entries(obj).length === 0 && obj.constructor === Object) ? true : false
         }
 
         showFlashMessages(messages = [], BGColor = "rgb(34,187,51)") {

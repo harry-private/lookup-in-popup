@@ -28,11 +28,15 @@ class LookupUtility {
         return (res !== null);
     }
     createSourceUrlForNewWindow(url, query) {
+        let encodedQuery = encodeURIComponent(query);
         if ((url).includes("%s")) {
-            return url.replace("%s", query);
+            return url.replace("%s", encodedQuery);
         } else {
-            return `${url}/?${query}`;
+            return `${url}/?${encodedQuery}`;
         }
+    }
+    isObjEmpty(obj) {
+        return (Object.entries(obj).length === 0 && obj.constructor === Object) ? true : false
     }
 }
 

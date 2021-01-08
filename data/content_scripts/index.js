@@ -1,7 +1,5 @@
 (async () => {
     'use strict'
-    // CONSIDER Adding bubble on mouseOver on links
-
     class Lookup {
         async _constructor() {
             // this.sources = {};

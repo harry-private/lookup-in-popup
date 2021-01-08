@@ -8,7 +8,7 @@ chrome.runtime.sendMessage({
 });
 
 let lookupPopupWindowRun = async (res) => {
-    'use strict'
+    'use strict';
     class LookupPopupWindow {
 
 
@@ -17,7 +17,7 @@ let lookupPopupWindowRun = async (res) => {
             this.res = res;
             this.localStorageData = await lookupUtility.localStorageDataPromise();
 
-            this.navbar;
+            this.navbar = null;
             this.select = null;
             this.from = null;
             this.input = null;
@@ -32,7 +32,9 @@ let lookupPopupWindowRun = async (res) => {
 
         run() {
             lookupPopupWindow.closeOnEsc();
-            if (this.res.navbarState == "removed") { return }
+            // TODO Remove or Show navbar based on user preference. Can change the value from settings
+
+            if (this.res.navbarState == "removed") { return; }
             let observer = new MutationObserver(() => {
                 if (document.body) {
                     this.body = document.body;
@@ -64,7 +66,7 @@ let lookupPopupWindowRun = async (res) => {
         insertEmptySpace() {
             document.body.insertAdjacentHTML('beforeend',
                 `
-            <div class="lookupPopupWindowEmptySpace"></div>
+            <div class="lookup-popup-window-empty-space"></div>
           `
             );
         }
@@ -106,13 +108,14 @@ let lookupPopupWindowRun = async (res) => {
             this.backBtn = this.navbar.querySelector('.lookup-popup-window-back');
             this.forwardBtn = this.navbar.querySelector('.lookup-popup-window-forward');
             this.reloadBtn = this.navbar.querySelector('.lookup-popup-window-reload');
-            this.lookupPopupWindowMenuBarCollapse = this.navbar.querySelector('.lookup-popup-window-menu-bar-collapse');
+            this.menuBarCollapse = this.navbar.querySelector('.lookup-popup-window-menu-bar-collapse');
 
 
             if (this.res.navbarState == "hidden") {
                 this.isMenuHidden = true;
                 this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
-                this.lookupPopupWindowMenuBarCollapse.classList.add('hide');
+                this.menuBarCollapse.classList.add('hide');
+                this.removeMenuBtn.classList.add('hide');
             }
 
 
@@ -124,7 +127,7 @@ let lookupPopupWindowRun = async (res) => {
             let options = '';
             this.localStorageData.sources.forEach(function(source) {
                 if (!source.isHidden) {
-                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`;
                 }
             });
             return options;
@@ -160,7 +163,7 @@ let lookupPopupWindowRun = async (res) => {
                     this.isMenuHidden = true;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
                     console.log(this.toggleMenuBtnIcon);
-                    this.lookupPopupWindowMenuBarCollapse.classList.add('hide');
+                    this.menuBarCollapse.classList.add('hide');
                     this.removeMenuBtn.classList.add('hide');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',
@@ -169,7 +172,7 @@ let lookupPopupWindowRun = async (res) => {
                 } else {
                     this.isMenuHidden = false;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(0deg)';
-                    this.lookupPopupWindowMenuBarCollapse.classList.remove('hide');
+                    this.menuBarCollapse.classList.remove('hide');
                     this.removeMenuBtn.classList.remove('hide');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',

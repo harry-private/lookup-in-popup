@@ -1,6 +1,5 @@
 /* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
 
-/* TODO Improve bubble styling, cross websites */
 .lookup-bubble {
     background: unset !important;
     width: 0 !important;
