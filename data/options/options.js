@@ -1,3 +1,5 @@
+// TODO Check the code, if anything is needed to be changed due to changes I made
+// TODO Instead of hidden inputs use data-*
 (async () => {
 
     class LookupOptions {
@@ -12,9 +14,7 @@
             this.enableDisableGloballyElem = document.querySelector("#enable-disable-globally");
 
             this.enableDisableWebsiteWiseElem = document.querySelector("#enable-disable-website-wise");
-            this.listModeElem = document.querySelector("#list-mode");
-            this.listUrlInputElem = document.querySelector("#list-url-input");
-            this.listUrlAddElem = document.querySelector("#list-url-add");
+            this.blackWhiteListFormElem = document.querySelector("#black-white-list-form");
             this.blacklistElem = document.querySelector("#blacklist");
             this.whitelistElem = document.querySelector("#whitelist");
 
@@ -29,25 +29,24 @@
             this.createSourcesSettingsLayout();
             this.sortSources();
             this.addEventListenerToSourceSideOptions();
-            this.addEventListenerToWhitelistBlacklistRemoveBtn();
+            this.addEventListenerToBlackWhiteListRemoveBtn();
             this.addNewSource();
             this.saveSettings();
-            this.addEventListenerToListMode();
-            this.addWebsiteInList();
+            this.addEventListenerToBlackWhiteListMode();
+            this.addWebsiteToBlackWhiteList();
         }
         saveSettings() {
             this.saveSettingsElem.addEventListener("click", () => {
 
-                const sourcesElem = this.sourcesSettingsElem.querySelectorAll(".source");
-                const blacklistWebsiteElem = document.querySelectorAll("#blacklist .website");
-                const whitelistWebsiteElem = document.querySelectorAll("#whitelist .website");
+                const sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
+                const blacklistWebsiteElems = document.querySelectorAll("#blacklist .website");
+                const whitelistWebsiteElems = document.querySelectorAll("#whitelist .website");
 
 
                 let triggerKeyToStore = this.changeTriggerKey();
-                let sourcesToStore = this.getSourcesFromInputs(sourcesElem);
+                let sourcesToStore = this.getSourcesFromInputs(sourceElems);
                 let enableDisableGloballyToStore = this.changeEnableDisableGlobally();
-                let blacklistAndWhitelist = this.getBlacklistAndWhitelist(blacklistWebsiteElem, whitelistWebsiteElem);
-                // console.log('blacklistAndWhitelist: ', blacklistAndWhitelist);
+                let blackWhiteList = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
                 if (sourcesToStore.error == true)
                     return;
                 // save the sources to the local storage
@@ -56,9 +55,9 @@
                     triggerKey: triggerKeyToStore,
                     enableDisable: {
                         globally: enableDisableGloballyToStore,
-                        listMode: this.listModeElem.value,
-                        blacklist: blacklistAndWhitelist[0],
-                        whitelist: blacklistAndWhitelist[1],
+                        blackWhiteListMode: this.blackWhiteListFormElem['mode'].value,
+                        blacklist: blackWhiteList[0],
+                        whitelist: blackWhiteList[1],
                     },
                     showChooseSourceOptions: this.showChooseSourceOptionsElem.value
                 });
@@ -113,18 +112,18 @@
             this.changeUrlOfPreInstalledSources();
 
             result.enableDisable.blacklist.forEach((blacklist) => {
-                const websiteTemplate = this.templateForBlacklistWhitelist(blacklist);
-                this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
+                const blackWhiteListTemplate = this.templateForBlackWhitelist(blacklist);
+                this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
             });
             result.enableDisable.whitelist.forEach((whitelist) => {
-                const websiteTemplate = this.templateForBlacklistWhitelist(whitelist);
+                const websiteTemplate = this.templateForBlackWhitelist(whitelist);
                 this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
             });
             // set default selected option the gotten from storage
             this.triggerKeyElem.value = result.triggerKey;
             this.enableDisableGloballyElem.value = result.enableDisable.globally;
-            this.listModeElem.value = result.enableDisable.listMode;
-            this.changeList();
+            this.blackWhiteListFormElem['mode'].value = result.enableDisable.blackWhiteListMode;
+            this.changeBlackWhiteList();
             this.showChooseSourceOptionsElem.value = result.showChooseSourceOptions.toLowerCase();
         }
 
@@ -182,17 +181,14 @@
 
         addNewSource() {
             let addNewSourceFormElem = document.querySelector("#add-new-source-form");
-            let addNewSourceFormData = new FormData(addNewSourceFormElem);
 
-            let sourceTitle = document.querySelector('.add-new-source .source-title');
-            let sourceUrl = document.querySelector('.add-new-source .source-url');
             addNewSourceFormElem.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let error = {};
                 // let id = ('_' + Math.random().toString(36).substr(2, 9));
 
-                let title = (sourceTitle.value).trim();
-                let url = sourceUrl.value;
+                let title = addNewSourceFormElem['title'].value.trim();
+                let url = addNewSourceFormElem['url'].value.trim();
 
                 if ((title.length >= 30) || (title.length <= 0)) {
                     error.invalidTitleLength = 'Title length should be between 1 to 30';
@@ -201,14 +197,11 @@
                     error.invalidUrl = "URL must be valid";
                     this.showFlashMessages([error.invalidUrl], "red")
                 } else {
-                    let newSourceTemplate = this.templateForSource({
-                        title,
-                        url,
-                    });
+                    let newSourceTemplate = this.templateForSource({ title, url, });
                     this.sourcesSettingsElem.insertAdjacentHTML('afterbegin', newSourceTemplate);
                     this.showFlashMessages(["New source is added, please save the changes."]);
-                    sourceTitle.value = "";
-                    sourceUrl.value = "";
+                    addNewSourceFormElem.reset();
+
                     // add eventListener to newly created source
                     this.addEventListenerToSourceSideOptions(true)
 
@@ -241,36 +234,37 @@
         }
 
 
-        // list == blacklist or whitelist
-        addEventListenerToListMode() {
-            this.listModeElem.addEventListener("change", this.changeList.bind(this))
+        addEventListenerToBlackWhiteListMode() {
+            this.blackWhiteListFormElem["mode"].addEventListener("change", this.changeBlackWhiteList.bind(this))
         }
 
-        changeList(e) {
-            if (this.listModeElem.value == "blacklist-mode") {
+        changeBlackWhiteList(e) {
+            // this will decide which list will be visible, and which list will be hidden
+            if (this.blackWhiteListFormElem['mode'].value == "blacklist-mode") {
                 this.blacklistElem.style.display = "block";
                 this.whitelistElem.style.display = "none";
-            } else if (this.listModeElem.value == "whitelist-mode") {
+            } else if (this.blackWhiteListFormElem['mode'].value == "whitelist-mode") {
                 this.whitelistElem.style.display = "block";
                 this.blacklistElem.style.display = "none";
             }
 
         }
 
-        addWebsiteInList() {
-            this.listUrlAddElem.addEventListener("click", () => {
-
-                if (!lookupUtility.isValidURL(this.listUrlInputElem.value)) {
+        addWebsiteToBlackWhiteList() {
+            this.blackWhiteListFormElem.addEventListener("submit", (e) => {
+                e.preventDefault();
+                if (!lookupUtility.isValidURL(this.blackWhiteListFormElem['url'].value)) {
                     let invalidUrl = `The URL is invalid.`;
                     this.showFlashMessages([invalidUrl], "red");
                 } else {
-                    const websiteTemplate = this.templateForBlacklistWhitelist(this.listUrlInputElem.value);
-                    if (this.listModeElem.value == "blacklist-mode") {
-                        this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
-                    } else if (this.listModeElem.value == "whitelist-mode") {
-                        this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
+                    const blackWhiteListTemplate = this.templateForBlackWhitelist(this.blackWhiteListFormElem['url'].value);
+                    if (this.blackWhiteListFormElem['mode'].value == "blacklist-mode") {
+                        this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
+                    } else if (this.blackWhiteListFormElem['mode'].value == "whitelist-mode") {
+                        this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
                     }
-                    this.addEventListenerToWhitelistBlacklistRemoveBtn(true);
+                    this.addEventListenerToBlackWhiteListRemoveBtn(true);
+                    this.blackWhiteListFormElem['url'] = "";
                     this.showFlashMessages(["New website is added, please save the changes."]);
 
                 }
@@ -280,18 +274,18 @@
 
 
 
-        getBlacklistAndWhitelist(blacklist, whitelist) {
+        getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems) {
             let blacklistWebsites = [];
             let whitelistWebsites = [];
 
             let blacklistWebsite;
             let whitelistWebsite;
-            blacklist.forEach((website) => {
+            blacklistWebsiteElems.forEach((website) => {
                 blacklistWebsite = new URL(website.innerText);
                 blacklistWebsite = blacklistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(blacklistWebsite.hostname);
                 blacklistWebsites.push(blacklistWebsite.toLowerCase());
             });
-            whitelist.forEach((website) => {
+            whitelistWebsiteElems.forEach((website) => {
                 whitelistWebsite = new URL(website.innerText);
                 whitelistWebsite = whitelistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(whitelistWebsite.hostname);
 
@@ -305,12 +299,12 @@
 
         }
 
-        templateForBlacklistWhitelist(url) {
+        templateForBlackWhitelist(url) {
             return (`
-              <div class="website-wrapper flex-container nowrap" style="justify-content: space-between">
+              <div class="black-white-list-website-wrapper flex-container nowrap" style="justify-content: space-between">
                 <div class="website column">${url}</div>
                 <div class="column" style="text-align: right;">
-                  <span class="website-remove-from-list" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><i class="material-icons">delete_forever</i></strong></span>
+                  <span class="website-remove-from-black-white-list" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><i class="material-icons">delete_forever</i></strong></span>
                 </div>
               </div>
           `);
@@ -357,11 +351,11 @@
 
         addEventListenerToSourceSideOptions(onJustFirstElement = false) {
             if (!onJustFirstElement) {
-                let allSourcesElem = this.sourcesSettingsElem.querySelectorAll(".source");
-                [...allSourcesElem].forEach(this.eventListenerForSideOptions());
+                let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
+                [...sourceElems].forEach(this.eventListenerForSideOptions());
             } else if (onJustFirstElement) {
-                let firstSourceElem = this.sourcesSettingsElem.querySelector('.source');
-                (this.eventListenerForSideOptions())(firstSourceElem);
+                let sourceElem = this.sourcesSettingsElem.querySelector('.source');
+                (this.eventListenerForSideOptions())(sourceElem);
             }
         }
 
@@ -409,29 +403,30 @@
             }
         }
 
-        addEventListenerToWhitelistBlacklistRemoveBtn(onJustFirstElement = false) {
+
+        addEventListenerToBlackWhiteListRemoveBtn(onJustFirstElement = false) {
             if (!onJustFirstElement) {
-                let allWebsiteElem = this.enableDisableWebsiteWiseElem.querySelectorAll(".website-wrapper");
-                [...allWebsiteElem].forEach(this.eventListenerForWhitelistBlacklistRemoveBtn());
+                let blackWhiteListWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".black-white-list-website-wrapper");
+                [...blackWhiteListWebsiteWrapperElems].forEach(this.eventListenerForBlackWhitelistRemoveBtn());
             } else if (onJustFirstElement) {
-                let firstWebsiteElem = this.enableDisableWebsiteWiseElem.querySelector(".website-wrapper");
-                (this.eventListenerForWhitelistBlacklistRemoveBtn())(firstWebsiteElem);
+                let blackWhiteListWebsiteWrapperElem = this.enableDisableWebsiteWiseElem.querySelector(".black-white-list-website-wrapper");
+                (this.eventListenerForBlackWhitelistRemoveBtn())(blackWhiteListWebsiteWrapperElem);
             }
         }
 
-        eventListenerForWhitelistBlacklistRemoveBtn() {
-            return function(websiteWrapper) {
-                const websiteRemoveBtnElem = websiteWrapper.querySelector(".website-remove-from-list");
+        eventListenerForBlackWhitelistRemoveBtn() {
+            return function(blackWhiteListWebsiteWrapperElem) {
+                const websiteRemoveBtnElem = blackWhiteListWebsiteWrapperElem.querySelector(".website-remove-from-black-white-list");
                 websiteRemoveBtnElem.addEventListener('click', (e) => {
-                    websiteWrapper.parentNode.removeChild(websiteWrapper);
+                    blackWhiteListWebsiteWrapperElem.parentNode.removeChild(blackWhiteListWebsiteWrapperElem);
                 });
             }
         }
 
         changeUrlOfPreInstalledSources() {
-            let allSourcesElem = this.sourcesSettingsElem.querySelectorAll(".source");
+            let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
 
-            [...allSourcesElem].forEach((source) => {
+            [...sourceElems].forEach((source) => {
                 let sourcePreinstalledElem = source.querySelector('.source-preinstalled')
                 if (sourcePreinstalledElem.value == 'true') {
                     let sourceId = source.querySelector('.source-id').value;

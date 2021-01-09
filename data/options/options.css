@@ -189,15 +189,15 @@ select:focus {
     color: red;
 }
 
-.website-remove-from-list:hover {
+.website-remove-from-black-white-list:hover {
     color: red;
 }
 
-#enable-disable-website-wise .website-wrapper {
+#enable-disable-website-wise .black-white-list-website-wrapper {
     padding: 5px;
     border-bottom: 1px solid #dedede;
 }
 
-#enable-disable-website-wise .website-wrapper:last-child {
+#enable-disable-website-wise .black-white-list-website-wrapper:last-child {
     border-bottom: none;
 }

@@ -61,7 +61,7 @@
             triggerKey: "none",
             enableDisable: {
                 globally: "enable", //disabled|enabled
-                listMode: "blacklist-mode", //blacklist-mode|whitelist-mode
+                blackWhiteListMode: "blacklist-mode", //blacklist-mode|whitelist-mode
                 blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
                 whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
             },

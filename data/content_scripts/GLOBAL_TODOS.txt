@@ -4,6 +4,13 @@
         Change "lookup_for_menu_bar.js|css"" to "lookup_in_pop_for_menu_bar.js|css",
         Change javascript classes from "lookup" to "lookupInPopup" in "lookup_in_popup.js", and ""   
 
+// TODO Improve Blacklist and Whitelist, allow user to be able to add just page(s), instead of the main domain
+
+// TODO https://stackoverflow.com/questions/54126343/how-to-fix-unchecked-runtime-lasterror-the-message-port-closed-before-a-respon
+
+// BUG Sometimes on some websites it doesn't work, and works on some parts of the page, but not on other parts,
+       https://www.ibm.com/support/knowledgecenter/SSMKFH/com.ibm.apmaas.doc/install/avmon_whitelist_blacklist.html,
+       I think the problem is with iframes
 
 // TODO Hide bubble after some time when no action is made.
 

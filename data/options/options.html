@@ -33,7 +33,7 @@
                     <span>*Add <strong>%s</strong> where the query will go</span>
                     <br>
                     <br>
-                    <button>Add Source</button>
+                    <button type="submit">Add Source</button>
                 </form>
             </div>
         </div>
@@ -65,17 +65,19 @@
                 <div id="enable-disable-website-wise">
                     <div class="second-settings-segment">
                         <h4>Enable or Disable the extension website-wise</h4>
-                        <select name="list_mode" id="list-mode">
-                            <option value="blacklist-mode">Blacklist Mode</option>
-                            <option value="whitelist-mode">Whitelist Mode</option>
-                        </select>
-                        <br>
-                        <br>
+                        <form id="black-white-list-form">
+                            <select name="mode">
+                                <option value="blacklist-mode">Blacklist Mode</option>
+                                <option value="whitelist-mode">Whitelist Mode</option>
+                            </select>
+                            <br>
+                            <br>
 
-                        <input id="list-url-input" type="text" placeholder="https://somewebsite.com" style="width:100%;">
-                        <br>
-                        <br>
-                        <button id="list-url-add">Add a website</button>
+                            <input name="url" type="text" placeholder="https://somewebsite.com" style="width:100%;">
+                            <br>
+                            <br>
+                            <button type="submit">Add a website</button>
+                        </form>
                         <br>
                         <br>
                         <div id="blacklist">

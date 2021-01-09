@@ -55,11 +55,11 @@
             // blacklist/whitelist check
             let allowed = true;
             let currentWebsiteUrl = window.location.protocol + "//" + lookupUtility.removeWWWBeginningOfHostname(window.location.hostname);
-            if (this.localStorageData.enableDisable.listMode == "blacklist-mode") {
+            if (this.localStorageData.enableDisable.blackWhiteListMode == "blacklist-mode") {
                 if (this.localStorageData.enableDisable.blacklist.includes(currentWebsiteUrl)) {
                     allowed = false;
                 }
-            } else if (this.localStorageData.enableDisable.listMode == "whitelist-mode") {
+            } else if (this.localStorageData.enableDisable.blackWhiteListMode == "whitelist-mode") {
                 if (!this.localStorageData.enableDisable.whitelist.includes(currentWebsiteUrl)) {
                     allowed = false;
                 }
