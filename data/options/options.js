@@ -66,6 +66,7 @@
         }
 
         createSourcesSettingsLayout() {
+            // TODO Remove "result", and replace it with "this.localStorageData"
             let result = this.localStorageData;
             result.sources.forEach((source) => {
                 let fromTo;
@@ -83,17 +84,24 @@
                             optionFrom += `<option ${selectedFrom}  value="${language[1]}">${language[0]}</option>`;
                             optionTo += `<option ${selectedTo} value="${language[1]}">${language[0]}</option>`;
                         });
-                        fromTo = `<label> <strong>Select Language (From)</strong> </label><br><select class="source-from">${optionFrom}</select><br><br>
-                  <label> <strong>Select Language (To)</strong> </label><br><select class="source-to">${optionTo}</select>`;
+                        fromTo = `
+                          <label> <strong>Select Language (From)</strong> </label><br>
+                          <select class="source-from">${optionFrom}</select><br><br>
+                          <label> <strong>Select Language (To)</strong> </label><br>
+                          <select class="source-to">${optionTo}</select>
+                        `;
                     } else {
                         let optionFromTo = '';
 
-                        // sourcesData is from dictionaries_data.js
+                        // sourcesData is from sources_data.js
                         sourcesData[source.id].fromTo.forEach((language) => {
                             let selectedFromTo = (source.fromTo == language[1]) ? "selected" : "";
                             optionFromTo += `<option value="${language[1]}" ${selectedFromTo}>${language[0]}</option>`;
                         });
-                        fromTo = `<label><strong>Select Language</strong> </label><br><select class="source-from-to">${optionFromTo}</select>`;
+                        fromTo = `
+                          <label><strong>Select Language</strong> </label><br>
+                          <select class="source-from-to">${optionFromTo}</select>
+                        `;
                     }
                 }
 
@@ -335,7 +343,7 @@
                     <div class="source-edited" style="display:none">
                     <br>
                     <!-- <label><strong>Title </strong></label><br> -->
-                    <input type="text" data-preinstalled="${preInstalled}" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
+                    <input type="text" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
                     <input type="hidden" class="source-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
                     <!-- <label><strong>URL </strong></label><br> -->
                     <input type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
