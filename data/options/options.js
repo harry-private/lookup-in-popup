@@ -1,4 +1,3 @@
-// TODO Check the code, if anything is needed to be changed due to changes I made
 // TODO Instead of hidden inputs use data-*
 (async () => {
 

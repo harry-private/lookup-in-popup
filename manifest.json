@@ -54,7 +54,11 @@
       ],
       "run_at": "document_start",
       "js": [
-        "data/internal_libs/lookup_utility.js"
+        "data/internal_libs/lookup_utility.js",
+        "data/content_scripts/index.js"
+      ],
+      "css": [
+        "data/content_scripts/index.css"
       ],
       "all_frames": true
     },
@@ -70,18 +74,6 @@
         "data/content_scripts/lookup_popup_window.css"
       ],
       "all_frames": false
-    },
-    {
-      "matches": [
-        "<all_urls>"
-      ],
-      "js": [
-        "data/content_scripts/index.js"
-      ],
-      "css": [
-        "data/content_scripts/index.css"
-      ],
-      "all_frames": true
     }
   ],
   "commands": {

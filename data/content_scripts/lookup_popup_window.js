@@ -1,20 +1,20 @@
 chrome.runtime.sendMessage({
     method: 'extend',
-}, (res) => {
-    if (res) {
-        console.log('res: ', res);
-        lookupPopupWindowRun(res);
+}, (response) => {
+    if (response.isLookupPopupWindow) {
+        console.log('currentLookupPopupWindowData: ', response.currentLookupPopupWindowData);
+        lookupPopupWindowRun(response.currentLookupPopupWindowData);
     }
 });
 
-let lookupPopupWindowRun = async (res) => {
+let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
     'use strict';
     class LookupPopupWindow {
 
 
-        async _constructor(res) {
-            // res comes from background 
-            this.res = res;
+        async _constructor(currentLookupPopupWindowData) {
+            // response comes from background 
+            this.currentLookupPopupWindowData = currentLookupPopupWindowData;
             this.localStorageData = await lookupUtility.localStorageDataPromise();
 
             this.navbar = null;
@@ -34,7 +34,7 @@ let lookupPopupWindowRun = async (res) => {
             lookupPopupWindow.closeOnEsc();
             // TODO Remove or Show navbar based on user preference. Can change the value from settings
 
-            if (this.res.navbarState == "removed") { return; }
+            if (this.currentLookupPopupWindowData.navbarState == "removed") { return; }
             let observer = new MutationObserver(() => {
                 if (document.body) {
                     this.body = document.body;
@@ -87,7 +87,7 @@ let lookupPopupWindowRun = async (res) => {
                       </div>
                       <div class="lookup-popup-window-menu-bar-form-container">
                           <form class="lookup-popup-window-menu-bar-form"  action="" title="Type your query and press Enter">
-                              <input class="lookup-popup-window-menu-bar-input" placeholder="Type your query and press Enter" value="${this.res.query}" autofocus>
+                              <input class="lookup-popup-window-menu-bar-input" placeholder="Type your query and press Enter" value="${this.currentLookupPopupWindowData.query}" autofocus>
                               <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
                               <button class="lookup-popup-window-menu-bar-submit"></button>
                           </form>
@@ -111,7 +111,7 @@ let lookupPopupWindowRun = async (res) => {
             this.menuBarCollapse = this.navbar.querySelector('.lookup-popup-window-menu-bar-collapse');
 
 
-            if (this.res.navbarState == "hidden") {
+            if (this.currentLookupPopupWindowData.navbarState == "hidden") {
                 this.isMenuHidden = true;
                 this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
                 this.menuBarCollapse.classList.add('hide');
@@ -211,6 +211,6 @@ let lookupPopupWindowRun = async (res) => {
     }
 
     let lookupPopupWindow = new LookupPopupWindow();
-    await lookupPopupWindow._constructor(res);
+    await lookupPopupWindow._constructor(currentLookupPopupWindowData);
 
 };

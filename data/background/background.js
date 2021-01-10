@@ -130,10 +130,14 @@
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
                     if (sender.tab.windowId in this.openedLookupPopupWindows) {
-                        sendResponse(this.openedLookupPopupWindows[sender.tab.windowId]);
-
-                    }
+                        sendResponse({
+                            isLookupPopupWindow: true,
+                            currentLookupPopupWindowData: this.openedLookupPopupWindows[sender.tab.windowId]
+                        });
+                    } else { sendResponse({ isLookupPopupWindow: false }); }
                 }
+                return true;
+
             });
         }
 
