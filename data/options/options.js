@@ -1,4 +1,3 @@
-// TODO Instead of hidden inputs use data-*
 (async () => {
 
     class LookupOptions {
@@ -28,8 +27,10 @@
             this.createSourcesSettingsLayout();
             this.sortSources();
             this.addEventListenerToSourceSideOptions();
+            this.addEventListenerToSourceEditForm();
             this.addEventListenerToBlackWhiteListRemoveBtn();
             this.addNewSource();
+
             this.saveSettings();
             this.addEventListenerToBlackWhiteListMode();
             this.addWebsiteToBlackWhiteList();
@@ -37,17 +38,16 @@
         saveSettings() {
             this.saveSettingsElem.addEventListener("click", () => {
 
-                const sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
+                const sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
                 const blacklistWebsiteElems = document.querySelectorAll("#blacklist .website");
                 const whitelistWebsiteElems = document.querySelectorAll("#whitelist .website");
 
 
                 let triggerKeyToStore = this.changeTriggerKey();
-                let sourcesToStore = this.getSourcesFromInputs(sourceElems);
+                let sourcesToStore = this.getSourcesFromInputs(sourceEditFormElems);
                 let enableDisableGloballyToStore = this.changeEnableDisableGlobally();
                 let blackWhiteList = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
-                if (sourcesToStore.error == true)
-                    return;
+                if (sourcesToStore.error == true) { return; }
                 // save the sources to the local storage
                 chrome.storage.sync.set({
                     sources: sourcesToStore.sourcesToStore,
@@ -66,21 +66,18 @@
         }
 
         createSourcesSettingsLayout() {
-            // TODO Remove "result", and replace it with "this.localStorageData"
-            let result = this.localStorageData;
-            result.sources.forEach((source) => {
+            this.localStorageData.sources.forEach((storedSource) => {
                 let fromTo;
-                let preInstalled = (source.preInstalled == 'true') ? true : false;
-                let isHidden = (source.isHidden == 'true') ? true : false;
+                let isPreInstalled = (storedSource.isPreInstalled == 'true') ? true : false;
+                let isHidden = (storedSource.isHidden == 'true') ? true : false;
 
-
-                if (preInstalled) {
-                    if (source.isGoogleTranslate) {
+                if (isPreInstalled) {
+                    if (storedSource.id === "googleTranslate") {
                         let optionFrom = '';
                         let optionTo = '';
-                        sourcesData[source.id].from.forEach((language) => {
-                            let selectedFrom = (source.from == language[1]) ? "selected" : "";
-                            let selectedTo = (source.to == language[1]) ? "selected" : "";
+                        sourcesData[storedSource.id].from.forEach((language) => {
+                            let selectedFrom = (storedSource.from == language[1]) ? "selected" : "";
+                            let selectedTo = (storedSource.to == language[1]) ? "selected" : "";
                             optionFrom += `<option ${selectedFrom}  value="${language[1]}">${language[0]}</option>`;
                             optionTo += `<option ${selectedTo} value="${language[1]}">${language[0]}</option>`;
                         });
@@ -94,8 +91,8 @@
                         let optionFromTo = '';
 
                         // sourcesData is from sources_data.js
-                        sourcesData[source.id].fromTo.forEach((language) => {
-                            let selectedFromTo = (source.fromTo == language[1]) ? "selected" : "";
+                        sourcesData[storedSource.id].fromTo.forEach((language) => {
+                            let selectedFromTo = (storedSource.fromTo == language[1]) ? "selected" : "";
                             optionFromTo += `<option value="${language[1]}" ${selectedFromTo}>${language[0]}</option>`;
                         });
                         fromTo = `
@@ -106,42 +103,42 @@
                 }
 
                 let template = this.templateForSource({
-                    isGoogleTranslate: source.isGoogleTranslate,
-                    preInstalled,
-                    isHidden,
-                    fromTo,
-                    title: source.title,
-                    url: source.url,
-                    id: source.id
+                    isPreInstalled: isPreInstalled,
+                    isHidden: isHidden,
+                    fromTo: fromTo,
+                    title: storedSource.title,
+                    url: storedSource.url,
+                    id: storedSource.id
                 })
                 this.sourcesSettingsElem.insertAdjacentHTML('beforeend', template);
             });
             this.changeUrlOfPreInstalledSources();
 
-            result.enableDisable.blacklist.forEach((blacklist) => {
+            this.localStorageData.enableDisable.blacklist.forEach((blacklist) => {
                 const blackWhiteListTemplate = this.templateForBlackWhitelist(blacklist);
                 this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
             });
-            result.enableDisable.whitelist.forEach((whitelist) => {
+            this.localStorageData.enableDisable.whitelist.forEach((whitelist) => {
                 const websiteTemplate = this.templateForBlackWhitelist(whitelist);
                 this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
             });
-            // set default selected option the gotten from storage
-            this.triggerKeyElem.value = result.triggerKey;
-            this.enableDisableGloballyElem.value = result.enableDisable.globally;
-            this.blackWhiteListFormElem['mode'].value = result.enableDisable.blackWhiteListMode;
+            // set default selected option that gotten from storage
+            this.triggerKeyElem.value = this.localStorageData.triggerKey;
+            this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;
+            this.blackWhiteListFormElem['mode'].value = this.localStorageData.enableDisable.blackWhiteListMode;
             this.changeBlackWhiteList();
-            this.showChooseSourceOptionsElem.value = result.showChooseSourceOptions.toLowerCase();
+            this.showChooseSourceOptionsElem.value = this.localStorageData.showChooseSourceOptions.toLowerCase();
         }
 
-        getSourcesFromInputs(sources) {
+        getSourcesFromInputs(sourceEditFormElems) {
             let sourcesToStore = [];
             let error = false;
-            [...sources].forEach((source) => {
+            [...sourceEditFormElems].forEach((sourceEditForm) => {
                 let sourcesToStoreObj = {};
-                let sourceTitle = source.querySelector(".source-title").value;
-                let sourceId = source.querySelector(".source-id").value;
-                let sourceUrl = source.querySelector(".source-url").value;
+                let sourceTitle = sourceEditForm["title"].value;
+                let sourceUrl = sourceEditForm["url"].value;
+
+                let sourceId = sourceEditForm.dataset.id;
                 if ((sourceTitle.length >= 30) || (sourceTitle.length <= 0)) {
                     let invalidTitleLength = `The title you edited must be between 1 to 30`;
                     this.showFlashMessages([invalidTitleLength], "red");
@@ -151,24 +148,23 @@
                     this.showFlashMessages([invalidUrl], "red");
                     error = true;
                 } else {
-                    let sourcePreInstalled = source.querySelector(".source-preinstalled").value;
-                    let sourceIsHidden = source.querySelector('.source-is-hidden');
-                    if (sourceIsHidden) {
-                        if (sourceIsHidden.value === "true") {
-                            sourcesToStoreObj.isHidden = "true";
-                        }
+                    let sourceIsPreInstalled = sourceEditForm.dataset.isPreInstalled;
+                    let sourceIsHidden = sourceEditForm.dataset.isHidden;
+
+                    if (sourceIsHidden == "true") {
+                        sourcesToStoreObj.isHidden = "true";
                     }
-                    if (sourcePreInstalled === 'true') {
-                        if (source.id == 'google-translate') {
-                            let sourceFrom = source.querySelector(".source-from");
-                            let sourceTo = source.querySelector(".source-to");
-                            let sourceFromSelected = this.getSelectedOption(sourceFrom)
-                            let sourceToSelected = this.getSelectedOption(sourceTo)
-                            sourcesToStoreObj.from = sourceFromSelected
-                            sourcesToStoreObj.to = sourceToSelected
-                            sourcesToStoreObj.isGoogleTranslate = true;
+
+                    if (sourceIsPreInstalled == 'true') {
+                        if (sourceId == 'googleTranslate') {
+                            let sourceFrom = sourceEditForm.querySelector(".source-from");
+                            let sourceTo = sourceEditForm.querySelector(".source-to");
+                            let sourceFromSelected = this.getSelectedOption(sourceFrom);
+                            let sourceToSelected = this.getSelectedOption(sourceTo);
+                            sourcesToStoreObj.from = sourceFromSelected;
+                            sourcesToStoreObj.to = sourceToSelected;
                         } else {
-                            let sourceFromTo = source.querySelector(".source-from-to");
+                            let sourceFromTo = sourceEditForm.querySelector(".source-from-to");
                             let sourceFromToSelected = this.getSelectedOption(sourceFromTo);
                             sourcesToStoreObj.fromTo = sourceFromToSelected;
                         }
@@ -179,7 +175,7 @@
                     sourcesToStoreObj.title = sourceTitle;
                     sourcesToStoreObj.id = sourceId;
                     sourcesToStoreObj.url = sourceUrl;
-                    sourcesToStoreObj.preInstalled = sourcePreInstalled;
+                    sourcesToStoreObj.isPreInstalled = sourceIsPreInstalled;
                     sourcesToStore.push(sourcesToStoreObj);
                 }
             });
@@ -204,13 +200,14 @@
                     error.invalidUrl = "URL must be valid";
                     this.showFlashMessages([error.invalidUrl], "red")
                 } else {
+                    addNewSourceFormElem.reset();
                     let newSourceTemplate = this.templateForSource({ title, url, });
                     this.sourcesSettingsElem.insertAdjacentHTML('afterbegin', newSourceTemplate);
                     this.showFlashMessages(["New source is added, please save the changes."]);
-                    addNewSourceFormElem.reset();
 
                     // add eventListener to newly created source
-                    this.addEventListenerToSourceSideOptions(true)
+                    this.addEventListenerToSourceSideOptions(true);
+                    this.addEventListenerToSourceEditForm(true);
 
                 }
 
@@ -224,11 +221,11 @@
 
         changeTriggerKey() {
             let allowedTriggerKeys = ["none", "ctrlKey", "shiftKey", "altKey"];
-            let triggerKeySelectedElem = this.getSelectedOption(this.triggerKeyElem);
-            const isAllowedTriggerKey = (allowedTriggerKeys.indexOf(triggerKeySelectedElem) > -1);
+            let triggerKeySelected = this.getSelectedOption(this.triggerKeyElem);
+            const isAllowedTriggerKey = (allowedTriggerKeys.indexOf(triggerKeySelected) > -1);
             // if the selected option is not allowed, or the user has edit the code
             // no need to show the error message, and set the trigger key to "none"
-            return (isAllowedTriggerKey ? triggerKeySelectedElem : "none");
+            return (isAllowedTriggerKey ? triggerKeySelected : "none");
 
         }
 
@@ -318,8 +315,7 @@
         }
 
         templateForSource({
-            isGoogleTranslate = false,
-            preInstalled = false,
+            isPreInstalled = false,
             isHidden = false,
             fromTo,
             title,
@@ -329,31 +325,37 @@
 
 
 
-            return (`
-                    <div ${isGoogleTranslate ? 'id="google-translate"' : ''} class="source" style="">
-                    <div class="flex-container nowrap" style="justify-content: space-between">
-                      <div class="column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
-                      <div class="column" style="text-align: right">
-                      <span class="source-edit" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
-                      <span class="source-hide" style="font-size: 25px; cursor: pointer; margin-right: 10px" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
-                      ${(preInstalled ? '' : '<span class="source-remove" style="font-size: 25px; cursor: pointer; margin-right: 10px;" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
-                      <span class="source-drag" style="font-size: 25px; cursor: grab" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
+            return (
+                `
+                  <div class="source" style="">
+                    
+                      <div class="flex-container nowrap" style="justify-content: space-between">
+                          <div class="column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
+                          <div class="source-side-options column">
+                              <span class="source-edit" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
+                              <span class="source-hide" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
+                              ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
+                              <span class="source-drag" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
+                          </div>
                       </div>
-                    </div>
-                    <div class="source-edited" style="display:none">
-                    <br>
-                    <!-- <label><strong>Title </strong></label><br> -->
-                    <input type="text" class="source-title" placeholder="Title" value="${title}" ${(preInstalled ? "disabled" : '')}> <br><br>
-                    <input type="hidden" class="source-id" value="${id}" ${(preInstalled ? "disabled" : '')}>
-                    <!-- <label><strong>URL </strong></label><br> -->
-                    <input type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}" ${(preInstalled ? "disabled" : '')}> <br><br>
-                    <input type="hidden" class="source-preinstalled" value="${preInstalled}">
-                    <input type="hidden" class="source-is-hidden" value="${isHidden}">
-                    ${( preInstalled ? fromTo + '<br><br>' : '' )}
-                    <button class="source-done">Done</button><br>
-                    </div>
+                      <form
+                           class="source-edit-form"
+                           style="display:none"
+                           data-is-pre-installed="${isPreInstalled}"
+                           data-is-hidden="${isHidden}"
+                           data-id="${id}"
+                      >
+                          <br>
+                          <!-- <label><strong>Title </strong></label><br> -->
+                          <input name="title" type="text" class="source-title" placeholder="Title" value="${title}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                          <!-- <label><strong>URL </strong></label><br> -->
+                          <input name="url" type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                          ${( isPreInstalled ? fromTo + '<br><br>' : '' )}
+                          <button class="source-done">Done</button><br>
+                      </form>
                   </div>
-                  `);
+                `
+            );
         }
 
         addEventListenerToSourceSideOptions(onJustFirstElement = false) {
@@ -368,6 +370,7 @@
 
         eventListenerForSideOptions() {
             return function(source) {
+                const sourceEditFormElem = source.querySelector(".source-edit-form");
                 const sourceEditElem = source.querySelector(".source-edit");
                 const sourceHideElem = source.querySelector(".source-hide");
                 const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
@@ -375,22 +378,22 @@
                 const sourceDoneElem = source.querySelector(".source-done");
 
                 sourceEditElem.addEventListener('click', (e) => {
-                    let sourceEditedElem = source.querySelector(".source-edited");
-                    if (sourceEditedElem.style.display === 'none') {
-                        sourceEditedElem.style.display = ""
+                    // let sourceEditedElem = source.querySelector(".source-edit-form");
+                    if (sourceEditFormElem.style.display === 'none') {
+                        sourceEditFormElem.style.display = ""
                     } else {
-                        sourceEditedElem.style.display = "none"
+                        sourceEditFormElem.style.display = "none"
                     }
                 });
                 sourceHideElem.addEventListener('click', (e) => {
-                    let sourceIsHiddenElem = source.querySelector('.source-is-hidden');
+                    let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
 
-                    if (sourceIsHiddenElem.value === "true") {
-                        sourceIsHiddenElem.value = "false"
+                    if (sourceIsHidden === "true") {
+                        sourceEditFormElem.dataset.isHidden = "false";
                         sourceHideIconElem.innerText = "visibility";
                         // sourceHideElem.style.textDecoration = '';
                     } else {
-                        sourceIsHiddenElem.value = "true"
+                        sourceEditFormElem.dataset.isHidden = "true";
                         // sourceHideElem.style.textDecoration = 'line-through';
                         sourceHideIconElem.innerText = "visibility_off";
 
@@ -403,9 +406,24 @@
                     });
                 }
                 sourceDoneElem.addEventListener('click', (e) => {
-                    let sourceEditedElem = source.querySelector(".source-edited");
-                    sourceEditedElem.style.display = "none"
+                    // TODO change title
+                    // let sourceEditedElem = source.querySelector(".source-edit-form");
+                    sourceEditFormElem.style.display = "none"
                 });
+
+            }
+        }
+
+        addEventListenerToSourceEditForm(onJustFirstElement = false) {
+            if (!onJustFirstElement) {
+                let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
+                [...sourceEditFormElems].forEach((sourceEditForm) => {
+                    sourceEditForm.addEventListener("submit", (e) => { e.preventDefault(); })
+                });
+
+            } else if (onJustFirstElement) {
+                let sourceEditFormElem = this.sourcesSettingsElem.querySelector('.source-edit-form');
+                sourceEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); })
 
             }
         }
@@ -431,16 +449,16 @@
         }
 
         changeUrlOfPreInstalledSources() {
-            let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
+            let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
 
-            [...sourceElems].forEach((source) => {
-                let sourcePreinstalledElem = source.querySelector('.source-preinstalled')
-                if (sourcePreinstalledElem.value == 'true') {
-                    let sourceId = source.querySelector('.source-id').value;
-                    let sourceUrl = source.querySelector('.source-url');
-                    if (source.getAttribute("id") == 'google-translate') {
-                        let sourceFromElem = source.querySelector('.source-from');
-                        let sourceToElem = source.querySelector('.source-to');
+            [...sourceEditFormElems].forEach((sourceEditForm) => {
+                let sourceIsPreInstalled = sourceEditForm.dataset.isPreInstalled;
+                if (sourceIsPreInstalled == 'true') {
+                    let sourceId = sourceEditForm.dataset.id;
+                    let sourceUrl = sourceEditForm["url"];
+                    if (sourceEditForm.dataset.id == 'googleTranslate') {
+                        let sourceFromElem = sourceEditForm.querySelector('.source-from');
+                        let sourceToElem = sourceEditForm.querySelector('.source-to');
                         sourceFromElem.addEventListener('change', (e) => {
                             let selectedSourceFrom = this.getSelectedOption(sourceFromElem);
                             let selectedSourceTo = this.getSelectedOption(sourceToElem);
@@ -454,7 +472,7 @@
                             sourceUrl.value = newUrl;
                         })
                     } else {
-                        let sourceFromToElem = source.querySelector('.source-from-to');
+                        let sourceFromToElem = sourceEditForm.querySelector('.source-from-to');
                         sourceFromToElem.addEventListener('change', (e) => {
                             let selectedSourceFromTo = this.getSelectedOption(sourceFromToElem);
                             let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFromTo)
@@ -464,7 +482,6 @@
                 }
             });
 
-            // fromToElem.addEventListener('change', function(e) {alert("You are disgusting!")})
         }
 
         showFlashMessages(messages = [], BGColor = "rgb(34,187,51)") {

@@ -64,7 +64,7 @@ body {
 
 }
 
-.input {
+.query-input {
     min-width: 0 !important;
     margin: 0 !important;
     box-shadow: none;
@@ -149,7 +149,7 @@ body {
 }
 
 
-.input:focus,
+.query-input:focus,
 .select:focus,
 .submit:focus {
     box-shadow: none !important;
@@ -159,7 +159,7 @@ body {
 
 }
 
-.input:hover,
+.query-input:hover,
 .select:hover,
 .submit:hover {
     background-color: #f5f5f5 !important;
@@ -167,7 +167,7 @@ body {
 
 }
 
-.input:hover {
+.query-input:hover {
     cursor: text !important;
 }
 

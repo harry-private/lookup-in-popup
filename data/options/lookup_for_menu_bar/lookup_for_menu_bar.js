@@ -9,7 +9,6 @@
             this.navBar;
             this.select = null;
             this.from = null;
-            this.input = null;
             this.run();
         }
         run() {
@@ -30,8 +29,8 @@
             this.navBar = document.createElement("div");
             this.navBar.insertAdjacentHTML("afterbegin", `
               <div class="formContainer">
-                <form class="form" title="Type your query and press Enter">
-                  <input class="input" placeholder="Type your query and press Enter" autofocus>
+                <form class="form">
+                  <input name="query" class="query-input" placeholder="Type your query here..." autofocus>
                   <select class="select">${this.sourcesOptionsForSelect()}</select>
                   <button class="submit"></button>
                 </form>
@@ -40,7 +39,6 @@
             this.navBar.classList.add("navbar");
             this.select = this.navBar.querySelector('.select');
             this.form = this.navBar.querySelector('.form');
-            this.input = this.navBar.querySelector('.input');
             this.body.appendChild(this.navBar);
         }
 
@@ -50,7 +48,7 @@
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
-                let query = this.input.value.trim();
+                let query = this.form["query"].value.trim();
                 if (query == "") { return; }
                 let selectedSource = this.select.options[this.select.selectedIndex];
                 let selectedSourceUrl = selectedSource.dataset.url;

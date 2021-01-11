@@ -1,5 +1,3 @@
-/* TODO Change "i" to "button" for icons(side-buttons)*/
-
 html,
 body {
     line-height: 1.6;
@@ -154,10 +152,33 @@ select:focus {
     border-bottom: none;
 }
 
-#sources-settings .source .source-edited {
-
+#sources-settings .source .source-edit-form {
     background: #eeeeee;
     padding: 15px;
+}
+
+.source-side-options {
+    text-align: right;
+}
+
+.source-side-options span {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    color: #5d5d5b;
+    font-size: 25px;
+    cursor: pointer;
+    margin-right: 10px
+}
+
+.source-side-options span:hover {
+    color: #434342
+}
+
+.source-side-options span.source-remove:hover {
+    color: red;
 }
 
 #top-menu-bar {
@@ -183,10 +204,6 @@ select:focus {
 
 .settings-page-link:focus {
     outline: none;
-}
-
-.source-remove:hover {
-    color: red;
 }
 
 .website-remove-from-black-white-list:hover {

@@ -9,47 +9,46 @@
     function firstTime() {
         chrome.storage.sync.set({
             sources: [{
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "googleTranslate",
                     "title": "Google Translate",
-                    "isGoogleTranslate": true,
                     "from": "auto", //default
                     "to": "en", //default
                     "url": sourcesData.googleTranslate.generateUrl("auto", "en")
                 },
                 {
-                    "preInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
+                    "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
                     "id": "google",
                     "title": "Google",
                     "url": "https://www.google.com/search?q=%s"
 
                 }, {
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "cambridge",
                     "title": "Cambridge",
                     "fromTo": "english",
                     "url": sourcesData.cambridge.generateUrl("english")
                 }, {
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "oxford",
                     "title": "Oxford",
                     "fromTo": "en",
                     "url": sourcesData.oxford.generateUrl("en")
                 }, {
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "collins",
                     "title": "Collins",
                     "fromTo": "english",
                     "url": sourcesData.collins.generateUrl("english")
                 }, {
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "longman",
                     "title": "Longman",
                     "fromTo": "english",
                     "url": sourcesData.longman.generateUrl("english")
                 },
                 {
-                    "preInstalled": "true",
+                    "isPreInstalled": "true",
                     "id": "wikipedia",
                     "title": "Wikipedia",
                     "fromTo": "english",

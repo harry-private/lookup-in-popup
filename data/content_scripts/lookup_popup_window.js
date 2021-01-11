@@ -20,7 +20,6 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             this.navbar = null;
             this.select = null;
             this.from = null;
-            this.input = null;
             this.toggleMenuBtn = null;
             this.isMenuHidden = false;
             this.backBtn = null;
@@ -64,11 +63,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             });
         }
         insertEmptySpace() {
-            document.body.insertAdjacentHTML('beforeend',
-                `
-            <div class="lookup-popup-window-empty-space"></div>
-          `
-            );
+            document.body.insertAdjacentHTML('beforeend', `<div class="lookup-popup-window-empty-space"></div>`);
         }
         insertNavbar() {
             this.navbar = document.createElement("div");
@@ -78,7 +73,6 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                   <button class="lookup-popup-window-menu-bar-toggle">
                   <span>❮</span>
                   </button>
-                  <!-- ❯ arrow -->
                   <div class="lookup-popup-window-menu-bar-collapse">
                       <div class="lookup-popup-window-menu-bar-extra">
                           <button class="lookup-popup-window-back">🠈</button>
@@ -86,8 +80,8 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                           <button class="lookup-popup-window-reload">⭮</button>
                       </div>
                       <div class="lookup-popup-window-menu-bar-form-container">
-                          <form class="lookup-popup-window-menu-bar-form"  action="" title="Type your query and press Enter">
-                              <input class="lookup-popup-window-menu-bar-input" placeholder="Type your query and press Enter" value="${this.currentLookupPopupWindowData.query}" autofocus>
+                          <form class="lookup-popup-window-menu-bar-form"  action="">
+                              <input name="query" class="lookup-popup-window-menu-bar-query-input" placeholder="Type your query here..." value="${this.currentLookupPopupWindowData.query}" autofocus>
                               <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
                               <button class="lookup-popup-window-menu-bar-submit"></button>
                           </form>
@@ -101,7 +95,6 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             this.navbar.classList.add("lookup-popup-window-menu-bar");
             this.select = this.navbar.querySelector('.lookup-popup-window-menu-bar-select');
             this.form = this.navbar.querySelector('.lookup-popup-window-menu-bar-form');
-            this.input = this.navbar.querySelector('.lookup-popup-window-menu-bar-input');
             this.toggleMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-toggle');
             this.removeMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-remove');
             this.toggleMenuBtnIcon = this.toggleMenuBtn.querySelector('span');
@@ -139,7 +132,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
 
             this.form.addEventListener("submit", (e) => {
                 e.preventDefault();
-                let query = this.input.value.trim();
+                let query = this.form['query'].value.trim();
                 if (query == "") { return; }
 
                 let selectedSource = this.select.options[this.select.selectedIndex];
