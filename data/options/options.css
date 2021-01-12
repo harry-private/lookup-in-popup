@@ -218,3 +218,26 @@ select:focus {
 #enable-disable-website-wise .black-white-list-website-wrapper:last-child {
     border-bottom: none;
 }
+
+
+/* sortableJS */
+
+.source-drag {
+    cursor: grab !important;
+    cursor: -webkit-grabbing;
+}
+
+.sortable-ghost {
+    background-color: #eee;
+}
+
+.sortable-ghost * {
+    pointer-events: none !important;
+
+}
+
+.sortable-chosen {
+    font-weight: 900;
+}
+
+.sortable-drag {}

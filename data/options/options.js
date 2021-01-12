@@ -503,7 +503,10 @@
         sortSources() {
             Sortable.create(this.sourcesSettingsElem, {
                 handle: '.source-drag',
-                animation: 150
+                animation: 200,
+                ghostClass: "sortable-ghost", // Class name for the drop placeholder
+                chosenClass: "sortable-chosen", // Class name for the chosen item
+                dragClass: "sortable-drag", // Class name for the dragging item
             });
         }
 
@@ -513,14 +516,7 @@
         }
 
         sanitize(string) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#x27;',
-                "/": '&#x2F;',
-            };
+            const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;', };
             const reg = /[&<>"'/]/ig;
             return string.replace(reg, (match) => (map[match]));
         }
