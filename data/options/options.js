@@ -330,7 +330,7 @@
                   <div class="source" style="">
                     
                       <div class="flex-container nowrap" style="justify-content: space-between">
-                          <div class="column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
+                          <div class="visible-title column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
                           <div class="source-side-options column">
                               <span class="source-edit" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
                               <span class="source-hide" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
@@ -347,7 +347,7 @@
                       >
                           <br>
                           <!-- <label><strong>Title </strong></label><br> -->
-                          <input name="title" type="text" class="source-title" placeholder="Title" value="${title}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                          <input name="title" type="text" class="source-title" placeholder="Title" value="${this.sanitize(title)}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
                           <!-- <label><strong>URL </strong></label><br> -->
                           <input name="url" type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
                           ${( isPreInstalled ? fromTo + '<br><br>' : '' )}
@@ -376,7 +376,6 @@
                 const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
                 const sourceRemoveElem = source.querySelector(".source-remove");
                 const sourceDoneElem = source.querySelector(".source-done");
-
                 sourceEditElem.addEventListener('click', (e) => {
                     // let sourceEditedElem = source.querySelector(".source-edit-form");
                     if (sourceEditFormElem.style.display === 'none') {
@@ -411,6 +410,12 @@
                     sourceEditFormElem.style.display = "none"
                 });
 
+                // This is not one of the side options, but I am putting it here to
+                // skip writing too many duplicate codes
+                sourceEditFormElem["title"].addEventListener("keyup", (e) => {
+                    let visibleTitle = source.querySelector(".visible-title");
+                    visibleTitle.innerText = sourceEditFormElem["title"].value;
+                });
             }
         }
 
