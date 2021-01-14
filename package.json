@@ -1,5 +1,5 @@
 {
-  "name": "lookup",
+  "name": "lookup-in-popup",
   "version": "0.0.1",
   "description": "Lookup selected texts in popup on your chosen source (website)",
   "main": "lip.js",
