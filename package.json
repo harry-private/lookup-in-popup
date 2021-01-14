@@ -13,12 +13,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harry-private/lookup.git"
+    "url": "git+https://github.com/harry-private/lookup-in-popup.git"
   },
   "author": "harry-private",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/harry-private/lookup/issues"
+    "url": "https://github.com/harry-private/lookup-in-popup/issues"
   },
-  "homepage": "https://github.com/harry-private/lookup#readme"
+  "homepage": "https://github.com/harry-private/lookup-in-popup#readme"
 }
