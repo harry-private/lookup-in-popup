@@ -349,16 +349,10 @@ healthchecksdb
 MigrationBackup/
 
 # extension
-lookup.zip
-lookup - 1.zip
-
 
 #screen shots
 
 screenshot/
-
-#Firefox_lookup.zip
-#Chrome_lookup.zip
 
 firefox_build/
 chrome_build/

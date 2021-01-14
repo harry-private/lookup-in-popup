@@ -1,13 +1,3 @@
-// TODO Change "lookup_popup_window.js|css" to "popup_window.js|css",
-        Change css selector names in "popup_window.css", from "lookup-popup-window-*" to "lip-popup-window"
-        Change "index.js|css" to "lip.js|css",
-        Change css selector names in "lookup_in_popup.css", from "lookup-*" to "lip-*"
-        Change Javascript class from "Lookup" to "Lip" in "lip.js"
-        Change "lookup_for_menu_bar.js|css" to "lip_from_menu_bar.js|css",
-        Change Javascript class from "Lookup" to "Lip" in "lip_from_toolbar.js"
-
-
-
 // TODO Improve Blacklist and Whitelist, allow user to be able to add just page(s), instead of the main domain
 
 // TODO Hide bubble after some time when no action is made.
