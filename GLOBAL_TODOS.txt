@@ -16,6 +16,9 @@
 
 // TODO Add better description for the extension in both manifest.json, and package.json.
 
+
+// TODO Change extension name to "lookup in popup"
+
 // CONSIDER Adding an option where a window mode (incognito, or normal) can be set for all,
             or for specific site/source.
 

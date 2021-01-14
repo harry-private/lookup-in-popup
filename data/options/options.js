@@ -1,10 +1,10 @@
 (async () => {
 
-    class LookupOptions {
+    class LipOptions {
 
         async _constructor() {
 
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+            this.localStorageData = await lipUtility.localStorageDataPromise();
             this.flashMessagesElem = document.querySelector('.flash-messages');
             this.sourcesSettingsElem = document.querySelector("#sources-settings");
             this.saveSettingsElem = document.querySelector("#save-settings");
@@ -145,7 +145,7 @@
                     let invalidTitleLength = `The title you edited must be between 1 to 30`;
                     this.showFlashMessages([invalidTitleLength], "red");
                     error = true;
-                } else if (!lookupUtility.isValidURL(sourceUrl)) {
+                } else if (!lipUtility.isValidURL(sourceUrl)) {
                     let invalidUrl = `The URL you edited must be valid`;
                     this.showFlashMessages([invalidUrl], "red");
                     error = true;
@@ -198,7 +198,7 @@
                 if ((title.length >= 30) || (title.length <= 0)) {
                     error.invalidTitleLength = 'Title length should be between 1 to 30';
                     this.showFlashMessages([error.invalidTitleLength], "red")
-                } else if (!lookupUtility.isValidURL(url)) {
+                } else if (!lipUtility.isValidURL(url)) {
                     error.invalidUrl = "URL must be valid";
                     this.showFlashMessages([error.invalidUrl], "red")
                 } else {
@@ -213,7 +213,7 @@
 
                 }
 
-                if (!lookupUtility.isObjEmpty(error)) {
+                if (!lipUtility.isObjEmpty(error)) {
                     // console.log(error)
 
                 }
@@ -259,7 +259,7 @@
         addWebsiteToBlackWhiteList() {
             this.blackWhiteListFormElem.addEventListener("submit", (e) => {
                 e.preventDefault();
-                if (!lookupUtility.isValidURL(this.blackWhiteListFormElem['url'].value)) {
+                if (!lipUtility.isValidURL(this.blackWhiteListFormElem['url'].value)) {
                     let invalidUrl = `The URL is invalid.`;
                     this.showFlashMessages([invalidUrl], "red");
                 } else {
@@ -288,14 +288,14 @@
             let whitelistWebsite;
             blacklistWebsiteElems.forEach((website) => {
                 blacklistWebsite = new URL(website.innerText);
-                blacklistWebsite = blacklistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(blacklistWebsite.hostname);
+                blacklistWebsite = blacklistWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(blacklistWebsite.hostname);
                 blacklistWebsites.push(blacklistWebsite.toLowerCase());
             });
             whitelistWebsiteElems.forEach((website) => {
                 whitelistWebsite = new URL(website.innerText);
-                whitelistWebsite = whitelistWebsite.protocol + '//' + lookupUtility.removeWWWBeginningOfHostname(whitelistWebsite.hostname);
+                whitelistWebsite = whitelistWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(whitelistWebsite.hostname);
 
-                whitelistWebsites.push(lookupUtility.removeWWWBeginningOfHostname(whitelistWebsite.toLowerCase()));
+                whitelistWebsites.push(lipUtility.removeWWWBeginningOfHostname(whitelistWebsite.toLowerCase()));
             });
             // remove duplicates 
             let uniqueBlacklistWebsites = [...new Set(blacklistWebsites)];
@@ -583,8 +583,8 @@
     }
 
 
-    let lookupOptions = new LookupOptions();
-    await lookupOptions._constructor();
+    let lipOptions = new LipOptions();
+    await lipOptions._constructor();
 
 
 })();

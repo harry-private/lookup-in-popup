@@ -1,8 +1,9 @@
 (async () => {
     'use strict'
-    class Lookup {
+    class LipFromToolbar {
         async _constructor() {
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+            this.localStorageData = await lipUtility.localStorageDataPromise();
+            console.log(this.localStorageData);
             this.body = document.body;
             this.html = document.documentElement;
 
@@ -55,9 +56,9 @@
                 if (!selectedSourceUrl) {
                     selectedSourceUrl = this.selectedSource.dataset.url;
                 }
-                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 chrome.runtime.sendMessage({
-                    method: 'open-lookup-popup-window',
+                    method: 'open-lip-popup-window',
                     // url: encodeURIComponent(url)
                     url,
                     query
@@ -68,6 +69,6 @@
 
     }
 
-    let lookup = new Lookup();
-    await lookup._constructor();
+    let lipFromToolbar = new LipFromToolbar();
+    await lipFromToolbar._constructor();
 })();

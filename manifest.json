@@ -18,7 +18,7 @@
   ],
   "background": {
     "scripts": [
-      "data/internal_libs/lookup_utility.js",
+      "data/internal_libs/lip_utility.js",
       "data/internal_libs/sources_data.js",
       "data/background/background.js"
     ],
@@ -26,8 +26,8 @@
   },
   "browser_action": {
     "default_icon": "data/icons/icon16.png",
-    "default_title": "Lookup",
-    "default_popup": "data/options/lookup_for_menu_bar/lookup_for_menu_bar.html"
+    "default_title": "Lookup In Popup",
+    "default_popup": "data/options/lip_from_toolbar/lip_from_toolbar.html"
   },
   "options_ui": {
     "page": "data/options/options.html",
@@ -54,11 +54,11 @@
       ],
       "run_at": "document_start",
       "js": [
-        "data/internal_libs/lookup_utility.js",
-        "data/content_scripts/index.js"
+        "data/internal_libs/lip_utility.js",
+        "data/inject/lip.js"
       ],
       "css": [
-        "data/content_scripts/index.css"
+        "data/inject/lip.css"
       ],
       "all_frames": true
     },
@@ -68,10 +68,10 @@
       ],
       "run_at": "document_start",
       "js": [
-        "data/content_scripts/lookup_popup_window.js"
+        "data/inject/lip_popup_window.js"
       ],
       "css": [
-        "data/content_scripts/lookup_popup_window.css"
+        "data/inject/lip_popup_window.css"
       ],
       "all_frames": false
     }

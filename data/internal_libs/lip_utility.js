@@ -1,4 +1,4 @@
-class LookupUtility {
+class LipUtility {
 
     constructor() {
         this._localStorageData = null; //private
@@ -10,6 +10,7 @@ class LookupUtility {
             console.log("Local Storage");
             return this._localStorageData = await new Promise(resolve => {
                 chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "isShowingBubbleAllowed"], result => {
+                    console.log(result);
                     resolve(result);
                 })
             });
@@ -40,4 +41,5 @@ class LookupUtility {
     }
 }
 
-let lookupUtility = new LookupUtility();
+let lipUtility = new LipUtility();
+console.log(lipUtility);

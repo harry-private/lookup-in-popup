@@ -1,21 +1,21 @@
 chrome.runtime.sendMessage({
     method: 'extend',
 }, (response) => {
-    if (response.isLookupPopupWindow) {
-        console.log('currentLookupPopupWindowData: ', response.currentLookupPopupWindowData);
-        lookupPopupWindowRun(response.currentLookupPopupWindowData);
+    if (response.isLipPopupWindow) {
+        console.log('currentLipPopupWindowData: ', response.currentLipPopupWindowData);
+        lipPopupWindowRun(response.currentLipPopupWindowData);
     }
 });
 
-let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
+let lipPopupWindowRun = async (currentLipPopupWindowData) => {
     'use strict';
-    class LookupPopupWindow {
+    class LipPopupWindow {
 
 
-        async _constructor(currentLookupPopupWindowData) {
+        async _constructor(currentLipPopupWindowData) {
             // response comes from background 
-            this.currentLookupPopupWindowData = currentLookupPopupWindowData;
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+            this.currentLipPopupWindowData = currentLipPopupWindowData;
+            this.localStorageData = await lipUtility.localStorageDataPromise();
 
             this.navbar = null;
             this.select = null;
@@ -30,10 +30,10 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
         }
 
         run() {
-            lookupPopupWindow.closeOnEsc();
+            lipPopupWindow.closeOnEsc();
             // TODO Remove or Show navbar based on user preference. Can change the value from settings
 
-            if (this.currentLookupPopupWindowData.navbarState == "removed") { return; }
+            if (this.currentLipPopupWindowData.navbarState == "removed") { return; }
             let observer = new MutationObserver(() => {
                 if (document.body) {
                     this.body = document.body;
@@ -57,54 +57,54 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             window.addEventListener('keyup', e => {
                 if (e.code === 'Escape') {
                     chrome.runtime.sendMessage({
-                        method: 'close-lookup-popup-window'
+                        method: 'close-lip-popup-window'
                     });
                 }
             });
         }
         insertEmptySpace() {
-            document.body.insertAdjacentHTML('beforeend', `<div class="lookup-popup-window-empty-space"></div>`);
+            document.body.insertAdjacentHTML('beforeend', `<div class="lip-popup-window-empty-space"></div>`);
         }
         insertNavbar() {
             this.navbar = document.createElement("div");
 
             this.navbar.insertAdjacentHTML('afterbegin',
                 `
-                  <button class="lookup-popup-window-menu-bar-toggle">
+                  <button class="lip-popup-window-menu-bar-toggle">
                   <span>❮</span>
                   </button>
-                  <div class="lookup-popup-window-menu-bar-collapse">
-                      <div class="lookup-popup-window-menu-bar-extra">
-                          <button class="lookup-popup-window-back">🠈</button>
-                          <button class="lookup-popup-window-forward">🠊</button>
-                          <button class="lookup-popup-window-reload">⭮</button>
+                  <div class="lip-popup-window-menu-bar-collapse">
+                      <div class="lip-popup-window-menu-bar-extra">
+                          <button class="lip-popup-window-back">🠈</button>
+                          <button class="lip-popup-window-forward">🠊</button>
+                          <button class="lip-popup-window-reload">⭮</button>
                       </div>
-                      <div class="lookup-popup-window-menu-bar-form-container">
-                          <form class="lookup-popup-window-menu-bar-form"  action="">
-                              <input name="query" class="lookup-popup-window-menu-bar-query-input" placeholder="Type your query here..." value="${this.currentLookupPopupWindowData.query}" autofocus>
-                              <select class="lookup-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
-                              <button class="lookup-popup-window-menu-bar-submit"></button>
+                      <div class="lip-popup-window-menu-bar-form-container">
+                          <form class="lip-popup-window-menu-bar-form"  action="">
+                              <input name="query" class="lip-popup-window-menu-bar-query-input" placeholder="Type your query here..." value="${this.currentLipPopupWindowData.query}" autofocus>
+                              <select class="lip-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
+                              <button class="lip-popup-window-menu-bar-submit"></button>
                           </form>
                       </div>
                     </div>
-                    <button class="lookup-popup-window-menu-bar-remove">
+                    <button class="lip-popup-window-menu-bar-remove">
                     <span>✖</span>
                     </button>
                 `
             );
-            this.navbar.classList.add("lookup-popup-window-menu-bar");
-            this.select = this.navbar.querySelector('.lookup-popup-window-menu-bar-select');
-            this.form = this.navbar.querySelector('.lookup-popup-window-menu-bar-form');
-            this.toggleMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-toggle');
-            this.removeMenuBtn = this.navbar.querySelector('.lookup-popup-window-menu-bar-remove');
+            this.navbar.classList.add("lip-popup-window-menu-bar");
+            this.select = this.navbar.querySelector('.lip-popup-window-menu-bar-select');
+            this.form = this.navbar.querySelector('.lip-popup-window-menu-bar-form');
+            this.toggleMenuBtn = this.navbar.querySelector('.lip-popup-window-menu-bar-toggle');
+            this.removeMenuBtn = this.navbar.querySelector('.lip-popup-window-menu-bar-remove');
             this.toggleMenuBtnIcon = this.toggleMenuBtn.querySelector('span');
-            this.backBtn = this.navbar.querySelector('.lookup-popup-window-back');
-            this.forwardBtn = this.navbar.querySelector('.lookup-popup-window-forward');
-            this.reloadBtn = this.navbar.querySelector('.lookup-popup-window-reload');
-            this.menuBarCollapse = this.navbar.querySelector('.lookup-popup-window-menu-bar-collapse');
+            this.backBtn = this.navbar.querySelector('.lip-popup-window-back');
+            this.forwardBtn = this.navbar.querySelector('.lip-popup-window-forward');
+            this.reloadBtn = this.navbar.querySelector('.lip-popup-window-reload');
+            this.menuBarCollapse = this.navbar.querySelector('.lip-popup-window-menu-bar-collapse');
 
 
-            if (this.currentLookupPopupWindowData.navbarState == "hidden") {
+            if (this.currentLipPopupWindowData.navbarState == "hidden") {
                 this.isMenuHidden = true;
                 this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
                 this.menuBarCollapse.classList.add('hidden');
@@ -140,11 +140,11 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                 if (!selectedSourceUrl) {
                     selectedSourceUrl = this.selectedSource.dataset.url;
                 }
-                let url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
                 location.href = url;
                 // return;
                 chrome.runtime.sendMessage({
-                    method: 'update_opened_lookup_popup_window_data',
+                    method: 'update_opened_lip_popup_window_data',
                     changeData: ['query', query]
                 });
             });
@@ -159,7 +159,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                     this.menuBarCollapse.classList.add('hidden');
                     this.removeMenuBtn.classList.add('hidden');
                     chrome.runtime.sendMessage({
-                        method: 'update_opened_lookup_popup_window_data',
+                        method: 'update_opened_lip_popup_window_data',
                         changeData: ['navbarState', "hidden"]
                     });
                 } else {
@@ -168,7 +168,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                     this.menuBarCollapse.classList.remove('hidden');
                     this.removeMenuBtn.classList.remove('hidden');
                     chrome.runtime.sendMessage({
-                        method: 'update_opened_lookup_popup_window_data',
+                        method: 'update_opened_lip_popup_window_data',
                         changeData: ['navbarState', "visible"]
                     });
                 }
@@ -179,7 +179,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             this.removeMenuBtn.addEventListener('click', (e) => {
                 this.navbar.remove();
                 chrome.runtime.sendMessage({
-                    method: 'update_opened_lookup_popup_window_data',
+                    method: 'update_opened_lip_popup_window_data',
                     changeData: ['navbarState', "removed"]
                 });
 
@@ -203,7 +203,7 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
         }
     }
 
-    let lookupPopupWindow = new LookupPopupWindow();
-    await lookupPopupWindow._constructor(currentLookupPopupWindowData);
+    let lipPopupWindow = new LipPopupWindow();
+    await lipPopupWindow._constructor(currentLipPopupWindowData);
 
 };

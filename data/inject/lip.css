@@ -1,4 +1,4 @@
-.lookup-bubble {
+.lip-bubble {
     background: unset !important;
     width: 0 !important;
     box-sizing: content-box !important;
@@ -11,14 +11,14 @@
 }
 
 
-.lookup-bubble:hover {
+.lip-bubble:hover {
     background-color: rgb(248, 248, 248) !important;
     /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px; */
     /* border: 1px solid rgb(198, 198, 198); */
     border-image: initial !important;
 }
 
-.lookup-bubble-select {
+.lip-bubble-select {
     box-sizing: border-box !important;
     padding: 16px !important;
     width: 0 !important;

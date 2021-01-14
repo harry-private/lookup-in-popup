@@ -2,7 +2,7 @@
   "name": "lookup",
   "version": "0.0.1",
   "description": "Lookup selected texts in popup on your chosen source (website)",
-  "main": "index.js",
+  "main": "lip.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "chrome": "web-ext -c=chrome_config.js run -t chromium",

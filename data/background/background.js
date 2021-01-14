@@ -1,6 +1,6 @@
 (async () => {
     chrome.runtime.onInstalled.addListener(async () => {
-        let localStorageData = await lookupUtility.localStorageDataPromise();
+        let localStorageData = await lipUtility.localStorageDataPromise();
         if (!('sources' in localStorageData)) {
             firstTime();
         }
@@ -66,14 +66,14 @@
             },
             isShowingBubbleAllowed: 'yes'
         }, function() {
-            // createLookupContextMenu();
+            // createLipContextMenu();
         });
     }
-    class LookupBackground {
+    class LipBackground {
 
 
         async _constructor() {
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+            this.localStorageData = await lipUtility.localStorageDataPromise();
 
             this.tempSettings = {
                 popupWindowMultipleAllowed: false,
@@ -88,7 +88,7 @@
             this.run();
 
             /*[[WindId = { windowId: 6, tabId: 8, query: "", navbarState: "visible|hidden|removed" }]]*/
-            this.openedLookupPopupWindows = {};
+            this.openedLipPopupWindows = {};
 
         }
 
@@ -98,16 +98,16 @@
             this.onStorageChange();
             this.onWindowRemoved();
 
-            // I am creating it, because the first time this id("lookup-popup") won't exist,
+            // I am creating it, because the first time this id("lip-popup") won't exist,
             // and it will cause an error, when removing it, because the function which creates it,
             // first remove context menu with this id
             chrome.contextMenus.create({
-                id: "lookup-popup",
-                title: 'Lookup',
+                id: "lip-popup",
+                title: 'Lookup In Popup',
                 contexts: ["selection"]
             });
-            this.createLookupContextMenu();
-            this.createLookupContextMenuForLinkImage();
+            this.createLipContextMenu();
+            this.createLipContextMenuForLinkImage();
         }
 
 
@@ -115,32 +115,32 @@
 
         onStorageChange() {
             chrome.storage.onChanged.addListener((changes, namespace) => {
-                this.createLookupContextMenu();
+                this.createLipContextMenu();
             });
         }
 
         onMessages() {
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-                if (request.method === 'open-lookup-popup-window') {
-                    this.openLookupPopupWindow(request.url, request.query);
-                } else if (request.method === 'update_opened_lookup_popup_window_data') {
-                    this.updateOpenedLookupPopupWindowData(request.changeData, sender.tab.windowId)
-                } else if (request.method === 'close-lookup-popup-window') {
+                if (request.method === 'open-lip-popup-window') {
+                    this.openLipPopupWindow(request.url, request.query);
+                } else if (request.method === 'update_opened_lip_popup_window_data') {
+                    this.updateOpenedLipPopupWindowData(request.changeData, sender.tab.windowId)
+                } else if (request.method === 'close-lip-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
-                    if (sender.tab.windowId in this.openedLookupPopupWindows) {
+                    if (sender.tab.windowId in this.openedLipPopupWindows) {
                         sendResponse({
-                            isLookupPopupWindow: true,
-                            currentLookupPopupWindowData: this.openedLookupPopupWindows[sender.tab.windowId]
+                            isLipPopupWindow: true,
+                            currentLipPopupWindowData: this.openedLipPopupWindows[sender.tab.windowId]
                         });
-                    } else { sendResponse({ isLookupPopupWindow: false }); }
+                    } else { sendResponse({ isLipPopupWindow: false }); }
                 }
                 return true;
 
             });
         }
 
-        openLookupPopupWindow(url, query = "") {
+        openLipPopupWindow(url, query = "") {
             // windowCreateOptions
 
 
@@ -148,9 +148,9 @@
 
             if (!this.tempSettings.popupWindowMultipleAllowed) {
                 let openedWindow;
-                if (!lookupUtility.isObjEmpty(this.openedLookupPopupWindows)) {
-                    openedWindow = this.openedLookupPopupWindows[Object.keys(this.openedLookupPopupWindows)[0]];
-                    this.updateOpenedLookupPopupWindowData(['query', query], openedWindow.windowId);
+                if (!lipUtility.isObjEmpty(this.openedLipPopupWindows)) {
+                    openedWindow = this.openedLipPopupWindows[Object.keys(this.openedLipPopupWindows)[0]];
+                    this.updateOpenedLipPopupWindowData(['query', query], openedWindow.windowId);
                     chrome.tabs.update(openedWindow.tabId, { url: url }, () => {});
                     chrome.windows.update(openedWindow.windowId, { focused: true }, () => {});
 
@@ -162,7 +162,7 @@
             chrome.windows.create(
                 windowOptionsObj,
                 (win) => {
-                    this.openedLookupPopupWindows[win.id] = {
+                    this.openedLipPopupWindows[win.id] = {
                         windowId: win.tabs[0].windowId,
                         tabId: win.tabs[0].id,
                         query: query,
@@ -222,28 +222,28 @@
             return windowOptionsObj;
         }
 
-        updateOpenedLookupPopupWindowData(changeData, windowId) {
+        updateOpenedLipPopupWindowData(changeData, windowId) {
             if (changeData[0] == 'query') {
-                this.openedLookupPopupWindows[windowId]["query"] = changeData[1];
+                this.openedLipPopupWindows[windowId]["query"] = changeData[1];
             }
             if (changeData[0] == 'navbarState') {
-                this.openedLookupPopupWindows[windowId]["navbarState"] = changeData[1];
+                this.openedLipPopupWindows[windowId]["navbarState"] = changeData[1];
 
             }
         }
         onWindowRemoved() {
             chrome.windows.onRemoved.addListener((windowId) => {
-                delete this.openedLookupPopupWindows[windowId];
+                delete this.openedLipPopupWindows[windowId];
             });
 
         }
-        createLookupContextMenu() {
+        createLipContextMenu() {
 
-            chrome.contextMenus.remove('lookup-popup', async () => {
+            chrome.contextMenus.remove('lip-popup', async () => {
                 chrome.contextMenus.create({
-                    // parentId: 'open-lookup',
-                    id: "lookup-popup",
-                    title: "Lookup \"%s\"",
+                    // parentId: 'open-lip',
+                    id: "lip-popup",
+                    title: "Lookup In Popup \"%s\"",
                     contexts: ["selection"],
                     onclick: (info, tab) => {},
                 });
@@ -254,12 +254,12 @@
                         if (!source.isHidden) {
                             // options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
                             chrome.contextMenus.create({
-                                parentId: 'lookup-popup',
+                                parentId: 'lip-popup',
                                 title: source.title,
                                 contexts: ["selection"],
                                 onclick: (info, tab) => {
-                                    let url = lookupUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
-                                    this.openLookupPopupWindow(url, info.selectionText.trim());
+                                    let url = lipUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
+                                    this.openLipPopupWindow(url, info.selectionText.trim());
 
                                 },
                             });
@@ -271,14 +271,14 @@
 
         }
 
-        createLookupContextMenuForLinkImage() {
+        createLipContextMenuForLinkImage() {
             chrome.contextMenus.create({
-                // parentId: 'open-lookup',
-                // id: "lookup-popup",
+                // parentId: 'open-lip',
+                // id: "lip-popup",
                 title: "Lookup in popup",
                 contexts: ["link", "image", "video", "audio"],
                 onclick: (info, tab) => {
-                    this.openLookupPopupWindow(info.linkUrl);
+                    this.openLipPopupWindow(info.linkUrl);
                 },
             });
         }
@@ -286,7 +286,7 @@
     }
 
 
-    let lookupBackground = new LookupBackground();
-    await lookupBackground._constructor();
+    let lipBackground = new LipBackground();
+    await lipBackground._constructor();
 
 })()

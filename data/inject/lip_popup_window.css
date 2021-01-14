@@ -1,4 +1,4 @@
-.lookup-popup-window-menu-bar * {
+.lip-popup-window-menu-bar * {
     font-family: sans-serif;
     line-height: 1.15 !important;
     -webkit-text-size-adjust: 100% !important;
@@ -8,7 +8,7 @@
     padding: 0 !important;
 }
 
-.lookup-popup-window-menu-bar {
+.lip-popup-window-menu-bar {
 
     position: fixed !important;
     bottom: 0 !important;
@@ -26,14 +26,14 @@
 
 
 
-.lookup-popup-window-empty-space {
+.lip-popup-window-empty-space {
     width: 100% !important;
     height: 100px !important;
 
 }
 
-.lookup-popup-window-menu-bar-toggle span,
-.lookup-popup-window-menu-bar-remove span {
+.lip-popup-window-menu-bar-toggle span,
+.lip-popup-window-menu-bar-remove span {
     color: inherit !important;
     /* this won't affect the remove span */
     transition: transform 0.25s cubic-bezier(0.42, 0, 1, 0.4);
@@ -42,8 +42,8 @@
 
 
 
-.lookup-popup-window-menu-bar-toggle,
-.lookup-popup-window-menu-bar-remove {
+.lip-popup-window-menu-bar-toggle,
+.lip-popup-window-menu-bar-remove {
     background: #eee !important;
     -webkit-appearance: button !important;
     font-weight: 900 !important;
@@ -55,7 +55,7 @@
 
 }
 
-.lookup-popup-window-menu-bar-toggle:hover {
+.lip-popup-window-menu-bar-toggle:hover {
     color: rgb(73, 73, 73) !important;
     background-color: #ccc !important;
     border-radius: unset !important;
@@ -64,7 +64,7 @@
 
 }
 
-.lookup-popup-window-menu-bar-remove:hover {
+.lip-popup-window-menu-bar-remove:hover {
     color: #fff8f8 !important;
     background-color: red !important;
     border-radius: unset !important;
@@ -73,20 +73,20 @@
 
 }
 
-/* .lookup-popup-window-menu-bar-toggle:hover span,
-.lookup-popup-window-menu-bar-remove:hover span {
+/* .lip-popup-window-menu-bar-toggle:hover span,
+.lip-popup-window-menu-bar-remove:hover span {
     transform: scale(1.5) !important;
 } */
 
-.lookup-popup-window-menu-bar-toggle:focus,
-.lookup-popup-window-menu-bar-remove:focus {
+.lip-popup-window-menu-bar-toggle:focus,
+.lip-popup-window-menu-bar-remove:focus {
     /* border: none !important; */
     outline: none !important;
     text-transform: none !important;
 
 }
 
-.lookup-popup-window-menu-bar-collapse {
+.lip-popup-window-menu-bar-collapse {
     border: 1px solid #dcdcdc !important;
     padding: 5px !important;
     display: flex !important;
@@ -95,7 +95,7 @@
     min-width: 0 !important;
 }
 
-.lookup-popup-window-menu-bar-extra {
+.lip-popup-window-menu-bar-extra {
     display: flex !important;
     /* flex: 1 !important; */
     width: 100px !important;
@@ -103,14 +103,14 @@
     margin-right: 25px !important;
 }
 
-.lookup-popup-window-menu-bar-extra button {
+.lip-popup-window-menu-bar-extra button {
     -webkit-appearance: button !important;
     font-weight: 900 !important;
     border: 0px !important;
     padding: 5px !important;
 }
 
-.lookup-popup-window-menu-bar-extra button:hover {
+.lip-popup-window-menu-bar-extra button:hover {
     color: rgb(73, 73, 73) !important;
     background-color: #ccc !important;
     border-radius: 10px !important;
@@ -118,14 +118,14 @@
     cursor: pointer;
 }
 
-.lookup-popup-window-menu-bar-extra button:focus {
+.lip-popup-window-menu-bar-extra button:focus {
     border: none !important;
     outline: none !important;
     text-transform: none !important;
 
 }
 
-.lookup-popup-window-menu-bar-form-container {
+.lip-popup-window-menu-bar-form-container {
     display: flex !important;
     flex: 2 !important;
     justify-content: space-between !important;
@@ -136,7 +136,7 @@
 
 
 
-.lookup-popup-window-menu-bar-form {
+.lip-popup-window-menu-bar-form {
     display: flex !important;
     height: 0 !important;
     flex: 2 !important;
@@ -145,7 +145,7 @@
 
 }
 
-.lookup-popup-window-menu-bar-query-input {
+.lip-popup-window-menu-bar-query-input {
     min-width: 0 !important;
     margin: 0 !important;
     box-shadow: none;
@@ -166,13 +166,13 @@
     flex: 3 !important;
 }
 
-.lookup-popup-window-menu-bar-query-input::-webkit-search-decoration {
+.lip-popup-window-menu-bar-query-input::-webkit-search-decoration {
     -webkit-appearance: none !important;
 }
 
-.lookup-popup-window-menu-bar-query-input:focus,
-.lookup-popup-window-menu-bar-select:focus,
-.lookup-popup-window-menu-bar-submit:focus {
+.lip-popup-window-menu-bar-query-input:focus,
+.lip-popup-window-menu-bar-select:focus,
+.lip-popup-window-menu-bar-submit:focus {
     box-shadow: none !important;
     outline: unset !important;
     border-color: #5f615f !important;
@@ -180,7 +180,7 @@
 
 }
 
-.lookup-popup-window-menu-bar-select {
+.lip-popup-window-menu-bar-select {
     min-width: 0 !important;
     box-shadow: none !important;
     transition: none !important;
@@ -210,7 +210,7 @@
     background-position-y: 50% !important;
 }
 
-.lookup-popup-window-menu-bar-submit {
+.lip-popup-window-menu-bar-submit {
     min-width: 0 !important;
     padding: 0 !important;
     transition: unset !important;
@@ -241,15 +241,15 @@
     background-size: 16px !important;
 }
 
-.lookup-popup-window-menu-bar-query-input:hover,
-.lookup-popup-window-menu-bar-select:hover,
-.lookup-popup-window-menu-bar-submit:hover {
+.lip-popup-window-menu-bar-query-input:hover,
+.lip-popup-window-menu-bar-select:hover,
+.lip-popup-window-menu-bar-submit:hover {
     background-color: #f5f5f5 !important;
     cursor: pointer;
 
 }
 
-.lookup-popup-window-menu-bar-query-input:hover {
+.lip-popup-window-menu-bar-query-input:hover {
     cursor: text !important;
 }
 
@@ -258,31 +258,31 @@
 @media (max-width: 400px) {
 
 
-    .lookup-popup-window-menu-bar {
+    .lip-popup-window-menu-bar {
         display: flex !important;
         width: 100% !important;
         /* padding: 5px 2px !important; */
 
     }
 
-    .lookup-popup-window-menu-bar-collapse {
+    .lip-popup-window-menu-bar-collapse {
         display: block !important;
     }
 
-    .lookup-popup-window-menu-bar-extra {
+    .lip-popup-window-menu-bar-extra {
         flex: 1;
         width: 100% !important;
     }
 
-    .lookup-popup-window-menu-bar-form-container {
+    .lip-popup-window-menu-bar-form-container {
         width: 100% !important;
     }
 
-    .lookup-popup-window-menu-bar-form {
+    .lip-popup-window-menu-bar-form {
         flex: 1 !important;
     }
 
-    .lookup-popup-window-menu-bar-select {
+    .lip-popup-window-menu-bar-select {
         flex: 1 !important;
     }
 }

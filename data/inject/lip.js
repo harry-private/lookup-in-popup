@@ -1,9 +1,10 @@
 (async () => {
     'use strict'
-    class Lookup {
+    class Lip {
         async _constructor() {
+            console.log("lkj");
             // this.sources = {};
-            this.localStorageData = await lookupUtility.localStorageDataPromise();
+            this.localStorageData = await lipUtility.localStorageDataPromise();
 
             if (this.isGloballyDisabled()) return;
 
@@ -15,8 +16,8 @@
                     this.html = document.documentElement;
                     this.bubble = document.createElement('div');
                     this.bubbleSelect = document.createElement('select');
-                    this.bubble.classList.add('lookup-bubble');
-                    this.bubbleSelect.classList.add('lookup-bubble-select');
+                    this.bubble.classList.add('lip-bubble');
+                    this.bubbleSelect.classList.add('lip-bubble-select');
                     this.isAdded = false;
                     this.selectedText = "";
                     this.selectedSource;
@@ -54,7 +55,7 @@
         isCurrentWebsiteIsAllowed() {
             // blacklist/whitelist check
             let allowed = true;
-            let currentWebsiteUrl = window.location.protocol + "//" + lookupUtility.removeWWWBeginningOfHostname(window.location.hostname);
+            let currentWebsiteUrl = window.location.protocol + "//" + lipUtility.removeWWWBeginningOfHostname(window.location.hostname);
             if (this.localStorageData.enableDisable.blackWhiteListMode == "blacklist-mode") {
                 if (this.localStorageData.enableDisable.blacklist.includes(currentWebsiteUrl)) {
                     allowed = false;
@@ -117,7 +118,7 @@
             let offsetX = 15;
             let offsetY = 10;
 
-            // this width and height represent the width and height defined in the index.css
+            // this width and height represent the width and height defined in the lip.css
             let bubbleWidth = 32;
             let bubbleHeight = 30;
             let scrollWidthX = window.innerHeight - document.documentElement.clientHeight;
@@ -157,18 +158,18 @@
         }
 
 
-        createLookupPopupWindow(event) {
+        createLipPopupWindow(event) {
             let url;
             if (this.isShowingBubbleAllowed()) {
                 this.selectedSource = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
-                url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
+                url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
             } else {
                 let firstSourceUrl = this.localStorageData.sources[0].url;
-                url = lookupUtility.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
+                url = lipUtility.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
             }
             chrome.runtime.sendMessage({
-                method: 'open-lookup-popup-window',
+                method: 'open-lip-popup-window',
                 // url: encodeURIComponent(url)
                 url: url,
                 query: this.selectedText.trim()
@@ -177,8 +178,8 @@
 
         addMouseupListenerToBody() {
             document.body.addEventListener("mouseup", (mouseupEvent) => {
-                if (mouseupEvent.target.classList.contains('lookup-bubble-select') ||
-                    mouseupEvent.target.closest(".lookup-bubble-select")) { return; }
+                if (mouseupEvent.target.classList.contains('lip-bubble-select') ||
+                    mouseupEvent.target.closest(".lip-bubble-select")) { return; }
 
                 // setTimeout is important
                 setTimeout(() => {
@@ -193,7 +194,7 @@
                     if (!this.isSelectedText(mouseupEvent)) { return; }
 
                     if (!this.isShowingBubbleAllowed()) {
-                        this.createLookupPopupWindow(mouseupEvent);
+                        this.createLipPopupWindow(mouseupEvent);
                         return;
                     }
 
@@ -203,7 +204,7 @@
                         this.removeBubble();
                         evt.stopPropagation();
                         evt.preventDefault();
-                        this.createLookupPopupWindow(mouseupEvent);
+                        this.createLipPopupWindow(mouseupEvent);
                     };
                 });
             });
@@ -218,7 +219,8 @@
             });
         }
 
+
     }
-    let lookup = new Lookup();
-    await lookup._constructor();
+    let lip = new Lip();
+    await lip._constructor();
 })();
