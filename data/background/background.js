@@ -64,7 +64,7 @@
                 blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
                 whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
             },
-            showChooseSourceOptions: 'yes'
+            isShowingBubbleAllowed: 'yes'
         }, function() {
             // createLookupContextMenu();
         });

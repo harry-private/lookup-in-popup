@@ -1,13 +1,13 @@
 /* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
 body {
-    line-height: 1.6;
+    line-height: 1;
     font-size: 15px;
     overflow: auto;
     background: #eeeeee;
-    min-height: 550px;
+    min-height: 500px;
     /* max-height: 90vh; */
     margin-bottom: 50px;
-    min-width: 750px;
+    min-width: 600px;
 }
 
 /* @-moz-document url-prefix() {

@@ -21,76 +21,83 @@
         <!-- <span style="display: inline-block; padding: 15px; background: palevioletred;">Note: no changes will be applied until you click on the "Save Settings" button below.</span> -->
 
         <div class="add-new-source main-settings-segment">
-            <div class="header">Add New Source</div>
-
-            <div class="second-settings-segment">
-                <form id="add-new-source-form">
-                    <!-- <label><strong>Title</strong></label><br> -->
-                    <input type="text" name="title" class="source-title" placeholder="Title"><br><br>
-                    <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
-                    <input type="text" name="url" class="source-url" placeholder="https://somewebsite/search/%s">
-                    <br>
-                    <span>*Add <strong>%s</strong> where the query will go</span>
-                    <br>
-                    <br>
-                    <button type="submit">Add Source</button>
-                </form>
+            <div class="header hide-next-sibling next-sibling-is-hidden">Add New Source <span class="material-icons expand-icon">expand_more</span></div>
+            <div class="hidable hidden">
+                <div class="second-settings-segment">
+                    <form id="add-new-source-form">
+                        <!-- <label><strong>Title</strong></label><br> -->
+                        <input type="text" name="title" class="source-title" placeholder="Title"><br><br>
+                        <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
+                        <input type="text" name="url" class="source-url" placeholder="https://somewebsite/search/%s">
+                        <br>
+                        <span>*Add <strong>%s</strong> where the query will go</span>
+                        <br>
+                        <br>
+                        <button type="submit">Add Source</button>
+                    </form>
+                </div>
             </div>
         </div>
 
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header">Added Sources</div>
-                <div class="second-settings-segment">
-                    <h3>Sources</h3>
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
-
-                    <div id="sources-settings" class=""></div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <div class="flex-container nowrap main-settings-segment">
-            <div class="column">
-                <div class="header">Enable/Disable the extension</div>
-                <div class="second-settings-segment">
-                    <h4>Enable or Disable the extension globally</h4>
-                    <select name="enable_disable_globally" id="enable-disable-globally">
-                        <option value="enable">Enable</option>
-                        <option value="disable">Disable</option>
-                    </select>
-                </div>
-                <br>
-                <div id="enable-disable-website-wise">
+                <div class="header hide-next-sibling next-sibling-is-hidden">Added Sources<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="hidable hidden">
+                    <h5>*Note that First source/website on the list will be the default when "Show Bubble" is set to "No"</h5>
                     <div class="second-settings-segment">
-                        <h4>Enable or Disable the extension website-wise</h4>
-                        <form id="black-white-list-form">
-                            <select name="mode">
-                                <option value="blacklist-mode">Blacklist Mode</option>
-                                <option value="whitelist-mode">Whitelist Mode</option>
-                            </select>
-                            <br>
-                            <br>
+                        <h3>Sources</h3>
+                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
 
-                            <input name="url" type="text" placeholder="https://somewebsite.com" style="width:100%;">
+                        <div id="sources-settings" class=""></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="flex-container nowrap main-settings-segment">
+            <div class="column">
+                <div class="header hide-next-sibling next-sibling-is-hidden">Enable/Disable the extension<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="hidable hidden">
+                    <h5>*Note that the extension will still work from context menu</h5>
+                    <div class="second-settings-segment">
+                        <h4>Enable or Disable the extension globally</h4>
+                        <select name="enable_disable_globally" id="enable-disable-globally">
+                            <option value="enable">Enable</option>
+                            <option value="disable">Disable</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div id="enable-disable-website-wise">
+                        <div class="second-settings-segment">
+                            <h4><span class="tooltip-btn" data-tooltip-btn="enable-disable-website-wise">Enable or Disable the extension website-wise</span></h4>
+                            <form id="black-white-list-form">
+                                <select name="mode">
+                                    <option value="blacklist-mode">Blacklist Mode</option>
+                                    <option value="whitelist-mode">Whitelist Mode</option>
+                                </select>
+                                <br>
+                                <br>
+
+                                <input name="url" type="text" placeholder="https://somewebsite.com" style="width:100%;">
+                                <br>
+                                <br>
+                                <button type="submit">Add a website</button>
+                            </form>
                             <br>
                             <br>
-                            <button type="submit">Add a website</button>
-                        </form>
-                        <br>
-                        <br>
-                        <div id="blacklist">
-                            <strong><span>BlackList</span></strong>
-                            <br>
-                            <br>
-                            <div class="main"></div>
-                        </div>
-                        <div id="whitelist" style="display: none;">
-                            <strong><span>Whitelist</span></strong>
-                            <br>
-                            <br>
-                            <div class="main"></div>
+                            <div id="blacklist" style="border: 1px solid #ccc; padding:15px;">
+                                <strong><span>BlackList</span></strong>
+                                <br>
+                                <br>
+                                <div class="main"></div>
+                            </div>
+                            <div id="whitelist" style="display: none; border: 1px solid #ccc; padding:15px;">
+                                <strong><span>Whitelist</span></strong>
+                                <br>
+                                <br>
+                                <div class="main"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,41 +106,123 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header">Other settings</div>
-                <div class="second-settings-segment">
-                    <h3>Trigger Key</h3>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Popup Window<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="hidable hidden">
+                    <br>
+                    <div class="second-settings-segment" title=''>
+                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-multiple-window">Allow multiple popup window</span></h3>
 
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
-                    <select name="" id="trigger-key">
-                        <option value="none">None</option>
-                        <option value="ctrlKey">Ctrl</option>
-                        <option value="shiftKey">Shift</option>
-                        <option value="altKey">Alt</option>
-                    </select>
+                        <select name="" id="popup-multiple-window">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window state</span></h3>
+
+                        <select name="" id="popup-window-state">
+                            <option value="normal">Normal</option>
+                            <option value="maximize">Maximize</option>
+                            <option value="fullscreen">Fullscreen</option>
+                        </select>
+                    </div>
+
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window width</span></h3>
+                        <input type="number" name="popup-window-width" id="" placeholder="in px">
+                    </div>
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window height</span></h3>
+                        <input type="number" name="popup-window-height" id="" placeholder="in px">
+                    </div>
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window from left</span></h3>
+                        <input type="number" name="popup-window-left" id="" placeholder="in px">
+                    </div>
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window from top</span></h3>
+                        <input type="number" name="popup-window-top" id="" placeholder="in px">
+                    </div>
                 </div>
-                <br>
-                <div class="second-settings-segment">
-                    <h3>Show "Choose Source Options" menu</h3>
+            </div>
 
-                    <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
-                    <select name="" id="show-choose-source-options">
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                    </select>
+        </div>
+        <br>
+        <div class="flex-container nowrap main-settings-segment">
+            <div class="column">
+                <div class="header hide-next-sibling next-sibling-is-hidden">Other settings <span class="material-icons expand-icon">expand_more</span></div>
+                <div class="hidable hidden">
+                    <div class="second-settings-segment">
+                        <h3><span class="tooltip-btn" data-tooltip-btn="trigger-key">Trigger Key</span></h3>
+
+                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
+                        <select name="" id="trigger-key">
+                            <option value="none">None</option>
+                            <option value="ctrlKey">Ctrl</option>
+                            <option value="shiftKey">Shift</option>
+                            <option value="altKey">Alt</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="second-settings-segment" title=''>
+                        <h3><span class="tooltip-btn" data-tooltip-btn="show-bubble">Show Bubble</span></h3>
+
+                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
+                        <select name="" id="is-showing-bubble-allowed">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
                 </div>
-
             </div>
         </div>
 
     </div>
 
     <br>
-    <!--     <hr>
-    <h2>Help</h2>
-    <div class="help"></div> -->
-    <div id="save-settings" style="position: fixed; z-index: 100; bottom: 28px; right:16px"><button>Save Settings</button></div>
+
+    <div accesskey="s" id="save-settings" title="Shortcut - Alt+s OR Alt+Shift+s"><button>Save Settings</button></div>
+
+
+    <!-- Help Tooltip data -->
+    <div class="tooltip" data-tooltip-for="enable-disable-website-wise">
+        <div class="arrow" data-popper-arrow></div>
+        "Blacklist Mode": Text selection will not work on websites that are on the blacklist.
+        <hr>
+        "Whitelist Mode": Text selection will only work on websites that are on the whitelist.
+
+    </div>
+
+    <div class="tooltip" data-tooltip-for="popup-multiple-window">
+        <div class="arrow" data-popper-arrow></div>
+        "Yes": Every request will open in a new popup window.
+        <hr>
+        "No": Every request will open in the same popup window.
+    </div>
+    <div class="tooltip" data-tooltip-for="trigger-key">
+        <div class="arrow" data-popper-arrow></div>
+        "None": Text selection will work normally.
+        <hr>
+        "Some Key": Text selection will not work, until the "Some Key" isn't held while making the text selection.
+    </div>
+
+
+    <div class="tooltip" data-tooltip-for="show-bubble">
+        <div class="arrow" data-popper-arrow></div>
+        "Yes": Bubble will show up normally upon text selection.
+        <hr>
+        "No": Bubble will not show up, and text selection will automatically open in a popup window.
+
+    </div>
+
     <script src="/data/internal_libs/lookup_utility.js"></script>
     <script src="/data/external_libs/sortable.min.js"></script>
+    <script src="/data/external_libs/popper.min.js"></script>
     <script src="/data/internal_libs/sources_data.js"></script>
     <script src="options.js"></script>
 

@@ -152,14 +152,14 @@
 
             if (this.body.appendChild(this.bubble)) { this.isAdded = true; }
         }
-        showChooseSourceOptions() {
-            return (this.localStorageData.showChooseSourceOptions == 'yes' ? true : false);
+        isShowingBubbleAllowed() {
+            return (this.localStorageData.isShowingBubbleAllowed == 'yes' ? true : false);
         }
 
 
         createLookupPopupWindow(event) {
             let url;
-            if (this.showChooseSourceOptions()) {
+            if (this.isShowingBubbleAllowed()) {
                 this.selectedSource = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
                 url = lookupUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
@@ -192,7 +192,7 @@
                     // if no text is selected or clicked element is bubble, don't execute the rest of the code
                     if (!this.isSelectedText(mouseupEvent)) { return; }
 
-                    if (!this.showChooseSourceOptions()) {
+                    if (!this.isShowingBubbleAllowed()) {
                         this.createLookupPopupWindow(mouseupEvent);
                         return;
                     }

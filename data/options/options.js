@@ -16,7 +16,7 @@
             this.blacklistElem = document.querySelector("#blacklist");
             this.whitelistElem = document.querySelector("#whitelist");
 
-            this.showChooseSourceOptionsElem = document.querySelector("#show-choose-source-options");
+            this.isShowingBubbleAllowedElem = document.querySelector("#is-showing-bubble-allowed");
             // document.body.style.height = (screen.height - 120) + "px";
 
             this.run();
@@ -26,6 +26,8 @@
 
             this.createSourcesSettingsLayout();
             this.sortSources();
+            this.tooltip();
+            this.toggleNextSibling();
             this.addEventListenerToSourceSideOptions();
             this.addEventListenerToSourceEditForm();
             this.addEventListenerToBlackWhiteListRemoveBtn();
@@ -58,7 +60,7 @@
                         blacklist: blackWhiteList[0],
                         whitelist: blackWhiteList[1],
                     },
-                    showChooseSourceOptions: this.showChooseSourceOptionsElem.value
+                    isShowingBubbleAllowed: this.isShowingBubbleAllowedElem.value
                 });
 
                 this.showFlashMessages(["Settings Saved!"]);
@@ -127,7 +129,7 @@
             this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;
             this.blackWhiteListFormElem['mode'].value = this.localStorageData.enableDisable.blackWhiteListMode;
             this.changeBlackWhiteList();
-            this.showChooseSourceOptionsElem.value = this.localStorageData.showChooseSourceOptions.toLowerCase();
+            this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed.toLowerCase();
         }
 
         getSourcesFromInputs(sourceEditFormElems) {
@@ -268,7 +270,7 @@
                         this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
                     }
                     this.addEventListenerToBlackWhiteListRemoveBtn(true);
-                    this.blackWhiteListFormElem['url'] = "";
+                    this.blackWhiteListFormElem['url'].value = "";
                     this.showFlashMessages(["New website is added, please save the changes."]);
 
                 }
@@ -304,11 +306,12 @@
         }
 
         templateForBlackWhitelist(url) {
+            let newUrl = new URL(url);
             return (`
               <div class="black-white-list-website-wrapper flex-container nowrap" style="justify-content: space-between">
-                <div class="website column">${url}</div>
+                <div class="website column"><img style="width: 16px; height: 16px; margin-right: 10px; margin-top: 6px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${url}</div>
                 <div class="column" style="text-align: right;">
-                  <span class="website-remove-from-black-white-list" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><i class="material-icons">delete_forever</i></strong></span>
+                  <span class="website-remove-from-black-white-list" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><span class="material-icons">delete_forever</span></strong></span>
                 </div>
               </div>
           `);
@@ -323,19 +326,18 @@
             id = ('_' + Math.random().toString(36).substr(2, 9))
         } = {}) {
 
-
-
+            let newUrl = new URL(url);
             return (
                 `
                   <div class="source" style="">
                     
                       <div class="flex-container nowrap" style="justify-content: space-between">
-                          <div class="visible-title column" title="${this.sanitize(title)}">${this.sanitize(title)}</div>
+                          <div class="visible-title column" title="${this.sanitize(title)}"><img style="width: 16px; height: 16px; margin-right: 10px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${this.sanitize(title)}</div>
                           <div class="source-side-options column">
-                              <span class="source-edit" title="Edit the source"><strong><i class="material-icons">edit</i></strong></span>
-                              <span class="source-hide" title="Hide the source"><strong><i class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</i></strong></span>
-                              ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><i class="material-icons">delete_forever</i></strong></span>')}
-                              <span class="source-drag" title="Sort by dragging and dropping"><strong><i class="material-icons">menu</i></strong></span>
+                              <span class="source-edit" title="Edit the source"><strong><span class="material-icons">edit</span></strong></span>
+                              <span class="source-hide" title="Hide the source"><strong><span class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</span></strong></span>
+                              ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><span class="material-icons">delete_forever</span></strong></span>')}
+                              <span class="source-drag" title="Sort by dragging and dropping"><strong><span class="material-icons">menu</span></strong></span>
                           </div>
                       </div>
                       <form
@@ -515,6 +517,59 @@
             });
         }
 
+        tooltip() {
+            const showEvents = ['mouseenter', 'focus'];
+            const hideEvents = ['mouseleave', 'blur'];
+            let tooltipBtnElems = document.querySelectorAll('[data-tooltip-btn]');
+
+            [...tooltipBtnElems].forEach((tooltipBtn) => {
+
+                let tooltip = document.querySelector(`[data-tooltip-for=${tooltipBtn.dataset.tooltipBtn}]`);
+                let popperInstance = null;
+
+                function create() {
+                    popperInstance = Popper.createPopper(tooltipBtn, tooltip, {
+                        modifiers: [{ name: 'offset', options: { offset: [0, 8], }, }, ],
+                        placement: 'auto',
+                    });
+                }
+
+                function destroy() {
+                    if (popperInstance) {
+                        popperInstance.destroy();
+                        popperInstance = null;
+                    }
+                }
+
+
+
+                showEvents.forEach(event => {
+                    tooltipBtn.addEventListener(event, () => {
+                        tooltip.setAttribute('data-show', '');
+                        create();
+                    });
+                });
+
+                hideEvents.forEach(event => {
+                    tooltipBtn.addEventListener(event, () => {
+                        tooltip.removeAttribute('data-show');
+                        destroy();
+                    });
+                });
+            });
+        }
+
+        toggleNextSibling() {
+            let hideNextSiblingBtnElems = document.querySelectorAll(".hide-next-sibling");
+            [...hideNextSiblingBtnElems].forEach((hideNextSiblingBtn) => {
+                let nextSibling = hideNextSiblingBtn.nextElementSibling;
+                hideNextSiblingBtn.addEventListener("click", (e) => {
+                    hideNextSiblingBtn.classList.toggle("next-sibling-is-hidden");
+                    nextSibling.classList.toggle("hidden");
+                });
+
+            });
+        }
 
         getSelectedOption(e) {
             return e.options[e.selectedIndex].value

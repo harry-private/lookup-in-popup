@@ -1,14 +1,15 @@
+/* TODO Improve styling of select inputs for firefox */
 html,
 body {
-    line-height: 1.6;
+    line-height: 1;
     font-size: 15px;
     overflow: auto;
     background: #eeeeee;
 
-    min-height: 550px;
-    /* max-height: 90vh; */
+    min-height: 500px;
+    /* max-height: 500px; */
     margin-bottom: 50px;
-    min-width: 750px;
+    min-width: 600px;
 
 
 }
@@ -86,7 +87,8 @@ button:focus {
     outline: none
 }
 
-input[type=text] {
+input[type=text],
+input[type=number] {
     background: #ffffff !important;
     width: 100%;
     padding: 12px;
@@ -108,6 +110,14 @@ select {
 
 select:focus {
     border-color: #ccc;
+}
+
+
+#save-settings {
+    position: fixed !important;
+    z-index: 100;
+    bottom: 28px;
+    right: 16px;
 }
 
 .main-settings {
@@ -137,10 +147,25 @@ select:focus {
 }
 
 .main-settings-segment .header {
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
     font-weight: 700;
     /* padding: 5px; */
     margin-bottom: 12px;
-    font-size: 23px
+    font-size: 23px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-settings-segment .header .expand-icon {
+    transition: transform 0.25s cubic-bezier(0.42, 0, 1, 0.4);
+}
+
+.main-settings-segment .header.next-sibling-is-hidden .expand-icon {
+    transform: rotate(180deg);
 }
 
 #sources-settings .source {
@@ -221,11 +246,11 @@ select:focus {
 
 
 /* sortableJS */
-
+/* 
 .source-drag {
     cursor: grab !important;
     cursor: -webkit-grabbing;
-}
+} */
 
 .sortable-ghost {
     background-color: #eee;
@@ -240,4 +265,68 @@ select:focus {
     font-weight: 900;
 }
 
-.sortable-drag {}
+.sortable-drag {
+
+    cursor: grab !important;
+    cursor: -webkit-grabbing;
+}
+
+/* Tooltip */
+
+.tooltip hr {
+    border: 0.1px solid #eee;
+}
+
+.tooltip-btn {
+    cursor: pointer;
+    border-bottom: 1px dotted #000;
+}
+
+.tooltip {
+    background: #5d5d5b;
+    max-width: 400px;
+    color: white;
+    font-weight: bold;
+    padding: 6px 8px;
+    font-size: 13px;
+    border-radius: 4px;
+    display: none;
+}
+
+.tooltip[data-show] {
+    display: block;
+}
+
+.arrow,
+.arrow::before {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    z-index: -1;
+}
+
+.arrow::before {
+    content: '';
+    transform: rotate(45deg);
+    background: #5d5d5b;
+}
+
+.tooltip[data-popper-placement^='top']>.arrow {
+    bottom: -4px;
+}
+
+.tooltip[data-popper-placement^='bottom']>.arrow {
+    top: -4px;
+}
+
+.tooltip[data-popper-placement^='left']>.arrow {
+    right: -4px;
+}
+
+.tooltip[data-popper-placement^='right']>.arrow {
+    left: -4px;
+}
+
+.hidden {
+    display: none !important;
+}

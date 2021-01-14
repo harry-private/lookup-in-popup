@@ -9,7 +9,7 @@ class LookupUtility {
         if (!this._localStorageData) {
             console.log("Local Storage");
             return this._localStorageData = await new Promise(resolve => {
-                chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "showChooseSourceOptions"], result => {
+                chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "isShowingBubbleAllowed"], result => {
                     resolve(result);
                 })
             });

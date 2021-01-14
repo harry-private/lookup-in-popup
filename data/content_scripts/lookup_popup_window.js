@@ -107,8 +107,8 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
             if (this.currentLookupPopupWindowData.navbarState == "hidden") {
                 this.isMenuHidden = true;
                 this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
-                this.menuBarCollapse.classList.add('hide');
-                this.removeMenuBtn.classList.add('hide');
+                this.menuBarCollapse.classList.add('hidden');
+                this.removeMenuBtn.classList.add('hidden');
             }
 
 
@@ -156,8 +156,8 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                     this.isMenuHidden = true;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
                     console.log(this.toggleMenuBtnIcon);
-                    this.menuBarCollapse.classList.add('hide');
-                    this.removeMenuBtn.classList.add('hide');
+                    this.menuBarCollapse.classList.add('hidden');
+                    this.removeMenuBtn.classList.add('hidden');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',
                         changeData: ['navbarState', "hidden"]
@@ -165,8 +165,8 @@ let lookupPopupWindowRun = async (currentLookupPopupWindowData) => {
                 } else {
                     this.isMenuHidden = false;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(0deg)';
-                    this.menuBarCollapse.classList.remove('hide');
-                    this.removeMenuBtn.classList.remove('hide');
+                    this.menuBarCollapse.classList.remove('hidden');
+                    this.removeMenuBtn.classList.remove('hidden');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lookup_popup_window_data',
                         changeData: ['navbarState', "visible"]
