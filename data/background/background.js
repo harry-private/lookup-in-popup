@@ -9,7 +9,8 @@
     function firstTime() {
         chrome.storage.sync.set({
             sources: [{
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "googleTranslate",
                     "title": "Google Translate",
                     "from": "auto", //default
@@ -18,37 +19,43 @@
                 },
                 {
                     "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
+                    "isHidden": false,
                     "id": "google",
                     "title": "Google",
                     "url": "https://www.google.com/search?q=%s"
 
                 }, {
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "cambridge",
                     "title": "Cambridge",
                     "fromTo": "english",
                     "url": lipPreInstalledSourcesData.cambridge.generateUrl("english")
                 }, {
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "oxford",
                     "title": "Oxford",
                     "fromTo": "en",
                     "url": lipPreInstalledSourcesData.oxford.generateUrl("en")
                 }, {
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "collins",
                     "title": "Collins",
                     "fromTo": "english",
                     "url": lipPreInstalledSourcesData.collins.generateUrl("english")
                 }, {
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "longman",
                     "title": "Longman",
                     "fromTo": "english",
                     "url": lipPreInstalledSourcesData.longman.generateUrl("english")
                 },
                 {
-                    "isPreInstalled": "true",
+                    "isPreInstalled": true,
+                    "isHidden": false,
                     "id": "wikipedia",
                     "title": "Wikipedia",
                     "fromTo": "english",

@@ -2,12 +2,11 @@
 
 // TODO Hide bubble after some time when no action is made.
 
+// TODO On options.js group functions which have same category.
+
 // TODO Remove unnecessary comments, especially form css files.
 
 // TODO Add better description for the extension in both manifest.json, and package.json.
-
-
-// TODO Change extension name to "lookup in popup"
 
 // CONSIDER Adding an option where a window mode (incognito, or normal) can be set for all,
             or for specific site/source.

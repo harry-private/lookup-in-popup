@@ -110,9 +110,18 @@
                 <div class="hidable hidden">
                     <br>
                     <div class="second-settings-segment" title=''>
-                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-multiple-window">Allow multiple popup window</span></h3>
+                        <h3><span>Popup window close on Esc</span></h3>
 
-                        <select name="" id="popup-multiple-window">
+                        <select name="" id="popup-close-on-esc">
+                            <option value="yes">Yes</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div class="second-settings-segment" title=''>
+                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-multiple-windows">Allow multiple popup windows</span></h3>
+
+                        <select name="" id="popup-multiple-windows">
                             <option value="yes">Yes</option>
                             <option value="no">No</option>
                         </select>
@@ -198,7 +207,7 @@
 
     </div>
 
-    <div class="tooltip" data-tooltip-for="popup-multiple-window">
+    <div class="tooltip" data-tooltip-for="popup-multiple-windows">
         <div class="arrow" data-popper-arrow></div>
         "Yes": Every request will open in a new popup window.
         <hr>
@@ -217,7 +226,6 @@
         "Yes": Bubble will show up normally upon text selection.
         <hr>
         "No": Bubble will not show up, and text selection will automatically open in a popup window.
-
     </div>
 
     <script src="/data/internal_libs/lip_utility.js"></script>

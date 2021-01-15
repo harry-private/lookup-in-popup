@@ -48,7 +48,7 @@
                 let triggerKeyToStore = this.changeTriggerKey();
                 let sourcesToStore = this.getSourcesFromInputs(sourceEditFormElems);
                 let enableDisableGloballyToStore = this.changeEnableDisableGlobally();
-                let blackWhiteList = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
+                let blackWhiteListToStore = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
                 if (sourcesToStore.error == true) { return; }
                 // save the sources to the local storage
                 chrome.storage.sync.set({
@@ -57,8 +57,8 @@
                     enableDisable: {
                         globally: enableDisableGloballyToStore,
                         blackWhiteListMode: this.blackWhiteListFormElem['mode'].value,
-                        blacklist: blackWhiteList[0],
-                        whitelist: blackWhiteList[1],
+                        blacklist: blackWhiteListToStore[0],
+                        whitelist: blackWhiteListToStore[1],
                     },
                     isShowingBubbleAllowed: this.isShowingBubbleAllowedElem.value
                 });
@@ -70,10 +70,8 @@
         createSourcesSettingsLayout() {
             this.localStorageData.sources.forEach((storedSource) => {
                 let fromTo;
-                let isPreInstalled = (storedSource.isPreInstalled == 'true') ? true : false;
-                let isHidden = (storedSource.isHidden == 'true') ? true : false;
 
-                if (isPreInstalled) {
+                if (storedSource.isPreInstalled) {
                     if (storedSource.id === "googleTranslate") {
                         let optionFrom = '';
                         let optionTo = '';
@@ -105,8 +103,8 @@
                 }
 
                 let template = this.templateForSource({
-                    isPreInstalled: isPreInstalled,
-                    isHidden: isHidden,
+                    isPreInstalled: storedSource.isPreInstalled,
+                    isHidden: storedSource.isHidden,
                     fromTo: fromTo,
                     title: storedSource.title,
                     url: storedSource.url,
@@ -137,6 +135,7 @@
             let error = false;
             [...sourceEditFormElems].forEach((sourceEditForm) => {
                 let sourcesToStoreObj = {};
+                // TODO Trim the values
                 let sourceTitle = sourceEditForm["title"].value;
                 let sourceUrl = sourceEditForm["url"].value;
 
@@ -150,14 +149,12 @@
                     this.showFlashMessages([invalidUrl], "red");
                     error = true;
                 } else {
-                    let sourceIsPreInstalled = sourceEditForm.dataset.isPreInstalled;
-                    let sourceIsHidden = sourceEditForm.dataset.isHidden;
+                    let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true') ? true : false;
+                    let sourceIsHidden = (sourceEditForm.dataset.isHidden == 'true') ? true : false;
 
-                    if (sourceIsHidden == "true") {
-                        sourcesToStoreObj.isHidden = "true";
-                    }
 
-                    if (sourceIsPreInstalled == 'true') {
+
+                    if (sourceIsPreInstalled) {
                         if (sourceId == 'googleTranslate') {
                             let sourceFrom = sourceEditForm.querySelector(".source-from");
                             let sourceTo = sourceEditForm.querySelector(".source-to");
@@ -178,6 +175,7 @@
                     sourcesToStoreObj.id = sourceId;
                     sourcesToStoreObj.url = sourceUrl;
                     sourcesToStoreObj.isPreInstalled = sourceIsPreInstalled;
+                    sourcesToStoreObj.isHidden = sourceIsHidden;
                     sourcesToStore.push(sourcesToStoreObj);
                 }
             });
@@ -305,6 +303,9 @@
 
         }
 
+        /* Popup window start */
+
+        /* Popup window end */
         templateForBlackWhitelist(url) {
             let newUrl = new URL(url);
             return (`
@@ -389,7 +390,7 @@
                 sourceHideElem.addEventListener('click', (e) => {
                     let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
 
-                    if (sourceIsHidden === "true") {
+                    if (sourceIsHidden == "true") {
                         sourceEditFormElem.dataset.isHidden = "false";
                         sourceHideIconElem.innerText = "visibility";
                         // sourceHideElem.style.textDecoration = '';
@@ -459,8 +460,8 @@
             let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
 
             [...sourceEditFormElems].forEach((sourceEditForm) => {
-                let sourceIsPreInstalled = sourceEditForm.dataset.isPreInstalled;
-                if (sourceIsPreInstalled == 'true') {
+                let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true') ? true : false;
+                if (sourceIsPreInstalled) {
                     let sourceId = sourceEditForm.dataset.id;
                     let sourceUrl = sourceEditForm["url"];
                     if (sourceEditForm.dataset.id == 'googleTranslate') {
