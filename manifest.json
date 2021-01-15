@@ -19,7 +19,7 @@
   "background": {
     "scripts": [
       "data/internal_libs/lip_utility.js",
-      "data/internal_libs/sources_data.js",
+      "data/internal_libs/lip_pre_installed_sources_data.js",
       "data/background/background.js"
     ],
     "persistent": true

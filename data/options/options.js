@@ -77,7 +77,7 @@
                     if (storedSource.id === "googleTranslate") {
                         let optionFrom = '';
                         let optionTo = '';
-                        sourcesData[storedSource.id].from.forEach((language) => {
+                        lipPreInstalledSourcesData[storedSource.id].from.forEach((language) => {
                             let selectedFrom = (storedSource.from == language[1]) ? "selected" : "";
                             let selectedTo = (storedSource.to == language[1]) ? "selected" : "";
                             optionFrom += `<option ${selectedFrom}  value="${language[1]}">${language[0]}</option>`;
@@ -92,8 +92,8 @@
                     } else {
                         let optionFromTo = '';
 
-                        // sourcesData is from sources_data.js
-                        sourcesData[storedSource.id].fromTo.forEach((language) => {
+                        // lipPreInstalledSourcesData is from lip_pre_installed_sources_data.js
+                        lipPreInstalledSourcesData[storedSource.id].fromTo.forEach((language) => {
                             let selectedFromTo = (storedSource.fromTo == language[1]) ? "selected" : "";
                             optionFromTo += `<option value="${language[1]}" ${selectedFromTo}>${language[0]}</option>`;
                         });
@@ -469,20 +469,20 @@
                         sourceFromElem.addEventListener('change', (e) => {
                             let selectedSourceFrom = this.getSelectedOption(sourceFromElem);
                             let selectedSourceTo = this.getSelectedOption(sourceToElem);
-                            let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
+                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
                             sourceUrl.value = newUrl;
                         })
                         sourceToElem.addEventListener('change', (e) => {
                             let selectedSourceFrom = this.getSelectedOption(sourceFromElem);
                             let selectedSourceTo = this.getSelectedOption(sourceToElem);
-                            let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
+                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
                             sourceUrl.value = newUrl;
                         })
                     } else {
                         let sourceFromToElem = sourceEditForm.querySelector('.source-from-to');
                         sourceFromToElem.addEventListener('change', (e) => {
                             let selectedSourceFromTo = this.getSelectedOption(sourceFromToElem);
-                            let newUrl = sourcesData[sourceId].generateUrl(selectedSourceFromTo)
+                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFromTo)
                             sourceUrl.value = newUrl;
                         })
                     }

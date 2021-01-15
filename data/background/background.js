@@ -14,7 +14,7 @@
                     "title": "Google Translate",
                     "from": "auto", //default
                     "to": "en", //default
-                    "url": sourcesData.googleTranslate.generateUrl("auto", "en")
+                    "url": lipPreInstalledSourcesData.googleTranslate.generateUrl("auto", "en")
                 },
                 {
                     "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
@@ -27,32 +27,32 @@
                     "id": "cambridge",
                     "title": "Cambridge",
                     "fromTo": "english",
-                    "url": sourcesData.cambridge.generateUrl("english")
+                    "url": lipPreInstalledSourcesData.cambridge.generateUrl("english")
                 }, {
                     "isPreInstalled": "true",
                     "id": "oxford",
                     "title": "Oxford",
                     "fromTo": "en",
-                    "url": sourcesData.oxford.generateUrl("en")
+                    "url": lipPreInstalledSourcesData.oxford.generateUrl("en")
                 }, {
                     "isPreInstalled": "true",
                     "id": "collins",
                     "title": "Collins",
                     "fromTo": "english",
-                    "url": sourcesData.collins.generateUrl("english")
+                    "url": lipPreInstalledSourcesData.collins.generateUrl("english")
                 }, {
                     "isPreInstalled": "true",
                     "id": "longman",
                     "title": "Longman",
                     "fromTo": "english",
-                    "url": sourcesData.longman.generateUrl("english")
+                    "url": lipPreInstalledSourcesData.longman.generateUrl("english")
                 },
                 {
                     "isPreInstalled": "true",
                     "id": "wikipedia",
                     "title": "Wikipedia",
                     "fromTo": "english",
-                    "url": sourcesData.wikipedia.generateUrl("en")
+                    "url": lipPreInstalledSourcesData.wikipedia.generateUrl("en")
                 },
 
             ],
