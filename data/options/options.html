@@ -59,10 +59,10 @@
             <div class="column">
                 <div class="header hide-next-sibling next-sibling-is-hidden">Enable/Disable the extension<span class="material-icons expand-icon">expand_more</span></div>
                 <div class="hidable hidden">
-                    <h5>*Note that the extension will still work from context menu</h5>
+                    <h5>*Note that the extension will still work from context menu, and toolbar</h5>
                     <div class="second-settings-segment">
                         <h4>Enable or Disable the extension globally</h4>
-                        <select name="enable_disable_globally" id="enable-disable-globally">
+                        <select id="enable-disable-globally">
                             <option value="enable">Enable</option>
                             <option value="disable">Disable</option>
                         </select>
@@ -112,50 +112,57 @@
                     <div class="second-settings-segment" title=''>
                         <h3><span>Popup window close on Esc</span></h3>
 
-                        <select name="" id="popup-close-on-esc">
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select id="popup-window-is-close-on-esc-allowed">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                     <br>
                     <div class="second-settings-segment" title=''>
-                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-multiple-windows">Allow multiple popup windows</span></h3>
+                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-window-is-multiple-allowed">Allow multiple popup windows</span></h3>
 
-                        <select name="" id="popup-multiple-windows">
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select id="popup-window-is-multiple-allowed">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                     <br>
                     <div class="second-settings-segment">
                         <h3><span>Popup window state</span></h3>
 
-                        <select name="" id="popup-window-state">
+                        <select id="popup-window-state">
                             <option value="normal">Normal</option>
-                            <option value="maximize">Maximize</option>
-                            <option value="fullscreen">Fullscreen</option>
+                            <option value="maximized">Maximized</option>
                         </select>
                     </div>
 
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window width</span></h3>
-                        <input type="number" name="popup-window-width" id="" placeholder="in px">
+                        <h3><span>Popup window width (in px)</span></h3>
+                        <input id="popup-window-width" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window height</span></h3>
-                        <input type="number" name="popup-window-height" id="" placeholder="in px">
+                        <h3><span>Popup window height (in px)</span></h3>
+                        <input id="popup-window-height" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window from left</span></h3>
-                        <input type="number" name="popup-window-left" id="" placeholder="in px">
+                        <h3><span>Popup window from left (in px)</span></h3>
+                        <input id="popup-window-from-left" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window from top</span></h3>
-                        <input type="number" name="popup-window-top" id="" placeholder="in px">
+                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-window-from-top">Popup window from top (in px)</span></h3>
+                        <input id="popup-window-from-top" type="number" placeholder="Keep default">
+                    </div>
+                    <br>
+                    <div class="second-settings-segment">
+                        <h3><span>Popup window show navbar</span></h3>
+                        <select id="popup-window-is-showing-navbar-allowed">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -170,7 +177,7 @@
                         <h3><span class="tooltip-btn" data-tooltip-btn="trigger-key">Trigger Key</span></h3>
 
                         <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
-                        <select name="" id="trigger-key">
+                        <select id="trigger-key">
                             <option value="none">None</option>
                             <option value="ctrlKey">Ctrl</option>
                             <option value="shiftKey">Shift</option>
@@ -182,9 +189,9 @@
                         <h3><span class="tooltip-btn" data-tooltip-btn="show-bubble">Show Bubble</span></h3>
 
                         <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
-                        <select name="" id="is-showing-bubble-allowed">
-                            <option value="yes">Yes</option>
-                            <option value="no">No</option>
+                        <select id="is-showing-bubble-allowed">
+                            <option value="true">Yes</option>
+                            <option value="false">No</option>
                         </select>
                     </div>
                 </div>
@@ -207,7 +214,7 @@
 
     </div>
 
-    <div class="tooltip" data-tooltip-for="popup-multiple-windows">
+    <div class="tooltip" data-tooltip-for="popup-window-is-multiple-allowed">
         <div class="arrow" data-popper-arrow></div>
         "Yes": Every request will open in a new popup window.
         <hr>
@@ -226,6 +233,11 @@
         "Yes": Bubble will show up normally upon text selection.
         <hr>
         "No": Bubble will not show up, and text selection will automatically open in a popup window.
+    </div>
+
+    <div class="tooltip" data-tooltip-for="popup-window-from-top">
+        <div class="arrow" data-popper-arrow></div>
+        *Note that "from top" doesn't work, if height is default.
     </div>
 
     <script src="/data/internal_libs/lip_utility.js"></script>

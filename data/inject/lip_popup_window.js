@@ -1,7 +1,7 @@
 chrome.runtime.sendMessage({
     method: 'extend',
 }, (response) => {
-    if (response.isLipPopupWindow) {
+    if (response && response.isLipPopupWindow) {
         console.log('currentLipPopupWindowData: ', response.currentLipPopupWindowData);
         lipPopupWindowRun(response.currentLipPopupWindowData);
     }
@@ -30,10 +30,14 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
         }
 
         run() {
-            lipPopupWindow.closeOnEsc();
-            // TODO Remove or Show navbar based on user preference. Can change the value from settings
 
-            if (this.currentLipPopupWindowData.navbarState == "removed") { return; }
+            if (this.localStorageData.popupWindow.isCloseOnEscAllowed) {
+                this.closeOnEsc();
+            }
+
+
+            if (!this.localStorageData.popupWindow.isShowingNavbarAllowed || this.currentLipPopupWindowData.navbarState == "removed") { return; }
+
             let observer = new MutationObserver(() => {
                 if (document.body) {
                     this.body = document.body;

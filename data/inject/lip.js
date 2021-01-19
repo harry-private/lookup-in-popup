@@ -2,7 +2,6 @@
     'use strict'
     class Lip {
         async _constructor() {
-            console.log("lkj");
             // this.sources = {};
             this.localStorageData = await lipUtility.localStorageDataPromise();
 
@@ -40,32 +39,27 @@
         }
 
         isTriggerKeyPressed(mouseupEvent) {
-            let triggerKeysNotNone = ["ctrlKey", "shiftKey", "altKey"];
-            // storage triggerKey
-            let isStorageTriggerKeyNotNone = (triggerKeysNotNone.indexOf(this.localStorageData.triggerKey) > -1);
-            // check if set triggerKey is not "none"
-            if (isStorageTriggerKeyNotNone) {
-                return (mouseupEvent[this.localStorageData.triggerKey]) ? true : false;
-            } else { return true; }
+            if (this.localStorageData.triggerKey == "none") { return true; }
+            return mouseupEvent[this.localStorageData.triggerKey]; // Boolean 
         }
 
         isGloballyDisabled() {
-            return (this.localStorageData.enableDisable.globally === "disable") ? true : false;
+            return this.localStorageData.enableDisable.globally == "disable"; // Boolean
         }
         isCurrentWebsiteIsAllowed() {
             // blacklist/whitelist check
-            let allowed = true;
+            let isAllowed = true;
             let currentWebsiteUrl = window.location.protocol + "//" + lipUtility.removeWWWBeginningOfHostname(window.location.hostname);
             if (this.localStorageData.enableDisable.blackWhiteListMode == "blacklist-mode") {
                 if (this.localStorageData.enableDisable.blacklist.includes(currentWebsiteUrl)) {
-                    allowed = false;
+                    isAllowed = false;
                 }
             } else if (this.localStorageData.enableDisable.blackWhiteListMode == "whitelist-mode") {
                 if (!this.localStorageData.enableDisable.whitelist.includes(currentWebsiteUrl)) {
-                    allowed = false;
+                    isAllowed = false;
                 }
             }
-            return allowed;
+            return isAllowed;
         }
 
 
@@ -153,14 +147,10 @@
 
             if (this.body.appendChild(this.bubble)) { this.isAdded = true; }
         }
-        isShowingBubbleAllowed() {
-            return (this.localStorageData.isShowingBubbleAllowed == 'yes' ? true : false);
-        }
-
 
         createLipPopupWindow(event) {
             let url;
-            if (this.isShowingBubbleAllowed()) {
+            if (this.localStorageData.isShowingBubbleAllowed) {
                 this.selectedSource = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
                 let selectedSourceUrl = this.selectedSource.dataset.url;
                 url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
@@ -193,7 +183,7 @@
                     // if no text is selected or clicked element is bubble, don't execute the rest of the code
                     if (!this.isSelectedText(mouseupEvent)) { return; }
 
-                    if (!this.isShowingBubbleAllowed()) {
+                    if (!this.localStorageData.isShowingBubbleAllowed) {
                         this.createLipPopupWindow(mouseupEvent);
                         return;
                     }

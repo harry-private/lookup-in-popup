@@ -4,40 +4,32 @@ class LipUtility {
         this._localStorageData = null; //private
     }
 
-    async localStorageDataPromise() {
+    async localStorageDataPromise(forced = false) {
         // one instance per page
-        if (!this._localStorageData) {
+        if (!this._localStorageData || this.isObjEmpty(this._localStorageData) || forced) {
             console.log("Local Storage");
             return this._localStorageData = await new Promise(resolve => {
-                chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "isShowingBubbleAllowed"], result => {
-                    console.log(result);
+                chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "isShowingBubbleAllowed", "popupWindow"], result => {
                     resolve(result);
                 })
             });
-        } else {
-            return this._localStorageData;
         }
+        console.trace("Already initiated");
+        return this._localStorageData;
     }
     removeWWWBeginningOfHostname(hostname) {
-        // console.log(hostname);
         return hostname.replace(/^www\./, '');
     }
     isValidURL(string) {
-        // http(s) is optional in first regex
-        // let res = string.match(/(http(s)?:\/\/.)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
         let res = string.match(/(http(s)?:\/\/.)(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/g);
         return (res !== null);
     }
     createSourceUrlForNewWindow(url, query) {
         let encodedQuery = encodeURIComponent(query);
-        if ((url).includes("%s")) {
-            return url.replace("%s", encodedQuery);
-        } else {
-            return `${url}/?${encodedQuery}`;
-        }
+        return (url).includes("%s") ? url.replace("%s", encodedQuery) : `${url}/?${encodedQuery}`;
     }
     isObjEmpty(obj) {
-        return (Object.entries(obj).length === 0 && obj.constructor === Object) ? true : false
+        return (Object.entries(obj).length === 0 && obj.constructor === Object);
     }
 }
 

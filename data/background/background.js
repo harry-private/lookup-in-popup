@@ -1,97 +1,12 @@
 (async () => {
-    chrome.runtime.onInstalled.addListener(async () => {
-        let localStorageData = await lipUtility.localStorageDataPromise();
-        if (!('sources' in localStorageData)) {
-            firstTime();
-        }
-    });
-
-    function firstTime() {
-        chrome.storage.sync.set({
-            sources: [{
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "googleTranslate",
-                    "title": "Google Translate",
-                    "from": "auto", //default
-                    "to": "en", //default
-                    "url": lipPreInstalledSourcesData.googleTranslate.generateUrl("auto", "en")
-                },
-                {
-                    "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
-                    "isHidden": false,
-                    "id": "google",
-                    "title": "Google",
-                    "url": "https://www.google.com/search?q=%s"
-
-                }, {
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "cambridge",
-                    "title": "Cambridge",
-                    "fromTo": "english",
-                    "url": lipPreInstalledSourcesData.cambridge.generateUrl("english")
-                }, {
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "oxford",
-                    "title": "Oxford",
-                    "fromTo": "en",
-                    "url": lipPreInstalledSourcesData.oxford.generateUrl("en")
-                }, {
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "collins",
-                    "title": "Collins",
-                    "fromTo": "english",
-                    "url": lipPreInstalledSourcesData.collins.generateUrl("english")
-                }, {
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "longman",
-                    "title": "Longman",
-                    "fromTo": "english",
-                    "url": lipPreInstalledSourcesData.longman.generateUrl("english")
-                },
-                {
-                    "isPreInstalled": true,
-                    "isHidden": false,
-                    "id": "wikipedia",
-                    "title": "Wikipedia",
-                    "fromTo": "english",
-                    "url": lipPreInstalledSourcesData.wikipedia.generateUrl("en")
-                },
-
-            ],
-            sourcesHidden: [],
-            triggerKey: "none",
-            enableDisable: {
-                globally: "enable", //disabled|enabled
-                blackWhiteListMode: "blacklist-mode", //blacklist-mode|whitelist-mode
-                blacklist: [], //["someUrl", "anotherUrl", "sommeAnotherUrl"]
-                whitelist: [] //["someUrl", "anotherUrl", "sommeAnotherUrl"]
-            },
-            isShowingBubbleAllowed: 'yes'
-        }, function() {
-            // createLipContextMenu();
-        });
-    }
     class LipBackground {
 
 
         async _constructor() {
+            // I think it does not work if I put it after "await"
+            this.onInstalled();
+
             this.localStorageData = await lipUtility.localStorageDataPromise();
-
-            this.tempSettings = {
-                popupWindowMultipleAllowed: false,
-                popupWindowState: "", // maximized, or fullscreen (these two cannot be combined with 'left', 'top', 'width', or 'height')
-                popupWindowHeight: "", // in px. empty means default
-                popupWindowWidth: "", // in px. empty means default
-                popupWindowTop: "", // in px. empty means default
-                popupWindowLeft: "", // in px. empty means default
-
-            }
-
             this.run();
 
             /*[[WindId = { windowId: 6, tabId: 8, query: "", navbarState: "visible|hidden|removed" }]]*/
@@ -120,9 +35,12 @@
 
 
 
+
         onStorageChange() {
-            chrome.storage.onChanged.addListener((changes, namespace) => {
+            chrome.storage.onChanged.addListener(async (changes, namespace) => {
                 this.createLipContextMenu();
+                this.localStorageData = await lipUtility.localStorageDataPromise(true);
+                console.log("storage change");
             });
         }
 
@@ -153,7 +71,7 @@
 
             let windowOptionsObj = this.windowCreateOptions(url);
 
-            if (!this.tempSettings.popupWindowMultipleAllowed) {
+            if (!this.localStorageData.popupWindow.isMultipleAllowed) {
                 let openedWindow;
                 if (!lipUtility.isObjEmpty(this.openedLipPopupWindows)) {
                     openedWindow = this.openedLipPopupWindows[Object.keys(this.openedLipPopupWindows)[0]];
@@ -169,6 +87,7 @@
             chrome.windows.create(
                 windowOptionsObj,
                 (win) => {
+                    console.log(win);
                     this.openedLipPopupWindows[win.id] = {
                         windowId: win.tabs[0].windowId,
                         tabId: win.tabs[0].id,
@@ -176,15 +95,16 @@
                         navbarState: "visible"
                     }
 
-                    // if state is "maximized", or "fullscreen" don't run the firefox specific update
-                    if (!(this.tempSettings.popupWindowState == "maximized") || (this.tempSettings.popupWindowState == "fullscreen")) {
-                        if (/Firefox/.test(navigator.userAgent)) {
-                            chrome.windows.update(win.id, {
-                                // focused: true,
-                                height: windowOptionsObj.height - 30,
-                                top: 0
-                            });
-                        }
+                    // if state is "maximized" don't run the firefox specific update
+                    if (!(this.localStorageData.popupWindow.state == "maximized") && (/Firefox/.test(navigator.userAgent))) {
+                        chrome.windows.update(win.id, {
+                            // focused: true,
+                            height: windowOptionsObj.height - 30,
+                            /* top is ignored in firefox (bug in firefox) in windows.create,
+                                that's why updating it here
+                            */
+                            top: windowOptionsObj.top
+                        });
                     }
 
 
@@ -194,41 +114,28 @@
         windowCreateOptions(url) {
             let windowOptionsObj = {};
             let defaultWidth = 600;
-            windowOptionsObj.url = url;
-            windowOptionsObj.type = "popup";
-            if ((this.tempSettings.popupWindowState == "maximized") || (this.tempSettings.popupWindowState == "fullscreen")) {
-                windowOptionsObj.state = this.tempSettings.popupWindowState;
+            let commonOptions = {
+                url: url,
+                type: "popup",
+            }
+
+            if ((this.localStorageData.popupWindow.state == "maximized")) {
+                windowOptionsObj = {
+                    ...commonOptions,
+                    state: this.localStorageData.popupWindow.state
+                }
             } else {
-
-                windowOptionsObj.state = "normal";
-
-                if ((this.tempSettings.popupWindowHeight || this.tempSettings.popupWindowHeight.length !== 0) && !isNaN(this.tempSettings.popupWindowHeight)) {
-                    windowOptionsObj.height = parseInt(this.tempSettings.popupWindowHeight);
-                } else {
-                    windowOptionsObj.height = (window.screen.height);
-                }
-
-                if ((this.tempSettings.popupWindowWidth || this.tempSettings.popupWindowWidth.length !== 0) && !isNaN(this.tempSettings.popupWindowWidth)) {
-                    windowOptionsObj.width = parseInt(this.tempSettings.popupWindowWidth);
-                } else {
-                    windowOptionsObj.width = defaultWidth;
-                }
-
-                if ((this.tempSettings.popupWindowTop || this.tempSettings.popupWindowTop.length !== 0) && !isNaN(this.tempSettings.popupWindowTop)) {
-                    windowOptionsObj.top = parseInt(this.tempSettings.popupWindowTop);
-                } else {
-                    windowOptionsObj.top = 0;
-                }
-
-                if ((this.tempSettings.popupWindowLeft || this.tempSettings.popupWindowLeft.length !== 0) && !isNaN(this.tempSettings.popupWindowLeft)) {
-                    windowOptionsObj.left = parseInt(this.tempSettings.popupWindowLeft);
-                } else {
-                    windowOptionsObj.left = (screen.width / 2) - (defaultWidth / 2);
+                windowOptionsObj = {
+                    ...commonOptions,
+                    state: "normal",
+                    height: (!Number.isInteger(parseInt(this.localStorageData.popupWindow.height)) ? (window.screen.height) : this.localStorageData.popupWindow.height),
+                    width: (!Number.isInteger(parseInt(this.localStorageData.popupWindow.width)) ? defaultWidth : this.localStorageData.popupWindow.width),
+                    top: (!Number.isInteger(parseInt(this.localStorageData.popupWindow.fromTop)) ? 0 : this.localStorageData.popupWindow.fromTop),
+                    left: (!Number.isInteger(parseInt(this.localStorageData.popupWindow.fromLeft)) ? ((screen.width / 2) - (defaultWidth / 2)) : this.localStorageData.popupWindow.fromLeft)
                 }
             }
             return windowOptionsObj;
         }
-
         updateOpenedLipPopupWindowData(changeData, windowId) {
             if (changeData[0] == 'query') {
                 this.openedLipPopupWindows[windowId]["query"] = changeData[1];
@@ -289,11 +196,101 @@
                 },
             });
         }
+        onInstalled() {
+            chrome.runtime.onInstalled.addListener(async (details) => {
+                console.log(details);
+                if (details.reason == "install") {
+                    this.firstTime();
+                }
+            });
+        }
 
+        firstTime() {
+            chrome.storage.sync.set({
+                sources: [{
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "googleTranslate",
+                        "title": "Google Translate",
+                        "from": "auto", //default
+                        "to": "en", //default
+                        "url": lipPreInstalledSourcesData.googleTranslate.generateUrl("auto", "en")
+                    },
+                    {
+                        "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
+                        "isHidden": false,
+                        "id": "google",
+                        "title": "Google",
+                        "url": "https://www.google.com/search?q=%s"
+
+                    }, {
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "cambridge",
+                        "title": "Cambridge",
+                        "fromTo": "english",
+                        "url": lipPreInstalledSourcesData.cambridge.generateUrl("english")
+                    }, {
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "oxford",
+                        "title": "Oxford",
+                        "fromTo": "en",
+                        "url": lipPreInstalledSourcesData.oxford.generateUrl("en")
+                    }, {
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "collins",
+                        "title": "Collins",
+                        "fromTo": "english",
+                        "url": lipPreInstalledSourcesData.collins.generateUrl("english")
+                    }, {
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "longman",
+                        "title": "Longman",
+                        "fromTo": "english",
+                        "url": lipPreInstalledSourcesData.longman.generateUrl("english")
+                    },
+                    {
+                        "isPreInstalled": true,
+                        "isHidden": false,
+                        "id": "wikipedia",
+                        "title": "Wikipedia",
+                        "fromTo": "english",
+                        "url": lipPreInstalledSourcesData.wikipedia.generateUrl("en")
+                    },
+
+                ],
+                sourcesHidden: [],
+                triggerKey: "none",
+                enableDisable: {
+                    globally: "enable", //disable|enable
+                    blackWhiteListMode: "blacklist-mode", // blacklist-mode|whitelist-mode
+                    blacklist: [], // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
+                    whitelist: [] // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
+                },
+                popupWindow: {
+                    isCloseOnEscAllowed: true,
+                    isMultipleAllowed: true,
+                    state: "normal", // normal|maximized (maximized cannot be combined with 'left', 'top', 'width', or 'height')
+                    height: "", // integer|"" in px. empty means default
+                    width: "", // integer|"" in px. empty means default
+                    fromLeft: "", // integer|"" in px. empty means default
+                    fromTop: "", // integer|"" in px. empty means default
+                    isShowingNavbarAllowed: true
+                },
+                isShowingBubbleAllowed: true,
+            }, async function() {
+                // let lipBackground = new LipBackground();
+                lipBackground.localStorageData = await lipUtility.localStorageDataPromise();
+
+            });
+        }
     }
 
-
     let lipBackground = new LipBackground();
-    await lipBackground._constructor();
+    lipBackground._constructor();
+
 
 })()

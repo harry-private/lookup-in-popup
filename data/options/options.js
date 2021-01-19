@@ -11,6 +11,15 @@
             this.triggerKeyElem = document.querySelector("#trigger-key");
             this.enableDisableGloballyElem = document.querySelector("#enable-disable-globally");
 
+            this.popupWindowIsCloseOnEscAllowedElem = document.querySelector("#popup-window-is-close-on-esc-allowed");
+            this.popupWindowIsMultipleAllowedElem = document.querySelector("#popup-window-is-multiple-allowed");
+            this.popupWindowStateElem = document.querySelector("#popup-window-state");
+            this.popupWindowWidthElem = document.querySelector("#popup-window-width");
+            this.popupWindowHeightElem = document.querySelector("#popup-window-height");
+            this.popupWindowFromLeftElem = document.querySelector("#popup-window-from-left");
+            this.popupWindowFromTopElem = document.querySelector("#popup-window-from-top");
+            this.popupWindowIsShowingNavbarAllowedElem = document.querySelector("#popup-window-is-showing-navbar-allowed");
+
             this.enableDisableWebsiteWiseElem = document.querySelector("#enable-disable-website-wise");
             this.blackWhiteListFormElem = document.querySelector("#black-white-list-form");
             this.blacklistElem = document.querySelector("#blacklist");
@@ -44,29 +53,55 @@
                 const blacklistWebsiteElems = document.querySelectorAll("#blacklist .website");
                 const whitelistWebsiteElems = document.querySelectorAll("#whitelist .website");
 
-
-                let triggerKeyToStore = this.changeTriggerKey();
+                // values from inputs
                 let sourcesToStore = this.getSourcesFromInputs(sourceEditFormElems);
-                let enableDisableGloballyToStore = this.changeEnableDisableGlobally();
+                let triggerKeyToStore = ((["none", "ctrlKey", "shiftKey", "altKey"].includes(this.triggerKeyElem.value)) ? this.triggerKeyElem.value : "none");
+                let enableDisableGloballyToStore = ((this.enableDisableGloballyElem.value == "disable") ? "disable" : "enable");
+                let blackWhiteListModeToStore = ((this.blackWhiteListFormElem['mode'].value == "whitelist-mode") ? "whitelist-mode" : "blacklist-mode");
                 let blackWhiteListToStore = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
-                if (sourcesToStore.error == true) { return; }
+                let isShowingBubbleAllowedToStore = (this.isShowingBubbleAllowedElem.value == "true");
+
+                let popupWindowIsCloseOnEscAllowedToStore = (this.popupWindowIsCloseOnEscAllowedElem.value == "true");
+                let popupWindowIsMultipleAllowedToStore = (this.popupWindowIsMultipleAllowedElem.value == "true");
+                let popupWindowSateToStore = (["normal", "maximized"].includes(this.popupWindowStateElem.value) ? this.popupWindowStateElem.value : "normal");
+                let popupWindowWidthToStore = (!Number.isInteger(parseInt(this.popupWindowWidthElem.value)) ? "" : parseInt(this.popupWindowWidthElem.value));
+                let popupWindowHeightToStore = (!Number.isInteger(parseInt(this.popupWindowHeightElem.value)) ? "" : parseInt(this.popupWindowHeightElem.value));
+                let popupWindowFromLeftToStore = (!Number.isInteger(parseInt(this.popupWindowFromLeftElem.value)) ? "" : parseInt(this.popupWindowFromLeftElem.value));
+                let popupWindowFromTopToStore = (!Number.isInteger(parseInt(this.popupWindowFromTopElem.value)) ? "" : parseInt(this.popupWindowFromTopElem.value));
+                let popupWindowIsShowingNavbarAllowedToStore = (this.popupWindowIsShowingNavbarAllowedElem.value == "true");
+
+                if (sourcesToStore.error) { return; }
+
                 // save the sources to the local storage
                 chrome.storage.sync.set({
                     sources: sourcesToStore.sourcesToStore,
                     triggerKey: triggerKeyToStore,
                     enableDisable: {
                         globally: enableDisableGloballyToStore,
-                        blackWhiteListMode: this.blackWhiteListFormElem['mode'].value,
+                        blackWhiteListMode: blackWhiteListModeToStore,
                         blacklist: blackWhiteListToStore[0],
                         whitelist: blackWhiteListToStore[1],
                     },
-                    isShowingBubbleAllowed: this.isShowingBubbleAllowedElem.value
+                    popupWindow: {
+
+                        isCloseOnEscAllowed: popupWindowIsCloseOnEscAllowedToStore,
+                        isMultipleAllowed: popupWindowIsMultipleAllowedToStore,
+                        state: popupWindowSateToStore,
+                        height: popupWindowHeightToStore,
+                        width: popupWindowWidthToStore,
+                        fromLeft: popupWindowFromLeftToStore,
+                        fromTop: popupWindowFromTopToStore,
+                        isShowingNavbarAllowed: popupWindowIsShowingNavbarAllowedToStore,
+                    },
+                    isShowingBubbleAllowed: isShowingBubbleAllowedToStore
+
                 });
 
                 this.showFlashMessages(["Settings Saved!"]);
             });
         }
 
+        // CONSIDER Changing the name to "createSettingsLayout()"
         createSourcesSettingsLayout() {
             this.localStorageData.sources.forEach((storedSource) => {
                 let fromTo;
@@ -123,11 +158,22 @@
                 this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
             });
             // set default selected option that gotten from storage
+
+            console.log(this.localStorageData.popupWindow);
+            this.popupWindowIsCloseOnEscAllowedElem.value = this.localStorageData.popupWindow.isCloseOnEscAllowed;
+            this.popupWindowIsMultipleAllowedElem.value = this.localStorageData.popupWindow.isMultipleAllowed;
+            this.popupWindowStateElem.value = this.localStorageData.popupWindow.state;
+            this.popupWindowWidthElem.value = this.localStorageData.popupWindow.width;
+            this.popupWindowHeightElem.value = this.localStorageData.popupWindow.height;
+            this.popupWindowFromLeftElem.value = this.localStorageData.popupWindow.fromLeft;
+            this.popupWindowFromTopElem.value = this.localStorageData.popupWindow.fromTop;
+            this.popupWindowIsShowingNavbarAllowedElem.value = this.localStorageData.popupWindow.isShowingNavbarAllowed;
+
             this.triggerKeyElem.value = this.localStorageData.triggerKey;
             this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;
             this.blackWhiteListFormElem['mode'].value = this.localStorageData.enableDisable.blackWhiteListMode;
             this.changeBlackWhiteList();
-            this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed.toLowerCase();
+            this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed;
         }
 
         getSourcesFromInputs(sourceEditFormElems) {
@@ -149,8 +195,8 @@
                     this.showFlashMessages([invalidUrl], "red");
                     error = true;
                 } else {
-                    let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true') ? true : false;
-                    let sourceIsHidden = (sourceEditForm.dataset.isHidden == 'true') ? true : false;
+                    let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true');
+                    let sourceIsHidden = (sourceEditForm.dataset.isHidden == 'true');
 
 
 
@@ -158,13 +204,13 @@
                         if (sourceId == 'googleTranslate') {
                             let sourceFrom = sourceEditForm.querySelector(".source-from");
                             let sourceTo = sourceEditForm.querySelector(".source-to");
-                            let sourceFromSelected = this.getSelectedOption(sourceFrom);
-                            let sourceToSelected = this.getSelectedOption(sourceTo);
+                            let sourceFromSelected = sourceFrom.value;
+                            let sourceToSelected = sourceTo.value;
                             sourcesToStoreObj.from = sourceFromSelected;
                             sourcesToStoreObj.to = sourceToSelected;
                         } else {
                             let sourceFromTo = sourceEditForm.querySelector(".source-from-to");
-                            let sourceFromToSelected = this.getSelectedOption(sourceFromTo);
+                            let sourceFromToSelected = sourceFromTo.value;
                             sourcesToStoreObj.fromTo = sourceFromToSelected;
                         }
                     }
@@ -219,23 +265,6 @@
             })
         }
 
-        changeTriggerKey() {
-            let allowedTriggerKeys = ["none", "ctrlKey", "shiftKey", "altKey"];
-            let triggerKeySelected = this.getSelectedOption(this.triggerKeyElem);
-            const isAllowedTriggerKey = (allowedTriggerKeys.indexOf(triggerKeySelected) > -1);
-            // if the selected option is not allowed, or the user has edit the code
-            // no need to show the error message, and set the trigger key to "none"
-            return (isAllowedTriggerKey ? triggerKeySelected : "none");
-
-        }
-
-        changeEnableDisableGlobally() {
-            let allowedOptions = ["enable", "disable"];
-            let enableDisableGloballySelectedElem = this.getSelectedOption(this.enableDisableGloballyElem);
-            const isAllowedOption = (allowedOptions.indexOf(enableDisableGloballySelectedElem) > -1);
-            return (isAllowedOption ? enableDisableGloballySelectedElem : "enable");
-
-        }
 
 
         addEventListenerToBlackWhiteListMode() {
@@ -328,46 +357,45 @@
         } = {}) {
 
             let newUrl = new URL(url);
-            return (
-                `
-                  <div class="source" style="">
-                    
-                      <div class="flex-container nowrap" style="justify-content: space-between">
-                          <div class="visible-title column" title="${this.sanitize(title)}"><img style="width: 16px; height: 16px; margin-right: 10px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${this.sanitize(title)}</div>
-                          <div class="source-side-options column">
-                              <span class="source-edit" title="Edit the source"><strong><span class="material-icons">edit</span></strong></span>
-                              <span class="source-hide" title="Hide the source"><strong><span class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</span></strong></span>
-                              ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><span class="material-icons">delete_forever</span></strong></span>')}
-                              <span class="source-drag" title="Sort by dragging and dropping"><strong><span class="material-icons">menu</span></strong></span>
-                          </div>
+            return (`
+              <div class="source" style="">
+                
+                  <div class="flex-container nowrap" style="justify-content: space-between">
+                      <div class="visible-title column" title="${this.sanitize(title)}"><img style="width: 16px; height: 16px; margin-right: 10px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${this.sanitize(title)}</div>
+                      <div class="source-side-options column">
+                          <span class="source-edit" title="Edit the source"><strong><span class="material-icons">edit</span></strong></span>
+                          <span class="source-hide" title="Hide the source"><strong><span class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</span></strong></span>
+                          ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><span class="material-icons">delete_forever</span></strong></span>')}
+                          <span class="source-drag" title="Sort by dragging and dropping"><strong><span class="material-icons">menu</span></strong></span>
                       </div>
-                      <form
-                           class="source-edit-form"
-                           style="display:none"
-                           data-is-pre-installed="${isPreInstalled}"
-                           data-is-hidden="${isHidden}"
-                           data-id="${id}"
-                      >
-                          <br>
-                          <!-- <label><strong>Title </strong></label><br> -->
-                          <input name="title" type="text" class="source-title" placeholder="Title" value="${this.sanitize(title)}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
-                          <!-- <label><strong>URL </strong></label><br> -->
-                          <input name="url" type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
-                          ${( isPreInstalled ? fromTo + '<br><br>' : '' )}
-                          <button class="source-done">Done</button><br>
-                      </form>
                   </div>
-                `
-            );
+                  <form
+                       class="source-edit-form"
+                       style="display:none"
+                       data-is-pre-installed="${isPreInstalled}"
+                       data-is-hidden="${isHidden}"
+                       data-id="${id}"
+                  >
+                      <br>
+                      <!-- <label><strong>Title </strong></label><br> -->
+                      <input name="title" type="text" class="source-title" placeholder="Title" value="${this.sanitize(title)}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                      <!-- <label><strong>URL </strong></label><br> -->
+                      <input name="url" type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                      ${( isPreInstalled ? fromTo + '<br><br>' : '' )}
+                      <button class="source-done">Done</button><br>
+                  </form>
+              </div>
+            `);
         }
 
         addEventListenerToSourceSideOptions(onJustFirstElement = false) {
-            if (!onJustFirstElement) {
-                let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
-                [...sourceElems].forEach(this.eventListenerForSideOptions());
-            } else if (onJustFirstElement) {
+
+            if (onJustFirstElement) {
                 let sourceElem = this.sourcesSettingsElem.querySelector('.source');
                 (this.eventListenerForSideOptions())(sourceElem);
+            } else {
+                let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
+                [...sourceElems].forEach(this.eventListenerForSideOptions());
             }
         }
 
@@ -380,12 +408,7 @@
                 const sourceRemoveElem = source.querySelector(".source-remove");
                 const sourceDoneElem = source.querySelector(".source-done");
                 sourceEditElem.addEventListener('click', (e) => {
-                    // let sourceEditedElem = source.querySelector(".source-edit-form");
-                    if (sourceEditFormElem.style.display === 'none') {
-                        sourceEditFormElem.style.display = ""
-                    } else {
-                        sourceEditFormElem.style.display = "none"
-                    }
+                    sourceEditFormElem.style.display = sourceEditFormElem.style.display === 'none' ? "" : "none";
                 });
                 sourceHideElem.addEventListener('click', (e) => {
                     let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
@@ -408,7 +431,6 @@
                     });
                 }
                 sourceDoneElem.addEventListener('click', (e) => {
-                    // TODO change title
                     // let sourceEditedElem = source.querySelector(".source-edit-form");
                     sourceEditFormElem.style.display = "none"
                 });
@@ -419,31 +441,30 @@
                     let visibleTitle = source.querySelector(".visible-title");
                     visibleTitle.innerText = sourceEditFormElem["title"].value;
                 });
-            }
+            };
         }
 
         addEventListenerToSourceEditForm(onJustFirstElement = false) {
-            if (!onJustFirstElement) {
+            if (onJustFirstElement) {
+                let sourceEditFormElem = this.sourcesSettingsElem.querySelector('.source-edit-form');
+                sourceEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); });
+            } else {
                 let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
                 [...sourceEditFormElems].forEach((sourceEditForm) => {
                     sourceEditForm.addEventListener("submit", (e) => { e.preventDefault(); })
                 });
-
-            } else if (onJustFirstElement) {
-                let sourceEditFormElem = this.sourcesSettingsElem.querySelector('.source-edit-form');
-                sourceEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); })
 
             }
         }
 
 
         addEventListenerToBlackWhiteListRemoveBtn(onJustFirstElement = false) {
-            if (!onJustFirstElement) {
-                let blackWhiteListWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".black-white-list-website-wrapper");
-                [...blackWhiteListWebsiteWrapperElems].forEach(this.eventListenerForBlackWhitelistRemoveBtn());
-            } else if (onJustFirstElement) {
+            if (onJustFirstElement) {
                 let blackWhiteListWebsiteWrapperElem = this.enableDisableWebsiteWiseElem.querySelector(".black-white-list-website-wrapper");
                 (this.eventListenerForBlackWhitelistRemoveBtn())(blackWhiteListWebsiteWrapperElem);
+            } else {
+                let blackWhiteListWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".black-white-list-website-wrapper");
+                [...blackWhiteListWebsiteWrapperElems].forEach(this.eventListenerForBlackWhitelistRemoveBtn());
             }
         }
 
@@ -460,7 +481,7 @@
             let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
 
             [...sourceEditFormElems].forEach((sourceEditForm) => {
-                let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true') ? true : false;
+                let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true');
                 if (sourceIsPreInstalled) {
                     let sourceId = sourceEditForm.dataset.id;
                     let sourceUrl = sourceEditForm["url"];
@@ -468,21 +489,21 @@
                         let sourceFromElem = sourceEditForm.querySelector('.source-from');
                         let sourceToElem = sourceEditForm.querySelector('.source-to');
                         sourceFromElem.addEventListener('change', (e) => {
-                            let selectedSourceFrom = this.getSelectedOption(sourceFromElem);
-                            let selectedSourceTo = this.getSelectedOption(sourceToElem);
+                            let selectedSourceFrom = sourceFromElem.value;
+                            let selectedSourceTo = sourceToElem.value;
                             let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
                             sourceUrl.value = newUrl;
                         })
                         sourceToElem.addEventListener('change', (e) => {
-                            let selectedSourceFrom = this.getSelectedOption(sourceFromElem);
-                            let selectedSourceTo = this.getSelectedOption(sourceToElem);
+                            let selectedSourceFrom = sourceFromElem.value;
+                            let selectedSourceTo = sourceToElem.value;
                             let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
                             sourceUrl.value = newUrl;
                         })
                     } else {
                         let sourceFromToElem = sourceEditForm.querySelector('.source-from-to');
                         sourceFromToElem.addEventListener('change', (e) => {
-                            let selectedSourceFromTo = this.getSelectedOption(sourceFromToElem);
+                            let selectedSourceFromTo = sourceFromToElem.value;
                             let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFromTo)
                             sourceUrl.value = newUrl;
                         })
@@ -572,9 +593,6 @@
             });
         }
 
-        getSelectedOption(e) {
-            return e.options[e.selectedIndex].value
-        }
 
         sanitize(string) {
             const map = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#x27;', "/": '&#x2F;', };

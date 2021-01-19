@@ -32,5 +32,6 @@
         ".git",                // Ignore the .git directory
         "**/data/internal_libs/sources_data.js"
     ],
+    "editor.fontSize": 17,
 
 }
