@@ -21,9 +21,9 @@
             this.popupWindowIsShowingNavbarAllowedElem = document.querySelector("#popup-window-is-showing-navbar-allowed");
 
             this.enableDisableWebsiteWiseElem = document.querySelector("#enable-disable-website-wise");
-            this.blackWhiteListFormElem = document.querySelector("#black-white-list-form");
-            this.blacklistElem = document.querySelector("#blacklist");
-            this.whitelistElem = document.querySelector("#whitelist");
+            this.websiteAccessFormElem = document.querySelector("#website-access-form");
+            this.denyListElem = document.querySelector("#deny-list");
+            this.allowListElem = document.querySelector("#allow-list");
 
             this.isShowingBubbleAllowedElem = document.querySelector("#is-showing-bubble-allowed");
             // document.body.style.height = (screen.height - 120) + "px";
@@ -39,26 +39,26 @@
             this.toggleNextSibling();
             this.addEventListenerToSourceSideOptions();
             this.addEventListenerToSourceEditForm();
-            this.addEventListenerToBlackWhiteListRemoveBtn();
+            this.addEventListenerToWebsiteAccessWebsiteRemoveBtn();
             this.addNewSource();
 
             this.saveSettings();
-            this.addEventListenerToBlackWhiteListMode();
-            this.addWebsiteToBlackWhiteList();
+            this.addEventListenerToWebsiteAccessMode();
+            this.addWebsiteToWebsiteAccess();
         }
         saveSettings() {
             this.saveSettingsElem.addEventListener("click", () => {
 
                 const sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
-                const blacklistWebsiteElems = document.querySelectorAll("#blacklist .website");
-                const whitelistWebsiteElems = document.querySelectorAll("#whitelist .website");
+                const denyListWebsiteElems = document.querySelectorAll("#deny-list .website");
+                const allowListWebsiteElems = document.querySelectorAll("#allow-list .website");
 
                 // values from inputs
                 let sourcesToStore = this.getSourcesFromInputs(sourceEditFormElems);
                 let triggerKeyToStore = ((["none", "ctrlKey", "shiftKey", "altKey"].includes(this.triggerKeyElem.value)) ? this.triggerKeyElem.value : "none");
                 let enableDisableGloballyToStore = ((this.enableDisableGloballyElem.value == "disable") ? "disable" : "enable");
-                let blackWhiteListModeToStore = ((this.blackWhiteListFormElem['mode'].value == "whitelist-mode") ? "whitelist-mode" : "blacklist-mode");
-                let blackWhiteListToStore = this.getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems);
+                let websiteAccessModeToStore = ((this.websiteAccessFormElem['mode'].value == "allow-mode") ? "allow-mode" : "deny-mode");
+                let websiteAccessWebsitesToStore = this.getWebsiteAccessWebsites(denyListWebsiteElems, allowListWebsiteElems);
                 let isShowingBubbleAllowedToStore = (this.isShowingBubbleAllowedElem.value == "true");
 
                 let popupWindowIsCloseOnEscAllowedToStore = (this.popupWindowIsCloseOnEscAllowedElem.value == "true");
@@ -78,9 +78,9 @@
                     triggerKey: triggerKeyToStore,
                     enableDisable: {
                         globally: enableDisableGloballyToStore,
-                        blackWhiteListMode: blackWhiteListModeToStore,
-                        blacklist: blackWhiteListToStore[0],
-                        whitelist: blackWhiteListToStore[1],
+                        websiteAccessMode: websiteAccessModeToStore,
+                        denyList: websiteAccessWebsitesToStore[0],
+                        allowList: websiteAccessWebsitesToStore[1],
                     },
                     popupWindow: {
 
@@ -149,13 +149,13 @@
             });
             this.changeUrlOfPreInstalledSources();
 
-            this.localStorageData.enableDisable.blacklist.forEach((blacklist) => {
-                const blackWhiteListTemplate = this.templateForBlackWhitelist(blacklist);
-                this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
+            this.localStorageData.enableDisable.denyList.forEach((denyList) => {
+                const websiteTemplate = this.templateForWebsiteAccessWebsites(denyList);
+                this.denyListElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
             });
-            this.localStorageData.enableDisable.whitelist.forEach((whitelist) => {
-                const websiteTemplate = this.templateForBlackWhitelist(whitelist);
-                this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
+            this.localStorageData.enableDisable.allowList.forEach((allowList) => {
+                const websiteTemplate = this.templateForWebsiteAccessWebsites(allowList);
+                this.allowListElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
             });
             // set default selected option that gotten from storage
 
@@ -171,8 +171,8 @@
 
             this.triggerKeyElem.value = this.localStorageData.triggerKey;
             this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;
-            this.blackWhiteListFormElem['mode'].value = this.localStorageData.enableDisable.blackWhiteListMode;
-            this.changeBlackWhiteList();
+            this.websiteAccessFormElem['mode'].value = this.localStorageData.enableDisable.websiteAccessMode;
+            this.onChangingWebsiteAccessMode();
             this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed;
         }
 
@@ -267,37 +267,37 @@
 
 
 
-        addEventListenerToBlackWhiteListMode() {
-            this.blackWhiteListFormElem["mode"].addEventListener("change", this.changeBlackWhiteList.bind(this))
+        addEventListenerToWebsiteAccessMode() {
+            this.websiteAccessFormElem["mode"].addEventListener("change", this.onChangingWebsiteAccessMode.bind(this))
         }
 
-        changeBlackWhiteList(e) {
+        onChangingWebsiteAccessMode(e) {
             // this will decide which list will be visible, and which list will be hidden
-            if (this.blackWhiteListFormElem['mode'].value == "blacklist-mode") {
-                this.blacklistElem.style.display = "block";
-                this.whitelistElem.style.display = "none";
-            } else if (this.blackWhiteListFormElem['mode'].value == "whitelist-mode") {
-                this.whitelistElem.style.display = "block";
-                this.blacklistElem.style.display = "none";
+            if (this.websiteAccessFormElem['mode'].value == "deny-mode") {
+                this.denyListElem.style.display = "block";
+                this.allowListElem.style.display = "none";
+            } else if (this.websiteAccessFormElem['mode'].value == "allow-mode") {
+                this.allowListElem.style.display = "block";
+                this.denyListElem.style.display = "none";
             }
 
         }
 
-        addWebsiteToBlackWhiteList() {
-            this.blackWhiteListFormElem.addEventListener("submit", (e) => {
+        addWebsiteToWebsiteAccess() {
+            this.websiteAccessFormElem.addEventListener("submit", (e) => {
                 e.preventDefault();
-                if (!lipUtility.isValidURL(this.blackWhiteListFormElem['url'].value)) {
+                if (!lipUtility.isValidURL(this.websiteAccessFormElem['url'].value)) {
                     let invalidUrl = `The URL is invalid.`;
                     this.showFlashMessages([invalidUrl], "red");
                 } else {
-                    const blackWhiteListTemplate = this.templateForBlackWhitelist(this.blackWhiteListFormElem['url'].value);
-                    if (this.blackWhiteListFormElem['mode'].value == "blacklist-mode") {
-                        this.blacklistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
-                    } else if (this.blackWhiteListFormElem['mode'].value == "whitelist-mode") {
-                        this.whitelistElem.querySelector('.main').insertAdjacentHTML('afterbegin', blackWhiteListTemplate);
+                    const websiteTemplate = this.templateForWebsiteAccessWebsites(this.websiteAccessFormElem['url'].value);
+                    if (this.websiteAccessFormElem['mode'].value == "deny-mode") {
+                        this.denyListElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
+                    } else if (this.websiteAccessFormElem['mode'].value == "allow-mode") {
+                        this.allowListElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
                     }
-                    this.addEventListenerToBlackWhiteListRemoveBtn(true);
-                    this.blackWhiteListFormElem['url'].value = "";
+                    this.addEventListenerToWebsiteAccessWebsiteRemoveBtn(true);
+                    this.websiteAccessFormElem['url'].value = "";
                     this.showFlashMessages(["New website is added, please save the changes."]);
 
                 }
@@ -307,41 +307,41 @@
 
 
 
-        getBlackWhiteList(blacklistWebsiteElems, whitelistWebsiteElems) {
-            let blacklistWebsites = [];
-            let whitelistWebsites = [];
+        getWebsiteAccessWebsites(denyListWebsiteElems, allowListWebsiteElems) {
+            let denyListWebsites = [];
+            let allowListWebsites = [];
 
-            let blacklistWebsite;
-            let whitelistWebsite;
-            blacklistWebsiteElems.forEach((website) => {
-                blacklistWebsite = new URL(website.innerText);
-                blacklistWebsite = blacklistWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(blacklistWebsite.hostname);
-                blacklistWebsites.push(blacklistWebsite.toLowerCase());
+            let denyListWebsite;
+            let allowListWebsite;
+            denyListWebsiteElems.forEach((website) => {
+                denyListWebsite = new URL(website.innerText);
+                denyListWebsite = denyListWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(denyListWebsite.hostname);
+                denyListWebsites.push(denyListWebsite.toLowerCase());
             });
-            whitelistWebsiteElems.forEach((website) => {
-                whitelistWebsite = new URL(website.innerText);
-                whitelistWebsite = whitelistWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(whitelistWebsite.hostname);
+            allowListWebsiteElems.forEach((website) => {
+                allowListWebsite = new URL(website.innerText);
+                allowListWebsite = allowListWebsite.protocol + '//' + lipUtility.removeWWWBeginningOfHostname(allowListWebsite.hostname);
 
-                whitelistWebsites.push(lipUtility.removeWWWBeginningOfHostname(whitelistWebsite.toLowerCase()));
+                allowListWebsites.push(lipUtility.removeWWWBeginningOfHostname(allowListWebsite.toLowerCase()));
             });
             // remove duplicates 
-            let uniqueBlacklistWebsites = [...new Set(blacklistWebsites)];
-            let uniqueWhitelistWebsite = [...new Set(whitelistWebsites)];
+            let uniqueDenyListWebsites = [...new Set(denyListWebsites)];
+            let uniqueAllowListWebsite = [...new Set(allowListWebsites)];
 
-            return [uniqueBlacklistWebsites.reverse(), uniqueWhitelistWebsite.reverse()];
+            return [uniqueDenyListWebsites.reverse(), uniqueAllowListWebsite.reverse()];
 
         }
 
         /* Popup window start */
 
         /* Popup window end */
-        templateForBlackWhitelist(url) {
+        templateForWebsiteAccessWebsites(url) {
             let newUrl = new URL(url);
             return (`
-              <div class="black-white-list-website-wrapper flex-container nowrap" style="justify-content: space-between">
+              <div class="website-access-website-wrapper flex-container nowrap" style="justify-content: space-between">
                 <div class="website column"><img style="width: 16px; height: 16px; margin-right: 10px; margin-top: 6px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${url}</div>
                 <div class="column" style="text-align: right;">
-                  <span class="website-remove-from-black-white-list" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><span class="material-icons">delete_forever</span></strong></span>
+                  <span class="website-remove-from-website-access" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><span class="material-icons">delete_forever</span></strong></span>
                 </div>
               </div>
           `);
@@ -458,21 +458,21 @@
         }
 
 
-        addEventListenerToBlackWhiteListRemoveBtn(onJustFirstElement = false) {
+        addEventListenerToWebsiteAccessWebsiteRemoveBtn(onJustFirstElement = false) {
             if (onJustFirstElement) {
-                let blackWhiteListWebsiteWrapperElem = this.enableDisableWebsiteWiseElem.querySelector(".black-white-list-website-wrapper");
-                (this.eventListenerForBlackWhitelistRemoveBtn())(blackWhiteListWebsiteWrapperElem);
+                let websiteAccessWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelector(".website-access-website-wrapper");
+                (this.eventListenerForWebsiteAccessWebsiteRemoveBtn())(websiteAccessWebsiteWrapperElems);
             } else {
-                let blackWhiteListWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".black-white-list-website-wrapper");
-                [...blackWhiteListWebsiteWrapperElems].forEach(this.eventListenerForBlackWhitelistRemoveBtn());
+                let websiteAccessWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".website-access-website-wrapper");
+                [...websiteAccessWebsiteWrapperElems].forEach(this.eventListenerForWebsiteAccessWebsiteRemoveBtn());
             }
         }
 
-        eventListenerForBlackWhitelistRemoveBtn() {
-            return function(blackWhiteListWebsiteWrapperElem) {
-                const websiteRemoveBtnElem = blackWhiteListWebsiteWrapperElem.querySelector(".website-remove-from-black-white-list");
+        eventListenerForWebsiteAccessWebsiteRemoveBtn() {
+            return function(websiteAccessWebsiteWrapperElem) {
+                const websiteRemoveBtnElem = websiteAccessWebsiteWrapperElem.querySelector(".website-remove-from-website-access");
                 websiteRemoveBtnElem.addEventListener('click', (e) => {
-                    blackWhiteListWebsiteWrapperElem.parentNode.removeChild(blackWhiteListWebsiteWrapperElem);
+                    websiteAccessWebsiteWrapperElem.parentNode.removeChild(websiteAccessWebsiteWrapperElem);
                 });
             }
         }

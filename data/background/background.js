@@ -266,9 +266,9 @@
                 triggerKey: "none",
                 enableDisable: {
                     globally: "enable", //disable|enable
-                    blackWhiteListMode: "blacklist-mode", // blacklist-mode|whitelist-mode
-                    blacklist: [], // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
-                    whitelist: [] // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
+                    websiteAccessMode: "deny-mode", // deny-mode|allow-mode
+                    denyList: [], // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
+                    allowList: [] // ["someUrl", "anotherUrl", "sommeAnotherUrl"]
                 },
                 popupWindow: {
                     isCloseOnEscAllowed: true,

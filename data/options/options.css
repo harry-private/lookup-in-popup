@@ -231,16 +231,16 @@ select:focus {
     outline: none;
 }
 
-.website-remove-from-black-white-list:hover {
+.website-remove-from-website-access:hover {
     color: red;
 }
 
-#enable-disable-website-wise .black-white-list-website-wrapper {
+#enable-disable-website-wise .website-access-website-wrapper {
     padding: 5px;
     border-bottom: 1px solid #dedede;
 }
 
-#enable-disable-website-wise .black-white-list-website-wrapper:last-child {
+#enable-disable-website-wise .website-access-website-wrapper:last-child {
     border-bottom: none;
 }
 

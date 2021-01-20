@@ -71,10 +71,10 @@
                     <div id="enable-disable-website-wise">
                         <div class="second-settings-segment">
                             <h4><span class="tooltip-btn" data-tooltip-btn="enable-disable-website-wise">Enable or Disable the extension website-wise</span></h4>
-                            <form id="black-white-list-form">
+                            <form id="website-access-form">
                                 <select name="mode">
-                                    <option value="blacklist-mode">Blacklist Mode</option>
-                                    <option value="whitelist-mode">Whitelist Mode</option>
+                                    <option value="deny-mode">Deny Mode</option>
+                                    <option value="allow-mode">Allow Mode</option>
                                 </select>
                                 <br>
                                 <br>
@@ -86,14 +86,14 @@
                             </form>
                             <br>
                             <br>
-                            <div id="blacklist" style="border: 1px solid #ccc; padding:15px;">
-                                <strong><span>BlackList</span></strong>
+                            <div id="deny-list" style="border: 1px solid #ccc; padding:15px;">
+                                <strong><span>Deny List</span></strong>
                                 <br>
                                 <br>
                                 <div class="main"></div>
                             </div>
-                            <div id="whitelist" style="display: none; border: 1px solid #ccc; padding:15px;">
-                                <strong><span>Whitelist</span></strong>
+                            <div id="allow-list" style="display: none; border: 1px solid #ccc; padding:15px;">
+                                <strong><span>Allow List</span></strong>
                                 <br>
                                 <br>
                                 <div class="main"></div>
@@ -208,9 +208,9 @@
     <!-- Help Tooltip data -->
     <div class="tooltip" data-tooltip-for="enable-disable-website-wise">
         <div class="arrow" data-popper-arrow></div>
-        "Blacklist Mode": Text selection will not work on websites that are on the blacklist.
+        "Deny Mode": Text selection will not work on websites that are on the Deny List.
         <hr>
-        "Whitelist Mode": Text selection will only work on websites that are on the whitelist.
+        "Allow Mode": Text selection will only work on websites that are on the Allow List.
 
     </div>
 

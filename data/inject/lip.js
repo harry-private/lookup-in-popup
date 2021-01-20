@@ -47,15 +47,16 @@
             return this.localStorageData.enableDisable.globally == "disable"; // Boolean
         }
         isCurrentWebsiteIsAllowed() {
-            // blacklist/whitelist check
+            // website access check
             let isAllowed = true;
             let currentWebsiteUrl = window.location.protocol + "//" + lipUtility.removeWWWBeginningOfHostname(window.location.hostname);
-            if (this.localStorageData.enableDisable.blackWhiteListMode == "blacklist-mode") {
-                if (this.localStorageData.enableDisable.blacklist.includes(currentWebsiteUrl)) {
+            console.log(this.localStorageData.enableDisable);
+            if (this.localStorageData.enableDisable.websiteAccessMode == "deny-mode") {
+                if (this.localStorageData.enableDisable.denyList.includes(currentWebsiteUrl)) {
                     isAllowed = false;
                 }
-            } else if (this.localStorageData.enableDisable.blackWhiteListMode == "whitelist-mode") {
-                if (!this.localStorageData.enableDisable.whitelist.includes(currentWebsiteUrl)) {
+            } else if (this.localStorageData.enableDisable.websiteAccessMode == "allow-mode") {
+                if (!this.localStorageData.enableDisable.allowList.includes(currentWebsiteUrl)) {
                     isAllowed = false;
                 }
             }

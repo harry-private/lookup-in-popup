@@ -1,10 +1,12 @@
 // TODO No need to use getSelectedOption, selectElem.value can be used instead
 
+// TODO Replace "addEventListener" with "handle" or "on"
+
 // TODO When full-screen close button is not visible, tell user about "F11"
 
 // TODO Change placeholder for "popup window" to something "Keep default (in px)"
 
-// TODO Improve Blacklist and Whitelist, allow user to be able to add just page(s), instead of the main domain
+// TODO Improve website access, allow user to be able to add just page(s), instead of the main domain
 
 // TODO Hide bubble after some time when no action is made.
 
