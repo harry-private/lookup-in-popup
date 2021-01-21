@@ -33,18 +33,19 @@
 
         run() {
 
-            this.createSourcesSettingsLayout();
+            this.createSettingsLayout();
             this.sortSources();
             this.tooltip();
             this.toggleNextSibling();
-            this.addEventListenerToSourceSideOptions();
-            this.addEventListenerToSourceEditForm();
-            this.addEventListenerToWebsiteAccessWebsiteRemoveBtn();
+            this.sourceSideOptions();
+            this.sourceEditForm();
+            this.websiteRemoveBtn();
             this.addNewSource();
 
-            this.saveSettings();
-            this.addEventListenerToWebsiteAccessMode();
             this.addWebsiteToWebsiteAccess();
+            this.websiteAccessMode();
+
+            this.saveSettings();
         }
         saveSettings() {
             this.saveSettingsElem.addEventListener("click", () => {
@@ -101,8 +102,12 @@
             });
         }
 
-        // CONSIDER Changing the name to "createSettingsLayout()"
-        createSourcesSettingsLayout() {
+        /**
+         * - Create layout for "Added Sources" 
+         * - Update form values based on local storage
+         * - Create layout for "Allow list and Deny list "
+         */
+        createSettingsLayout() {
             this.localStorageData.sources.forEach((storedSource) => {
                 let fromTo;
 
@@ -147,7 +152,7 @@
                 })
                 this.sourcesSettingsElem.insertAdjacentHTML('beforeend', template);
             });
-            this.changeUrlOfPreInstalledSources();
+            this.updateUrlOfPreInstalledSources();
 
             this.localStorageData.enableDisable.denyList.forEach((denyList) => {
                 const websiteTemplate = this.templateForWebsiteAccessWebsites(denyList);
@@ -172,7 +177,7 @@
             this.triggerKeyElem.value = this.localStorageData.triggerKey;
             this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;
             this.websiteAccessFormElem['mode'].value = this.localStorageData.enableDisable.websiteAccessMode;
-            this.onChangingWebsiteAccessMode();
+            this.changeListBasedOnWebsiteAccessMode();
             this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed;
         }
 
@@ -181,9 +186,8 @@
             let error = false;
             [...sourceEditFormElems].forEach((sourceEditForm) => {
                 let sourcesToStoreObj = {};
-                // TODO Trim the values
-                let sourceTitle = sourceEditForm["title"].value;
-                let sourceUrl = sourceEditForm["url"].value;
+                let sourceTitle = sourceEditForm["title"].value.trim();
+                let sourceUrl = sourceEditForm["url"].value.trim();
 
                 let sourceId = sourceEditForm.dataset.id;
                 if ((sourceTitle.length >= 30) || (sourceTitle.length <= 0)) {
@@ -252,8 +256,8 @@
                     this.showFlashMessages(["New source is added, please save the changes."]);
 
                     // add eventListener to newly created source
-                    this.addEventListenerToSourceSideOptions(true);
-                    this.addEventListenerToSourceEditForm(true);
+                    this.sourceSideOptions(true);
+                    this.sourceEditForm(true);
 
                 }
 
@@ -266,12 +270,17 @@
         }
 
 
-
-        addEventListenerToWebsiteAccessMode() {
-            this.websiteAccessFormElem["mode"].addEventListener("change", this.onChangingWebsiteAccessMode.bind(this))
+        /**
+         * Add event listener to website access mode **select**
+         */
+        websiteAccessMode() {
+            this.websiteAccessFormElem["mode"].addEventListener("change", this.changeListBasedOnWebsiteAccessMode.bind(this))
         }
 
-        onChangingWebsiteAccessMode(e) {
+        /**
+         *  Change list (allow or deny) based on selected website access mode
+         */
+        changeListBasedOnWebsiteAccessMode(e) {
             // this will decide which list will be visible, and which list will be hidden
             if (this.websiteAccessFormElem['mode'].value == "deny-mode") {
                 this.denyListElem.style.display = "block";
@@ -296,7 +305,7 @@
                     } else if (this.websiteAccessFormElem['mode'].value == "allow-mode") {
                         this.allowListElem.querySelector('.main').insertAdjacentHTML('afterbegin', websiteTemplate);
                     }
-                    this.addEventListenerToWebsiteAccessWebsiteRemoveBtn(true);
+                    this.websiteRemoveBtn(true);
                     this.websiteAccessFormElem['url'].value = "";
                     this.showFlashMessages(["New website is added, please save the changes."]);
 
@@ -332,14 +341,12 @@
 
         }
 
-        /* Popup window start */
-
-        /* Popup window end */
         templateForWebsiteAccessWebsites(url) {
-            let newUrl = new URL(url);
+            let urlTrimmed = url.trim();
+            let newUrl = new URL(urlTrimmed);
             return (`
               <div class="website-access-website-wrapper flex-container nowrap" style="justify-content: space-between">
-                <div class="website column"><img style="width: 16px; height: 16px; margin-right: 10px; margin-top: 6px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${url}</div>
+                <div class="website column"><img style="width: 16px; height: 16px; margin-right: 10px; margin-top: 6px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${urlTrimmed}</div>
                 <div class="column" style="text-align: right;">
                   <span class="website-remove-from-website-access" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><span class="material-icons">delete_forever</span></strong></span>
                 </div>
@@ -357,7 +364,7 @@
         } = {}) {
 
             let newUrl = new URL(url);
-            return (`
+            return `
               <div class="source" style="">
                 
                   <div class="flex-container nowrap" style="justify-content: space-between">
@@ -385,66 +392,75 @@
                       <button class="source-done">Done</button><br>
                   </form>
               </div>
-            `);
+            `;
         }
 
-        addEventListenerToSourceSideOptions(onJustFirstElement = false) {
+        /**
+         * Add event listeners and handlers to sources side options
+         * @param {boolean} onJustFirstElement 
+         */
+        sourceSideOptions(onJustFirstElement = false) {
+            const addEventListenerToSourceSideOptions = () => {
+                return function(source) {
+                    const sourceEditFormElem = source.querySelector(".source-edit-form");
+                    const sourceEditElem = source.querySelector(".source-edit");
+                    const sourceHideElem = source.querySelector(".source-hide");
+                    const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
+                    const sourceRemoveElem = source.querySelector(".source-remove");
+                    const sourceDoneElem = source.querySelector(".source-done");
+                    sourceEditElem.addEventListener('click', (e) => {
+                        sourceEditFormElem.style.display = sourceEditFormElem.style.display === 'none' ? "" : "none";
+                    });
+                    sourceHideElem.addEventListener('click', (e) => {
+                        let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
+
+                        if (sourceIsHidden == "true") {
+                            sourceEditFormElem.dataset.isHidden = "false";
+                            sourceHideIconElem.innerText = "visibility";
+                            // sourceHideElem.style.textDecoration = '';
+                        } else {
+                            sourceEditFormElem.dataset.isHidden = "true";
+                            // sourceHideElem.style.textDecoration = 'line-through';
+                            sourceHideIconElem.innerText = "visibility_off";
+
+                        }
+                    });
+                    if (sourceRemoveElem) {
+                        sourceRemoveElem.addEventListener('click', (e) => {
+                            source.parentNode.removeChild(source);
+
+                        });
+                    }
+                    sourceDoneElem.addEventListener('click', (e) => {
+                        // let sourceEditedElem = source.querySelector(".source-edit-form");
+                        sourceEditFormElem.style.display = "none"
+                    });
+
+                    // This is not one of the side options, but I am putting it here to
+                    // skip writing too many duplicate codes
+                    sourceEditFormElem["title"].addEventListener("keyup", (e) => {
+                        let visibleTitle = source.querySelector(".visible-title");
+                        visibleTitle.innerText = sourceEditFormElem["title"].value;
+                    });
+                };
+            };
 
             if (onJustFirstElement) {
                 let sourceElem = this.sourcesSettingsElem.querySelector('.source');
-                (this.eventListenerForSideOptions())(sourceElem);
+                (addEventListenerToSourceSideOptions())(sourceElem);
             } else {
                 let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
-                [...sourceElems].forEach(this.eventListenerForSideOptions());
+                [...sourceElems].forEach(addEventListenerToSourceSideOptions());
             }
         }
 
-        eventListenerForSideOptions() {
-            return function(source) {
-                const sourceEditFormElem = source.querySelector(".source-edit-form");
-                const sourceEditElem = source.querySelector(".source-edit");
-                const sourceHideElem = source.querySelector(".source-hide");
-                const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
-                const sourceRemoveElem = source.querySelector(".source-remove");
-                const sourceDoneElem = source.querySelector(".source-done");
-                sourceEditElem.addEventListener('click', (e) => {
-                    sourceEditFormElem.style.display = sourceEditFormElem.style.display === 'none' ? "" : "none";
-                });
-                sourceHideElem.addEventListener('click', (e) => {
-                    let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
 
-                    if (sourceIsHidden == "true") {
-                        sourceEditFormElem.dataset.isHidden = "false";
-                        sourceHideIconElem.innerText = "visibility";
-                        // sourceHideElem.style.textDecoration = '';
-                    } else {
-                        sourceEditFormElem.dataset.isHidden = "true";
-                        // sourceHideElem.style.textDecoration = 'line-through';
-                        sourceHideIconElem.innerText = "visibility_off";
 
-                    }
-                });
-                if (sourceRemoveElem) {
-                    sourceRemoveElem.addEventListener('click', (e) => {
-                        source.parentNode.removeChild(source);
-
-                    });
-                }
-                sourceDoneElem.addEventListener('click', (e) => {
-                    // let sourceEditedElem = source.querySelector(".source-edit-form");
-                    sourceEditFormElem.style.display = "none"
-                });
-
-                // This is not one of the side options, but I am putting it here to
-                // skip writing too many duplicate codes
-                sourceEditFormElem["title"].addEventListener("keyup", (e) => {
-                    let visibleTitle = source.querySelector(".visible-title");
-                    visibleTitle.innerText = sourceEditFormElem["title"].value;
-                });
-            };
-        }
-
-        addEventListenerToSourceEditForm(onJustFirstElement = false) {
+        /**
+         * Add submit listener and handler to source edit form
+         * @param {boolean} onJustFirstElement 
+         */
+        sourceEditForm(onJustFirstElement = false) {
             if (onJustFirstElement) {
                 let sourceEditFormElem = this.sourcesSettingsElem.querySelector('.source-edit-form');
                 sourceEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); });
@@ -458,26 +474,35 @@
         }
 
 
-        addEventListenerToWebsiteAccessWebsiteRemoveBtn(onJustFirstElement = false) {
+        /**
+         * Add event listener and handler to **allow list** and **deny list** websites' remove button
+         * @param {boolean} onJustFirstElement 
+         */
+        websiteRemoveBtn(onJustFirstElement = false) {
+            const addEventListenerToWebsiteRemoveBtn = () => {
+                return function(websiteAccessWebsiteWrapperElem) {
+                    const websiteRemoveBtnElem = websiteAccessWebsiteWrapperElem.querySelector(".website-remove-from-website-access");
+                    websiteRemoveBtnElem.addEventListener('click', (e) => {
+                        websiteAccessWebsiteWrapperElem.parentNode.removeChild(websiteAccessWebsiteWrapperElem);
+                    });
+                }
+            };
+
             if (onJustFirstElement) {
                 let websiteAccessWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelector(".website-access-website-wrapper");
-                (this.eventListenerForWebsiteAccessWebsiteRemoveBtn())(websiteAccessWebsiteWrapperElems);
+                (addEventListenerToWebsiteRemoveBtn())(websiteAccessWebsiteWrapperElems);
             } else {
                 let websiteAccessWebsiteWrapperElems = this.enableDisableWebsiteWiseElem.querySelectorAll(".website-access-website-wrapper");
-                [...websiteAccessWebsiteWrapperElems].forEach(this.eventListenerForWebsiteAccessWebsiteRemoveBtn());
+                [...websiteAccessWebsiteWrapperElems].forEach(addEventListenerToWebsiteRemoveBtn());
             }
         }
 
-        eventListenerForWebsiteAccessWebsiteRemoveBtn() {
-            return function(websiteAccessWebsiteWrapperElem) {
-                const websiteRemoveBtnElem = websiteAccessWebsiteWrapperElem.querySelector(".website-remove-from-website-access");
-                websiteRemoveBtnElem.addEventListener('click', (e) => {
-                    websiteAccessWebsiteWrapperElem.parentNode.removeChild(websiteAccessWebsiteWrapperElem);
-                });
-            }
-        }
 
-        changeUrlOfPreInstalledSources() {
+
+        /**
+         * Update url of pre-installed source on its option changes
+         */
+        updateUrlOfPreInstalledSources() {
             let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
 
             [...sourceEditFormElems].forEach((sourceEditForm) => {

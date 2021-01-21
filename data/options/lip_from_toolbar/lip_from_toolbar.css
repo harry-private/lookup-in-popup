@@ -8,6 +8,8 @@ body {
     /* max-height: 90vh; */
     margin-bottom: 50px;
     min-width: 600px;
+    font-family: sans-serif;
+
 }
 
 /* @-moz-document url-prefix() {

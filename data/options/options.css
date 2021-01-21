@@ -10,6 +10,7 @@ body {
     /* max-height: 500px; */
     margin-bottom: 50px;
     min-width: 600px;
+    font-family: sans-serif;
 
 
 }
@@ -144,6 +145,7 @@ select:focus {
     border: 1px solid #ccc;
     padding: 15px;
 
+
 }
 
 .main-settings-segment .header {
@@ -152,10 +154,10 @@ select:focus {
     -webkit-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    font-weight: 700;
+    font-weight: 600;
     /* padding: 5px; */
     margin-bottom: 12px;
-    font-size: 23px;
+    font-size: 17px;
     display: flex;
     justify-content: space-between;
 }
@@ -166,6 +168,12 @@ select:focus {
 
 .main-settings-segment .header.next-sibling-is-hidden .expand-icon {
     transform: rotate(180deg);
+}
+
+
+.second-settings-segment .header {
+    font-weight: 400;
+    font-size: 17px;
 }
 
 #sources-settings .source {
@@ -273,9 +281,7 @@ select:focus {
 
 /* Tooltip */
 
-.tooltip hr {
-    border: 0.1px solid #eee;
-}
+
 
 .tooltip-btn {
     cursor: pointer;
@@ -284,10 +290,10 @@ select:focus {
 
 .tooltip {
     background: #5d5d5b;
-    max-width: 400px;
+    /* max-width: 400px; */
     color: white;
     font-weight: bold;
-    padding: 6px 8px;
+    padding: 8px;
     font-size: 13px;
     border-radius: 4px;
     display: none;

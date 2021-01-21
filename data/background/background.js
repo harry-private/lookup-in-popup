@@ -9,7 +9,16 @@
             this.localStorageData = await lipUtility.localStorageDataPromise();
             this.run();
 
-            /*[[WindId = { windowId: 6, tabId: 8, query: "", navbarState: "visible|hidden|removed" }]]*/
+            /**
+             * Stores data related to opened popup windows
+             * @example
+             * [[6(WindowId) = {
+             *    windowId: 6,
+             *    tabId: 8,
+             *    query: "",
+             *    navbarState: "visible|hidden|removed" 
+             * }]]
+             */
             this.openedLipPopupWindows = {};
 
         }
@@ -262,8 +271,7 @@
                     },
 
                 ],
-                sourcesHidden: [],
-                triggerKey: "none",
+                triggerKey: "none", // none|altKey|shiftKey|ctrlKey
                 enableDisable: {
                     globally: "enable", //disable|enable
                     websiteAccessMode: "deny-mode", // deny-mode|allow-mode

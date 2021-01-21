@@ -21,7 +21,7 @@
         <!-- <span style="display: inline-block; padding: 15px; background: palevioletred;">Note: no changes will be applied until you click on the "Save Settings" button below.</span> -->
 
         <div class="add-new-source main-settings-segment">
-            <div class="header hide-next-sibling next-sibling-is-hidden">Add New Source <span class="material-icons expand-icon">expand_more</span></div>
+            <div class="header hide-next-sibling next-sibling-is-hidden">Add New Source <span class="material-icons expand-icon">expand_less</span></div>
             <div class="hidable hidden">
                 <div class="second-settings-segment">
                     <form id="add-new-source-form">
@@ -42,11 +42,12 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header hide-next-sibling next-sibling-is-hidden">Added Sources<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Added Sources<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
-                    <h5>*Note that First source/website on the list will be the default when "Show Bubble" is set to "No"</h5>
+                    <span>*Note that First source/website on the list will be the default when "Show Bubble" is set to "No"</span>
+                    <br><br>
                     <div class="second-settings-segment">
-                        <h3>Sources</h3>
+                        <div class="header">Sources</div>
                         <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
 
                         <div id="sources-settings" class=""></div>
@@ -57,11 +58,12 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header hide-next-sibling next-sibling-is-hidden">Enable/Disable the extension<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Enable/Disable the extension<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
-                    <h5>*Note that the extension will still work from context menu, and toolbar</h5>
+                    <span>*Note that the extension will still work from context menu, and toolbar</span>
+                    <br><br>
                     <div class="second-settings-segment">
-                        <h4>Enable or Disable the extension globally</h4>
+                        <div class="header">Enable or Disable the extension globally</div>
                         <select id="enable-disable-globally">
                             <option value="enable">Enable</option>
                             <option value="disable">Disable</option>
@@ -70,7 +72,7 @@
                     <br>
                     <div id="enable-disable-website-wise">
                         <div class="second-settings-segment">
-                            <h4><span class="tooltip-btn" data-tooltip-btn="enable-disable-website-wise">Enable or Disable the extension website-wise</span></h4>
+                            <div class="header"><span class="tooltip-btn" data-tooltip-btn="enable-disable-website-wise">Enable or Disable the extension website-wise</span></div>
                             <form id="website-access-form">
                                 <select name="mode">
                                     <option value="deny-mode">Deny Mode</option>
@@ -106,11 +108,11 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header hide-next-sibling next-sibling-is-hidden">Popup Window<span class="material-icons expand-icon">expand_more</span></div>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Popup Window<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
                     <br>
                     <div class="second-settings-segment" title=''>
-                        <h3><span>Popup window close on Esc</span></h3>
+                        <div class="header"><span>Popup window close on Esc</span></div>
 
                         <select id="popup-window-is-close-on-esc-allowed">
                             <option value="true">Yes</option>
@@ -119,7 +121,7 @@
                     </div>
                     <br>
                     <div class="second-settings-segment" title=''>
-                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-window-is-multiple-allowed">Allow multiple popup windows</span></h3>
+                        <div class="header"><span class="tooltip-btn" data-tooltip-btn="popup-window-is-multiple-allowed">Allow multiple popup windows</span></div>
 
                         <select id="popup-window-is-multiple-allowed">
                             <option value="true">Yes</option>
@@ -128,7 +130,7 @@
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window state</span></h3>
+                        <div class="header"><span>Popup window state</span></div>
 
                         <select id="popup-window-state">
                             <option value="normal">Normal</option>
@@ -138,27 +140,27 @@
 
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window width (in px)</span></h3>
+                        <div class="header"><span>Popup window width (in px)</span></div>
                         <input id="popup-window-width" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window height (in px)</span></h3>
+                        <div class="header"><span>Popup window height (in px)</span></div>
                         <input id="popup-window-height" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window from left (in px)</span></h3>
+                        <div class="header"><span>Popup window from left (in px)</span></div>
                         <input id="popup-window-from-left" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span class="tooltip-btn" data-tooltip-btn="popup-window-from-top">Popup window from top (in px)</span></h3>
+                        <div class="header"><span class="tooltip-btn" data-tooltip-btn="popup-window-from-top">Popup window from top (in px)</span></div>
                         <input id="popup-window-from-top" type="number" placeholder="Keep default">
                     </div>
                     <br>
                     <div class="second-settings-segment">
-                        <h3><span>Popup window show navbar</span></h3>
+                        <div class="header"><span>Popup window show navbar</span></div>
                         <select id="popup-window-is-showing-navbar-allowed">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
@@ -171,10 +173,10 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header hide-next-sibling next-sibling-is-hidden">Other settings <span class="material-icons expand-icon">expand_more</span></div>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Other settings <span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
                     <div class="second-settings-segment">
-                        <h3><span class="tooltip-btn" data-tooltip-btn="trigger-key">Trigger Key</span></h3>
+                        <div class="header"><span class="tooltip-btn" data-tooltip-btn="trigger-key">Trigger Key</span></div>
 
                         <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
                         <select id="trigger-key">
@@ -186,7 +188,7 @@
                     </div>
                     <br>
                     <div class="second-settings-segment" title=''>
-                        <h3><span class="tooltip-btn" data-tooltip-btn="show-bubble">Show Bubble</span></h3>
+                        <div class="header"><span class="tooltip-btn" data-tooltip-btn="show-bubble">Show Bubble</span></div>
 
                         <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
                         <select id="is-showing-bubble-allowed">
@@ -209,7 +211,7 @@
     <div class="tooltip" data-tooltip-for="enable-disable-website-wise">
         <div class="arrow" data-popper-arrow></div>
         "Deny Mode": Text selection will not work on websites that are on the Deny List.
-        <hr>
+        <br><br>
         "Allow Mode": Text selection will only work on websites that are on the Allow List.
 
     </div>
@@ -217,13 +219,13 @@
     <div class="tooltip" data-tooltip-for="popup-window-is-multiple-allowed">
         <div class="arrow" data-popper-arrow></div>
         "Yes": Every request will open in a new popup window.
-        <hr>
+        <br><br>
         "No": Every request will open in the same popup window.
     </div>
     <div class="tooltip" data-tooltip-for="trigger-key">
         <div class="arrow" data-popper-arrow></div>
         "None": Text selection will work normally.
-        <hr>
+        <br><br>
         "Some Key": Text selection will not work, until the "Some Key" is held while making the text selection.
     </div>
 
@@ -231,7 +233,7 @@
     <div class="tooltip" data-tooltip-for="show-bubble">
         <div class="arrow" data-popper-arrow></div>
         "Yes": Bubble will show up normally upon text selection.
-        <hr>
+        <br><br>
         "No": Bubble will not show up, and text selection will automatically open in a popup window.
     </div>
 
