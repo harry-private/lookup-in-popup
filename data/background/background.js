@@ -38,7 +38,7 @@
                 contexts: ["selection"]
             });
             this.createLipContextMenu();
-            this.createLipContextMenuForLinkImage();
+            this.createLipContextMenuForLink();
         }
 
 
@@ -194,11 +194,11 @@
 
         }
 
-        createLipContextMenuForLinkImage() {
+        createLipContextMenuForLink() {
             chrome.contextMenus.create({
                 // parentId: 'open-lip',
                 // id: "lip-popup",
-                title: "Lookup in popup",
+                title: "Open link popup",
                 contexts: ["link", "image", "video", "audio"],
                 onclick: (info, tab) => {
                     this.openLipPopupWindow(info.linkUrl);

@@ -108,6 +108,8 @@
     font-weight: 900 !important;
     border: 0px !important;
     padding: 5px !important;
+    background: unset !important;
+    background-color: unset !important;
 }
 
 .lip-popup-window-menu-bar-extra button:hover {
