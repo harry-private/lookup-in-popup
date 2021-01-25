@@ -446,7 +446,7 @@
             };
 
             if (onJustFirstElement) {
-                let searchEngineElem = this.searchEnginesSettingsElem.querySelector('.searchEngine');
+                let searchEngineElem = this.searchEnginesSettingsElem.querySelector('.search-engine');
                 (addEventListenerToSearchEngineSideOptions())(searchEngineElem);
             } else {
                 let searchEngineElems = this.searchEnginesSettingsElem.querySelectorAll(".search-engine");
