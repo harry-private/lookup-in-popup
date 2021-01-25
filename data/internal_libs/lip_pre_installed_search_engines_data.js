@@ -504,7 +504,7 @@ let wikipediaLanguages = [
 ];
 
 
-let lipPreInstalledSourcesData = {
+let lipPreInstalledSearchEnginesData = {
     "googleTranslate": {
         generateUrl: function(from, to) {
             return `https://translate.google.com/?view=home&op=translate&sl=${from}&tl=${to}&text=%s`

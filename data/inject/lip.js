@@ -2,7 +2,7 @@
     'use strict'
     class Lip {
         async _constructor() {
-            // this.sources = {};
+            // this.searchEngines = {};
             this.localStorageData = await lipUtility.localStorageDataPromise();
 
             if (this.isGloballyDisabled()) return;
@@ -19,7 +19,7 @@
                     this.bubbleSelect.classList.add('lip-bubble-select');
                     this.isAdded = false;
                     this.selectedText = "";
-                    this.selectedSource;
+                    this.selectedSearchEngine;
                     this.run();
 
                     observer.disconnect();
@@ -34,7 +34,7 @@
         }
 
         createBubble() {
-            this.bubbleSelect.innerHTML = `${(this.sourcesOptionsForSelect())}`;
+            this.bubbleSelect.innerHTML = `${(this.searchEnginesOptionsForSelect())}`;
             this.bubble.appendChild(this.bubbleSelect);
         }
 
@@ -96,11 +96,11 @@
             }
             return true;
         }
-        sourcesOptionsForSelect() {
+        searchEnginesOptionsForSelect() {
             let options = '<option selected disabled></option>';
-            this.localStorageData.sources.forEach(function(source) {
-                if (!source.isHidden) {
-                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+            this.localStorageData.searchEngines.forEach(function(searchEngine) {
+                if (!searchEngine.isHidden) {
+                    options += `<option data-url="${searchEngine.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${searchEngine.title}</option>`
                 }
             });
             return options;
@@ -152,12 +152,12 @@
         createLipPopupWindow(event) {
             let url;
             if (this.localStorageData.isShowingBubbleAllowed) {
-                this.selectedSource = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
-                let selectedSourceUrl = this.selectedSource.dataset.url;
-                url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, this.selectedText.trim())
+                this.selectedSearchEngine = this.bubbleSelect.options[this.bubbleSelect.selectedIndex];
+                let selectedSearchEnginesUrl = this.selectedSearchEngine.dataset.url;
+                url = lipUtility.createSearchEngineUrlForNewWindow(selectedSearchEnginesUrl, this.selectedText.trim())
             } else {
-                let firstSourceUrl = this.localStorageData.sources[0].url;
-                url = lipUtility.createSourceUrlForNewWindow(firstSourceUrl, this.selectedText.trim())
+                let firstSearchEngineUrl = this.localStorageData.searchEngines[0].url;
+                url = lipUtility.createSearchEngineUrlForNewWindow(firstSearchEngineUrl, this.selectedText.trim())
             }
             chrome.runtime.sendMessage({
                 method: 'open-lip-popup-window',

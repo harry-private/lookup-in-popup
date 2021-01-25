@@ -16,11 +16,11 @@
             this.insertNavbar();
             this.querySubmitted();
         }
-        sourcesOptionsForSelect() {
+        searchEnginesOptionsForSelect() {
             let options = '';
-            this.localStorageData.sources.forEach(function(source) {
-                if (!source.isHidden) {
-                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
+            this.localStorageData.searchEngines.forEach(function(searchEngine) {
+                if (!searchEngine.isHidden) {
+                    options += `<option data-url="${searchEngine.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${searchEngine.title}</option>`
                 }
             });
             return options;
@@ -32,7 +32,7 @@
               <div class="formContainer">
                 <form class="form">
                   <input name="query" class="query-input" placeholder="Type your query here..." autofocus>
-                  <select class="select">${this.sourcesOptionsForSelect()}</select>
+                  <select class="select">${this.searchEnginesOptionsForSelect()}</select>
                   <button class="submit"></button>
                 </form>
               </div>
@@ -51,12 +51,12 @@
                 e.preventDefault();
                 let query = this.form["query"].value.trim();
                 if (query == "") { return; }
-                let selectedSource = this.select.options[this.select.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                if (!selectedSourceUrl) {
-                    selectedSourceUrl = this.selectedSource.dataset.url;
+                let selectedSearchEngine = this.select.options[this.select.selectedIndex];
+                let selectedSearchEngineUrl = selectedSearchEngine.dataset.url;
+                if (!selectedSearchEngineUrl) {
+                    selectedSearchEngineUrl = this.selectedSearchEngine.dataset.url;
                 }
-                let url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lipUtility.createSearchEngineUrlForNewWindow(selectedSearchEngineUrl, query);
                 chrome.runtime.sendMessage({
                     method: 'open-lip-popup-window',
                     // url: encodeURIComponent(url)

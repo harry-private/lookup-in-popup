@@ -20,20 +20,20 @@
     <div class="main-settings">
         <!-- <span style="display: inline-block; padding: 15px; background: palevioletred;">Note: no changes will be applied until you click on the "Save Settings" button below.</span> -->
 
-        <div class="add-new-source main-settings-segment">
-            <div class="header hide-next-sibling next-sibling-is-hidden">Add New Source <span class="material-icons expand-icon">expand_less</span></div>
+        <div class="add-new-search-engine main-settings-segment">
+            <div class="header hide-next-sibling next-sibling-is-hidden">Add New Search Engine <span class="material-icons expand-icon">expand_less</span></div>
             <div class="hidable hidden">
                 <div class="second-settings-segment">
-                    <form id="add-new-source-form">
+                    <form id="add-new-search-engine-form">
                         <!-- <label><strong>Title</strong></label><br> -->
-                        <input type="text" name="title" class="source-title" placeholder="Title"><br><br>
+                        <input type="text" name="title" class="search-engine-title" placeholder="Title"><br><br>
                         <!-- <label><strong>Url</strong> (<span>Add <strong>%s</strong> where the query will go</span>)</label><br> -->
-                        <input type="text" name="url" class="source-url" placeholder="https://somewebsite/search/%s">
+                        <input type="text" name="url" class="search-engine-url" placeholder="https://somewebsite/search/%s">
                         <br>
                         <span>*Add <strong>%s</strong> where the query will go</span>
                         <br>
                         <br>
-                        <button type="submit">Add Source</button>
+                        <button type="submit">Add Search Engine</button>
                     </form>
                 </div>
             </div>
@@ -42,15 +42,14 @@
         <br>
         <div class="flex-container nowrap main-settings-segment">
             <div class="column">
-                <div class="header hide-next-sibling next-sibling-is-hidden">Added Sources<span class="material-icons expand-icon">expand_less</span></div>
+                <div class="header hide-next-sibling next-sibling-is-hidden">Added Search Engines<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
-                    <span>*Note that First source/website on the list will be the default when "Show Bubble" is set to "No"</span>
+                    <span>*Note that First "Search Engine" on the list will be the default when "Show Bubble" is set to "No"</span>
                     <br><br>
                     <div class="second-settings-segment">
-                        <div class="header">Sources</div>
-                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
+                        <div class="header">Search Engines</div>
 
-                        <div id="sources-settings" class=""></div>
+                        <div id="search-engines-settings" class=""></div>
                     </div>
                 </div>
             </div>
@@ -178,7 +177,6 @@
                     <div class="second-settings-segment">
                         <div class="header"><span class="tooltip-btn" data-tooltip-btn="trigger-key">Trigger Key</span></div>
 
-                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
                         <select id="trigger-key">
                             <option value="none">None</option>
                             <option value="ctrlKey">Ctrl</option>
@@ -190,7 +188,6 @@
                     <div class="second-settings-segment" title=''>
                         <div class="header"><span class="tooltip-btn" data-tooltip-btn="show-bubble">Show Bubble</span></div>
 
-                        <!-- <span style="font-size: 12px; font-style: unset"><strong>* First source in the list will be the default source</strong></span><br><br> -->
                         <select id="is-showing-bubble-allowed">
                             <option value="true">Yes</option>
                             <option value="false">No</option>
@@ -245,7 +242,7 @@
     <script src="/data/internal_libs/lip_utility.js"></script>
     <script src="/data/external_libs/sortable.min.js"></script>
     <script src="/data/external_libs/popper.min.js"></script>
-    <script src="/data/internal_libs/lip_pre_installed_sources_data.js"></script>
+    <script src="/data/internal_libs/lip_pre_installed_search_engines_data.js"></script>
     <script src="options.js"></script>
 
 </body>

@@ -174,15 +174,15 @@
             });
 
 
-            if (('sources' in this.localStorageData)) {
-                this.localStorageData.sources.forEach((source) => {
-                    if (!source.isHidden) {
+            if (('searchEngines' in this.localStorageData)) {
+                this.localStorageData.searchEngines.forEach((searchEngine) => {
+                    if (!searchEngine.isHidden) {
                         chrome.contextMenus.create({
                             parentId: 'lip-popup',
-                            title: source.title,
+                            title: searchEngine.title,
                             contexts: ["selection"],
                             onclick: (info, tab) => {
-                                let url = lipUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
+                                let url = lipUtility.createSearchEngineUrlForNewWindow(searchEngine.url, info.selectionText);
                                 this.openLipPopupWindow(url, info.selectionText.trim());
 
                             },
@@ -224,14 +224,14 @@
 
         firstTime() {
             chrome.storage.sync.set({
-                sources: [{
+                searchEngines: [{
                         "isPreInstalled": true,
                         "isHidden": false,
                         "id": "googleTranslate",
                         "title": "Google Translate",
                         "from": "auto", //default
                         "to": "en", //default
-                        "url": lipPreInstalledSourcesData.googleTranslate.generateUrl("auto", "en")
+                        "url": lipPreInstalledSearchEnginesData.googleTranslate.generateUrl("auto", "en")
                     },
                     {
                         "isPreInstalled": false, //it's true, but I will have to make so much effort to make it work, that's why I'm leaving it like this.
@@ -246,28 +246,28 @@
                         "id": "cambridge",
                         "title": "Cambridge",
                         "fromTo": "english",
-                        "url": lipPreInstalledSourcesData.cambridge.generateUrl("english")
+                        "url": lipPreInstalledSearchEnginesData.cambridge.generateUrl("english")
                     }, {
                         "isPreInstalled": true,
                         "isHidden": false,
                         "id": "oxford",
                         "title": "Oxford",
                         "fromTo": "en",
-                        "url": lipPreInstalledSourcesData.oxford.generateUrl("en")
+                        "url": lipPreInstalledSearchEnginesData.oxford.generateUrl("en")
                     }, {
                         "isPreInstalled": true,
                         "isHidden": false,
                         "id": "collins",
                         "title": "Collins",
                         "fromTo": "english",
-                        "url": lipPreInstalledSourcesData.collins.generateUrl("english")
+                        "url": lipPreInstalledSearchEnginesData.collins.generateUrl("english")
                     }, {
                         "isPreInstalled": true,
                         "isHidden": false,
                         "id": "longman",
                         "title": "Longman",
                         "fromTo": "english",
-                        "url": lipPreInstalledSourcesData.longman.generateUrl("english")
+                        "url": lipPreInstalledSearchEnginesData.longman.generateUrl("english")
                     },
                     {
                         "isPreInstalled": true,
@@ -275,7 +275,7 @@
                         "id": "wikipedia",
                         "title": "Wikipedia",
                         "fromTo": "english",
-                        "url": lipPreInstalledSourcesData.wikipedia.generateUrl("en")
+                        "url": lipPreInstalledSearchEnginesData.wikipedia.generateUrl("en")
                     },
 
                 ],

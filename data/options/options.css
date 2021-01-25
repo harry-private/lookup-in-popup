@@ -176,25 +176,25 @@ select:focus {
     font-size: 17px;
 }
 
-#sources-settings .source {
+#search-engines-settings .search-engine {
     padding: 5px;
     border-bottom: 1px solid #dedede;
 }
 
-#sources-settings .source:last-child {
+#search-engines-settings .search-engine:last-child {
     border-bottom: none;
 }
 
-#sources-settings .source .source-edit-form {
+#search-engines-settings .search-engine .search-engine-edit-form {
     background: #eeeeee;
     padding: 15px;
 }
 
-.source-side-options {
+.search-engine-side-options {
     text-align: right;
 }
 
-.source-side-options span {
+.search-engine-side-options span {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
@@ -206,11 +206,11 @@ select:focus {
     margin-right: 10px
 }
 
-.source-side-options span:hover {
+.search-engine-side-options span:hover {
     color: #434342
 }
 
-.source-side-options span.source-remove:hover {
+.search-engine-side-options span.search-engine-remove:hover {
     color: red;
 }
 
@@ -255,7 +255,7 @@ select:focus {
 
 /* sortableJS */
 /* 
-.source-drag {
+.search-engine-drag {
     cursor: grab !important;
     cursor: -webkit-grabbing;
 } */

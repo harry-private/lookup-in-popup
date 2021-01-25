@@ -86,7 +86,7 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                       <div class="lip-popup-window-menu-bar-form-container">
                           <form class="lip-popup-window-menu-bar-form"  action="">
                               <input name="query" class="lip-popup-window-menu-bar-query-input" placeholder="Type your query here..." value="${this.currentLipPopupWindowData.query}" autofocus>
-                              <select class="lip-popup-window-menu-bar-select">${this.sourcesOptionsForSelect()}</select>
+                              <select class="lip-popup-window-menu-bar-select">${this.searchEnginesOptionsForSelect()}</select>
                               <button class="lip-popup-window-menu-bar-submit"></button>
                           </form>
                       </div>
@@ -120,11 +120,11 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
 
 
         }
-        sourcesOptionsForSelect() {
+        searchEnginesOptionsForSelect() {
             let options = '';
-            this.localStorageData.sources.forEach(function(source) {
-                if (!source.isHidden) {
-                    options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`;
+            this.localStorageData.searchEngines.forEach(function(searchEngine) {
+                if (!searchEngine.isHidden) {
+                    options += `<option data-url="${searchEngine.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${searchEngine.title}</option>`;
                 }
             });
             return options;
@@ -139,12 +139,12 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 let query = this.form['query'].value.trim();
                 if (query == "") { return; }
 
-                let selectedSource = this.select.options[this.select.selectedIndex];
-                let selectedSourceUrl = selectedSource.dataset.url;
-                if (!selectedSourceUrl) {
-                    selectedSourceUrl = this.selectedSource.dataset.url;
+                let selectedSearchEngine = this.select.options[this.select.selectedIndex];
+                let selectedSearchEngineUrl = selectedSearchEngine.dataset.url;
+                if (!selectedSearchEngineUrl) {
+                    selectedSearchEngineUrl = this.selectedSearchEngine.dataset.url;
                 }
-                let url = lipUtility.createSourceUrlForNewWindow(selectedSourceUrl, query);
+                let url = lipUtility.createSearchEngineUrlForNewWindow(selectedSearchEngineUrl, query);
                 location.href = url;
                 // return;
                 chrome.runtime.sendMessage({

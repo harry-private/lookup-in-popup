@@ -6,7 +6,7 @@
 
             this.localStorageData = await lipUtility.localStorageDataPromise();
             this.flashMessagesElem = document.querySelector('.flash-messages');
-            this.sourcesSettingsElem = document.querySelector("#sources-settings");
+            this.searchEnginesSettingsElem = document.querySelector("#search-engines-settings");
             this.saveSettingsElem = document.querySelector("#save-settings");
             this.triggerKeyElem = document.querySelector("#trigger-key");
             this.enableDisableGloballyElem = document.querySelector("#enable-disable-globally");
@@ -34,13 +34,13 @@
         run() {
 
             this.createSettingsLayout();
-            this.sortSources();
+            this.sortSearchEngines();
             this.tooltip();
             this.toggleNextSibling();
-            this.sourceSideOptions();
-            this.sourceEditForm();
+            this.searchEngineSideOptions();
+            this.searchEngineEditForm();
             this.websiteRemoveBtn();
-            this.addNewSource();
+            this.addNewSearchEngine();
 
             this.addWebsiteToWebsiteAccess();
             this.websiteAccessMode();
@@ -50,12 +50,12 @@
         saveSettings() {
             this.saveSettingsElem.addEventListener("click", () => {
 
-                const sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
+                const searchEngineEditFormElems = this.searchEnginesSettingsElem.querySelectorAll(".search-engine-edit-form");
                 const denyListWebsiteElems = document.querySelectorAll("#deny-list .website");
                 const allowListWebsiteElems = document.querySelectorAll("#allow-list .website");
 
                 // values from inputs
-                let sourcesToStore = this.getSourcesFromInputs(sourceEditFormElems);
+                let searchEnginesToStore = this.getSearchEnginesFromInputs(searchEngineEditFormElems);
                 let triggerKeyToStore = ((["none", "ctrlKey", "shiftKey", "altKey"].includes(this.triggerKeyElem.value)) ? this.triggerKeyElem.value : "none");
                 let enableDisableGloballyToStore = ((this.enableDisableGloballyElem.value == "disable") ? "disable" : "enable");
                 let websiteAccessModeToStore = ((this.websiteAccessFormElem['mode'].value == "allow-mode") ? "allow-mode" : "deny-mode");
@@ -71,11 +71,11 @@
                 let popupWindowFromTopToStore = (!Number.isInteger(parseInt(this.popupWindowFromTopElem.value)) ? "" : parseInt(this.popupWindowFromTopElem.value));
                 let popupWindowIsShowingNavbarAllowedToStore = (this.popupWindowIsShowingNavbarAllowedElem.value == "true");
 
-                if (sourcesToStore.error) { return; }
+                if (searchEnginesToStore.error) { return; }
 
-                // save the sources to the local storage
+                // save the SearchEngines to the local storage
                 chrome.storage.sync.set({
-                    sources: sourcesToStore.sourcesToStore,
+                    searchEngines: searchEnginesToStore.searchEnginesToStore,
                     triggerKey: triggerKeyToStore,
                     enableDisable: {
                         globally: enableDisableGloballyToStore,
@@ -103,56 +103,56 @@
         }
 
         /**
-         * - Create layout for "Added Sources" 
+         * - Create layout for "Added Search Engines" 
          * - Update form values based on local storage
          * - Create layout for "Allow list and Deny list "
          */
         createSettingsLayout() {
-            this.localStorageData.sources.forEach((storedSource) => {
+            this.localStorageData.searchEngines.forEach((storedSearchEngine) => {
                 let fromTo;
 
-                if (storedSource.isPreInstalled) {
-                    if (storedSource.id === "googleTranslate") {
+                if (storedSearchEngine.isPreInstalled) {
+                    if (storedSearchEngine.id === "googleTranslate") {
                         let optionFrom = '';
                         let optionTo = '';
-                        lipPreInstalledSourcesData[storedSource.id].from.forEach((language) => {
-                            let selectedFrom = (storedSource.from == language[1]) ? "selected" : "";
-                            let selectedTo = (storedSource.to == language[1]) ? "selected" : "";
+                        lipPreInstalledSearchEnginesData[storedSearchEngine.id].from.forEach((language) => {
+                            let selectedFrom = (storedSearchEngine.from == language[1]) ? "selected" : "";
+                            let selectedTo = (storedSearchEngine.to == language[1]) ? "selected" : "";
                             optionFrom += `<option ${selectedFrom}  value="${language[1]}">${language[0]}</option>`;
                             optionTo += `<option ${selectedTo} value="${language[1]}">${language[0]}</option>`;
                         });
                         fromTo = `
                           <label> <strong>Select Language (From)</strong> </label><br>
-                          <select class="source-from">${optionFrom}</select><br><br>
+                          <select class="search-engine-from">${optionFrom}</select><br><br>
                           <label> <strong>Select Language (To)</strong> </label><br>
-                          <select class="source-to">${optionTo}</select>
+                          <select class="search-engine-to">${optionTo}</select>
                         `;
                     } else {
                         let optionFromTo = '';
 
-                        // lipPreInstalledSourcesData is from lip_pre_installed_sources_data.js
-                        lipPreInstalledSourcesData[storedSource.id].fromTo.forEach((language) => {
-                            let selectedFromTo = (storedSource.fromTo == language[1]) ? "selected" : "";
+                        // lipPreInstalledSearchEnginesData is from lip_pre_installed_search_engines_data.js
+                        lipPreInstalledSearchEnginesData[storedSearchEngine.id].fromTo.forEach((language) => {
+                            let selectedFromTo = (storedSearchEngine.fromTo == language[1]) ? "selected" : "";
                             optionFromTo += `<option value="${language[1]}" ${selectedFromTo}>${language[0]}</option>`;
                         });
                         fromTo = `
                           <label><strong>Select Language</strong> </label><br>
-                          <select class="source-from-to">${optionFromTo}</select>
+                          <select class="search-engine-from-to">${optionFromTo}</select>
                         `;
                     }
                 }
 
-                let template = this.templateForSource({
-                    isPreInstalled: storedSource.isPreInstalled,
-                    isHidden: storedSource.isHidden,
+                let template = this.templateForSearchEngine({
+                    isPreInstalled: storedSearchEngine.isPreInstalled,
+                    isHidden: storedSearchEngine.isHidden,
                     fromTo: fromTo,
-                    title: storedSource.title,
-                    url: storedSource.url,
-                    id: storedSource.id
+                    title: storedSearchEngine.title,
+                    url: storedSearchEngine.url,
+                    id: storedSearchEngine.id
                 })
-                this.sourcesSettingsElem.insertAdjacentHTML('beforeend', template);
+                this.searchEnginesSettingsElem.insertAdjacentHTML('beforeend', template);
             });
-            this.updateUrlOfPreInstalledSources();
+            this.updateUrlOfPreInstalledSearchEngines();
 
             this.localStorageData.enableDisable.denyList.forEach((denyList) => {
                 const websiteTemplate = this.templateForWebsiteAccessWebsites(denyList);
@@ -181,67 +181,67 @@
             this.isShowingBubbleAllowedElem.value = this.localStorageData.isShowingBubbleAllowed;
         }
 
-        getSourcesFromInputs(sourceEditFormElems) {
-            let sourcesToStore = [];
+        getSearchEnginesFromInputs(searchEngineEditFormElems) {
+            let searchEnginesToStore = [];
             let error = false;
-            [...sourceEditFormElems].forEach((sourceEditForm) => {
-                let sourcesToStoreObj = {};
-                let sourceTitle = sourceEditForm["title"].value.trim();
-                let sourceUrl = sourceEditForm["url"].value.trim();
+            [...searchEngineEditFormElems].forEach((searchEngineEditForm) => {
+                let searchEnginesToStoreObj = {};
+                let searchEngineTitle = searchEngineEditForm["title"].value.trim();
+                let searchEngineUrl = searchEngineEditForm["url"].value.trim();
 
-                let sourceId = sourceEditForm.dataset.id;
-                if ((sourceTitle.length >= 30) || (sourceTitle.length <= 0)) {
+                let searchEngineId = searchEngineEditForm.dataset.id;
+                if ((searchEngineTitle.length >= 30) || (searchEngineTitle.length <= 0)) {
                     let invalidTitleLength = `The title you edited must be between 1 to 30`;
                     this.showFlashMessages([invalidTitleLength], "red");
                     error = true;
-                } else if (!lipUtility.isValidURL(sourceUrl)) {
+                } else if (!lipUtility.isValidURL(searchEngineUrl)) {
                     let invalidUrl = `The URL you edited must be valid`;
                     this.showFlashMessages([invalidUrl], "red");
                     error = true;
                 } else {
-                    let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true');
-                    let sourceIsHidden = (sourceEditForm.dataset.isHidden == 'true');
+                    let searchEngineIsPreInstalled = (searchEngineEditForm.dataset.isPreInstalled == 'true');
+                    let searchEngineIsHidden = (searchEngineEditForm.dataset.isHidden == 'true');
 
 
 
-                    if (sourceIsPreInstalled) {
-                        if (sourceId == 'googleTranslate') {
-                            let sourceFrom = sourceEditForm.querySelector(".source-from");
-                            let sourceTo = sourceEditForm.querySelector(".source-to");
-                            let sourceFromSelected = sourceFrom.value;
-                            let sourceToSelected = sourceTo.value;
-                            sourcesToStoreObj.from = sourceFromSelected;
-                            sourcesToStoreObj.to = sourceToSelected;
+                    if (searchEngineIsPreInstalled) {
+                        if (searchEngineId == 'googleTranslate') {
+                            let searchEngineFrom = searchEngineEditForm.querySelector(".search-engine-from");
+                            let searchEngineTo = searchEngineEditForm.querySelector(".search-engine-to");
+                            let searchEngineFromSelected = searchEngineFrom.value;
+                            let searchEngineToSelected = searchEngineTo.value;
+                            searchEnginesToStoreObj.from = searchEngineFromSelected;
+                            searchEnginesToStoreObj.to = searchEngineToSelected;
                         } else {
-                            let sourceFromTo = sourceEditForm.querySelector(".source-from-to");
-                            let sourceFromToSelected = sourceFromTo.value;
-                            sourcesToStoreObj.fromTo = sourceFromToSelected;
+                            let searchEngineFromTo = searchEngineEditForm.querySelector(".search-engine-from-to");
+                            let searchEngineFromToSelected = searchEngineFromTo.value;
+                            searchEnginesToStoreObj.fromTo = searchEngineFromToSelected;
                         }
                     }
 
 
 
-                    sourcesToStoreObj.title = sourceTitle;
-                    sourcesToStoreObj.id = sourceId;
-                    sourcesToStoreObj.url = sourceUrl;
-                    sourcesToStoreObj.isPreInstalled = sourceIsPreInstalled;
-                    sourcesToStoreObj.isHidden = sourceIsHidden;
-                    sourcesToStore.push(sourcesToStoreObj);
+                    searchEnginesToStoreObj.title = searchEngineTitle;
+                    searchEnginesToStoreObj.id = searchEngineId;
+                    searchEnginesToStoreObj.url = searchEngineUrl;
+                    searchEnginesToStoreObj.isPreInstalled = searchEngineIsPreInstalled;
+                    searchEnginesToStoreObj.isHidden = searchEngineIsHidden;
+                    searchEnginesToStore.push(searchEnginesToStoreObj);
                 }
             });
-            return { error, sourcesToStore: sourcesToStore };
+            return { error, searchEnginesToStore: searchEnginesToStore };
         }
 
-        addNewSource() {
-            let addNewSourceFormElem = document.querySelector("#add-new-source-form");
+        addNewSearchEngine() {
+            let addNewSearchEngineFormElem = document.querySelector("#add-new-search-engine-form");
 
-            addNewSourceFormElem.addEventListener('submit', (e) => {
+            addNewSearchEngineFormElem.addEventListener('submit', (e) => {
                 e.preventDefault();
                 let error = {};
                 // let id = ('_' + Math.random().toString(36).substr(2, 9));
 
-                let title = addNewSourceFormElem['title'].value.trim();
-                let url = addNewSourceFormElem['url'].value.trim();
+                let title = addNewSearchEngineFormElem['title'].value.trim();
+                let url = addNewSearchEngineFormElem['url'].value.trim();
 
                 if ((title.length >= 30) || (title.length <= 0)) {
                     error.invalidTitleLength = 'Title length should be between 1 to 30';
@@ -250,14 +250,14 @@
                     error.invalidUrl = "URL must be valid";
                     this.showFlashMessages([error.invalidUrl], "red")
                 } else {
-                    addNewSourceFormElem.reset();
-                    let newSourceTemplate = this.templateForSource({ title, url, });
-                    this.sourcesSettingsElem.insertAdjacentHTML('afterbegin', newSourceTemplate);
-                    this.showFlashMessages(["New source is added, please save the changes."]);
+                    addNewSearchEngineFormElem.reset();
+                    let newSearchEngineTemplate = this.templateForSearchEngine({ title, url, });
+                    this.searchEnginesSettingsElem.insertAdjacentHTML('afterbegin', newSearchEngineTemplate);
+                    this.showFlashMessages(["New search engine is added, please save the changes."]);
 
-                    // add eventListener to newly created source
-                    this.sourceSideOptions(true);
-                    this.sourceEditForm(true);
+                    // add eventListener to newly created search engine
+                    this.searchEngineSideOptions(true);
+                    this.searchEngineEditForm(true);
 
                 }
 
@@ -354,7 +354,7 @@
           `);
         }
 
-        templateForSource({
+        templateForSearchEngine({
             isPreInstalled = false,
             isHidden = false,
             fromTo,
@@ -365,19 +365,19 @@
 
             let newUrl = new URL(url);
             return `
-              <div class="source" style="">
+              <div class="search-engine" style="">
                 
                   <div class="flex-container nowrap" style="justify-content: space-between">
                       <div class="visible-title column" title="${this.sanitize(title)}"><img style="width: 16px; height: 16px; margin-right: 10px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${this.sanitize(title)}</div>
-                      <div class="source-side-options column">
-                          <span class="source-edit" title="Edit the source"><strong><span class="material-icons">edit</span></strong></span>
-                          <span class="source-hide" title="Hide the source"><strong><span class="material-icons source-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</span></strong></span>
-                          ${(isPreInstalled ? '' : '<span class="source-remove" title="Remove the source"><strong><span class="material-icons">delete_forever</span></strong></span>')}
-                          <span class="source-drag" title="Sort by dragging and dropping"><strong><span class="material-icons">menu</span></strong></span>
+                      <div class="search-engine-side-options column">
+                          <span class="search-engine-edit" title="Edit the search engine"><strong><span class="material-icons">edit</span></strong></span>
+                          <span class="search-engine-hide" title="Hide the search engine"><strong><span class="material-icons search-engine-hide-icon">${(isHidden ? 'visibility_off': 'visibility')}</span></strong></span>
+                          ${(isPreInstalled ? '' : '<span class="search-engine-remove" title="Remove the search engine"><strong><span class="material-icons">delete_forever</span></strong></span>')}
+                          <span class="search-engine-drag" title="Sort by dragging and dropping"><strong><span class="material-icons">menu</span></strong></span>
                       </div>
                   </div>
                   <form
-                       class="source-edit-form"
+                       class="search-engine-edit-form"
                        style="display:none"
                        data-is-pre-installed="${isPreInstalled}"
                        data-is-hidden="${isHidden}"
@@ -385,89 +385,89 @@
                   >
                       <br>
                       <!-- <label><strong>Title </strong></label><br> -->
-                      <input name="title" type="text" class="source-title" placeholder="Title" value="${this.sanitize(title)}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                      <input name="title" type="text" class="search-engine-title" placeholder="Title" value="${this.sanitize(title)}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
                       <!-- <label><strong>URL </strong></label><br> -->
-                      <input name="url" type="text" class="source-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
+                      <input name="url" type="text" class="search-engine-url" placeholder="https://somewebsite/search/%s" value="${url.replace(/"/g, '&quot;' ).replace(/'/g, '&#x27;' )}" ${(isPreInstalled ? "disabled" : '' )}> <br><br>
                       ${( isPreInstalled ? fromTo + '<br><br>' : '' )}
-                      <button class="source-done">Done</button><br>
+                      <button class="search-engine-done">Done</button><br>
                   </form>
               </div>
             `;
         }
 
         /**
-         * Add event listeners and handlers to sources side options
+         * Add event listeners and handlers to search engines side options
          * @param {boolean} onJustFirstElement 
          */
-        sourceSideOptions(onJustFirstElement = false) {
-            const addEventListenerToSourceSideOptions = () => {
-                return function(source) {
-                    const sourceEditFormElem = source.querySelector(".source-edit-form");
-                    const sourceEditElem = source.querySelector(".source-edit");
-                    const sourceHideElem = source.querySelector(".source-hide");
-                    const sourceHideIconElem = sourceHideElem.querySelector('.source-hide-icon');
-                    const sourceRemoveElem = source.querySelector(".source-remove");
-                    const sourceDoneElem = source.querySelector(".source-done");
-                    sourceEditElem.addEventListener('click', (e) => {
-                        sourceEditFormElem.style.display = sourceEditFormElem.style.display === 'none' ? "" : "none";
+        searchEngineSideOptions(onJustFirstElement = false) {
+            const addEventListenerToSearchEngineSideOptions = () => {
+                return function(searchEngine) {
+                    const searchEngineEditFormElem = searchEngine.querySelector(".search-engine-edit-form");
+                    const searchEngineEditElem = searchEngine.querySelector(".search-engine-edit");
+                    const searchEngineHideElem = searchEngine.querySelector(".search-engine-hide");
+                    const searchEngineHideIconElem = searchEngineHideElem.querySelector('.search-engine-hide-icon');
+                    const searchEngineRemoveElem = searchEngine.querySelector(".search-engine-remove");
+                    const searchEngineDoneElem = searchEngine.querySelector(".search-engine-done");
+                    searchEngineEditElem.addEventListener('click', (e) => {
+                        searchEngineEditFormElem.style.display = searchEngineEditFormElem.style.display === 'none' ? "" : "none";
                     });
-                    sourceHideElem.addEventListener('click', (e) => {
-                        let sourceIsHidden = sourceEditFormElem.dataset.isHidden;
+                    searchEngineHideElem.addEventListener('click', (e) => {
+                        let searchEngineIsHidden = searchEngineEditFormElem.dataset.isHidden;
 
-                        if (sourceIsHidden == "true") {
-                            sourceEditFormElem.dataset.isHidden = "false";
-                            sourceHideIconElem.innerText = "visibility";
-                            // sourceHideElem.style.textDecoration = '';
+                        if (searchEngineIsHidden == "true") {
+                            searchEngineEditFormElem.dataset.isHidden = "false";
+                            searchEngineHideIconElem.innerText = "visibility";
+                            // searchEngineHideElem.style.textDecoration = '';
                         } else {
-                            sourceEditFormElem.dataset.isHidden = "true";
-                            // sourceHideElem.style.textDecoration = 'line-through';
-                            sourceHideIconElem.innerText = "visibility_off";
+                            searchEngineEditFormElem.dataset.isHidden = "true";
+                            // searchEngineHideElem.style.textDecoration = 'line-through';
+                            searchEngineHideIconElem.innerText = "visibility_off";
 
                         }
                     });
-                    if (sourceRemoveElem) {
-                        sourceRemoveElem.addEventListener('click', (e) => {
-                            source.parentNode.removeChild(source);
+                    if (searchEngineRemoveElem) {
+                        searchEngineRemoveElem.addEventListener('click', (e) => {
+                            searchEngine.parentNode.removeChild(searchEngine);
 
                         });
                     }
-                    sourceDoneElem.addEventListener('click', (e) => {
-                        // let sourceEditedElem = source.querySelector(".source-edit-form");
-                        sourceEditFormElem.style.display = "none"
+                    searchEngineDoneElem.addEventListener('click', (e) => {
+                        // let searchEngineEditedElem = searchEngine.querySelector(".search-engine-edit-form");
+                        searchEngineEditFormElem.style.display = "none"
                     });
 
                     // This is not one of the side options, but I am putting it here to
                     // skip writing too many duplicate codes
-                    sourceEditFormElem["title"].addEventListener("keyup", (e) => {
-                        let visibleTitle = source.querySelector(".visible-title");
-                        visibleTitle.innerText = sourceEditFormElem["title"].value;
+                    searchEngineEditFormElem["title"].addEventListener("keyup", (e) => {
+                        let visibleTitle = searchEngine.querySelector(".visible-title");
+                        visibleTitle.innerText = searchEngineEditFormElem["title"].value;
                     });
                 };
             };
 
             if (onJustFirstElement) {
-                let sourceElem = this.sourcesSettingsElem.querySelector('.source');
-                (addEventListenerToSourceSideOptions())(sourceElem);
+                let searchEngineElem = this.searchEnginesSettingsElem.querySelector('.searchEngine');
+                (addEventListenerToSearchEngineSideOptions())(searchEngineElem);
             } else {
-                let sourceElems = this.sourcesSettingsElem.querySelectorAll(".source");
-                [...sourceElems].forEach(addEventListenerToSourceSideOptions());
+                let searchEngineElems = this.searchEnginesSettingsElem.querySelectorAll(".search-engine");
+                [...searchEngineElems].forEach(addEventListenerToSearchEngineSideOptions());
             }
         }
 
 
 
         /**
-         * Add submit listener and handler to source edit form
+         * Add submit listener and handler to search engine edit form
          * @param {boolean} onJustFirstElement 
          */
-        sourceEditForm(onJustFirstElement = false) {
+        searchEngineEditForm(onJustFirstElement = false) {
             if (onJustFirstElement) {
-                let sourceEditFormElem = this.sourcesSettingsElem.querySelector('.source-edit-form');
-                sourceEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); });
+                let searchEngineEditFormElem = this.searchEnginesSettingsElem.querySelector('.search-engine-edit-form');
+                searchEngineEditFormElem.addEventListener("submit", (e) => { e.preventDefault(); });
             } else {
-                let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
-                [...sourceEditFormElems].forEach((sourceEditForm) => {
-                    sourceEditForm.addEventListener("submit", (e) => { e.preventDefault(); })
+                let searchEngineEditFormElems = this.searchEnginesSettingsElem.querySelectorAll(".search-engine-edit-form");
+                [...searchEngineEditFormElems].forEach((searchEngineEditForm) => {
+                    searchEngineEditForm.addEventListener("submit", (e) => { e.preventDefault(); })
                 });
 
             }
@@ -500,37 +500,37 @@
 
 
         /**
-         * Update url of pre-installed source on its option changes
+         * Update url of pre-installed search engine on its option changes
          */
-        updateUrlOfPreInstalledSources() {
-            let sourceEditFormElems = this.sourcesSettingsElem.querySelectorAll(".source-edit-form");
+        updateUrlOfPreInstalledSearchEngines() {
+            let searchEngineEditFormElems = this.searchEnginesSettingsElem.querySelectorAll(".search-engine-edit-form");
 
-            [...sourceEditFormElems].forEach((sourceEditForm) => {
-                let sourceIsPreInstalled = (sourceEditForm.dataset.isPreInstalled == 'true');
-                if (sourceIsPreInstalled) {
-                    let sourceId = sourceEditForm.dataset.id;
-                    let sourceUrl = sourceEditForm["url"];
-                    if (sourceEditForm.dataset.id == 'googleTranslate') {
-                        let sourceFromElem = sourceEditForm.querySelector('.source-from');
-                        let sourceToElem = sourceEditForm.querySelector('.source-to');
-                        sourceFromElem.addEventListener('change', (e) => {
-                            let selectedSourceFrom = sourceFromElem.value;
-                            let selectedSourceTo = sourceToElem.value;
-                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
-                            sourceUrl.value = newUrl;
+            [...searchEngineEditFormElems].forEach((searchEngineEditForm) => {
+                let searchEngineIsPreInstalled = (searchEngineEditForm.dataset.isPreInstalled == 'true');
+                if (searchEngineIsPreInstalled) {
+                    let searchEngineId = searchEngineEditForm.dataset.id;
+                    let searchEngineUrl = searchEngineEditForm["url"];
+                    if (searchEngineEditForm.dataset.id == 'googleTranslate') {
+                        let searchEngineFromElem = searchEngineEditForm.querySelector('.search-engine-from');
+                        let searchEngineToElem = searchEngineEditForm.querySelector('.search-engine-to');
+                        searchEngineFromElem.addEventListener('change', (e) => {
+                            let selectedSearchEngineFrom = searchEngineFromElem.value;
+                            let selectedSearchEngineTo = searchEngineToElem.value;
+                            let newUrl = lipPreInstalledSearchEnginesData[searchEngineId].generateUrl(selectedSearchEngineFrom, selectedSearchEngineTo)
+                            searchEngineUrl.value = newUrl;
                         })
-                        sourceToElem.addEventListener('change', (e) => {
-                            let selectedSourceFrom = sourceFromElem.value;
-                            let selectedSourceTo = sourceToElem.value;
-                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFrom, selectedSourceTo)
-                            sourceUrl.value = newUrl;
+                        searchEngineToElem.addEventListener('change', (e) => {
+                            let selectedSearchEngineFrom = searchEngineFromElem.value;
+                            let selectedSearchEngineTo = searchEngineToElem.value;
+                            let newUrl = lipPreInstalledSearchEnginesData[searchEngineId].generateUrl(selectedSearchEngineFrom, selectedSearchEngineTo)
+                            searchEngineUrl.value = newUrl;
                         })
                     } else {
-                        let sourceFromToElem = sourceEditForm.querySelector('.source-from-to');
-                        sourceFromToElem.addEventListener('change', (e) => {
-                            let selectedSourceFromTo = sourceFromToElem.value;
-                            let newUrl = lipPreInstalledSourcesData[sourceId].generateUrl(selectedSourceFromTo)
-                            sourceUrl.value = newUrl;
+                        let searchEngineFromToElem = searchEngineEditForm.querySelector('.search-engine-from-to');
+                        searchEngineFromToElem.addEventListener('change', (e) => {
+                            let selectedSearchEngineFromTo = searchEngineFromToElem.value;
+                            let newUrl = lipPreInstalledSearchEnginesData[searchEngineId].generateUrl(selectedSearchEngineFromTo)
+                            searchEngineUrl.value = newUrl;
                         })
                     }
                 }
@@ -554,9 +554,9 @@
 
         }
 
-        sortSources() {
-            Sortable.create(this.sourcesSettingsElem, {
-                handle: '.source-drag',
+        sortSearchEngines() {
+            Sortable.create(this.searchEnginesSettingsElem, {
+                handle: '.search-engine-drag',
                 animation: 200,
                 ghostClass: "sortable-ghost", // Class name for the drop placeholder
                 chosenClass: "sortable-chosen", // Class name for the chosen item

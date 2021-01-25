@@ -7,7 +7,7 @@
   },
   "manifest_version": 2,
   "name": "Lookup In Popup",
-  "description": "Lookup selected texts in popup on your chosen source (website)",
+  "description": "Lookup selected texts in popup on your selected search engine",
   "version": "0.0.1",
   "permissions": [
     "tabs",
@@ -19,7 +19,7 @@
   "background": {
     "scripts": [
       "data/internal_libs/lip_utility.js",
-      "data/internal_libs/lip_pre_installed_sources_data.js",
+      "data/internal_libs/lip_pre_installed_search_engines_data.js",
       "data/background/background.js"
     ],
     "persistent": true

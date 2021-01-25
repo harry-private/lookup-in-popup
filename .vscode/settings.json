@@ -30,7 +30,7 @@
         "node_modules",        // this will ignore anything the node_modules directory
         "vscode-extension",    //
         ".git",                // Ignore the .git directory
-        "**/data/internal_libs/sources_data.js"
+        "**/data/internal_libs/search-engines_data.js"
     ],
     "editor.fontSize": 17,
 
