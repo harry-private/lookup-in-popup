@@ -149,7 +149,7 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 // return;
                 chrome.runtime.sendMessage({
                     method: 'update_opened_lip_popup_window_data',
-                    changeData: ['query', query]
+                    change: { type: 'query', data: query }
                 });
             });
         }
@@ -164,7 +164,7 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                     this.removeMenuBtn.classList.add('hidden');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lip_popup_window_data',
-                        changeData: ['navbarState', "hidden"]
+                        change: { type: 'navbarState', data: "hidden" }
                     });
                 } else {
                     this.isMenuHidden = false;
@@ -173,7 +173,9 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                     this.removeMenuBtn.classList.remove('hidden');
                     chrome.runtime.sendMessage({
                         method: 'update_opened_lip_popup_window_data',
-                        changeData: ['navbarState', "visible"]
+                        change: { type: 'navbarState', data: "visible" }
+
+
                     });
                 }
             });
@@ -184,7 +186,7 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 this.navbar.remove();
                 chrome.runtime.sendMessage({
                     method: 'update_opened_lip_popup_window_data',
-                    changeData: ['navbarState', "removed"]
+                    change: { type: 'navbarState', data: "removed" }
                 });
 
             });

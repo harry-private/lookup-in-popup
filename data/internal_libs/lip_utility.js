@@ -7,7 +7,7 @@ class LipUtility {
     async localStorageDataPromise(forced = false) {
         // one instance per page
         if (!this._localStorageData || this.isObjEmpty(this._localStorageData) || forced) {
-            console.log("Local Storage");
+            console.trace("Local Storage");
             return this._localStorageData = await new Promise(resolve => {
                 chrome.storage.sync.get(['sources', "triggerKey", "enableDisable", "isShowingBubbleAllowed", "popupWindow"], result => {
                     resolve(result);

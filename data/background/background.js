@@ -3,9 +3,8 @@
 
 
         async _constructor() {
-            // I think it does not work if I put it after "await"
-            this.createTemporaryLipContextMenu();
 
+            // I think it does not work if I put it after "await"
             this.onInstalled();
 
             this.localStorageData = await lipUtility.localStorageDataPromise();
@@ -32,30 +31,18 @@
             this.onWindowRemoved();
 
 
-            this.createLipContextMenu();
-            this.createLipContextMenuForLink();
-            this.createLipContextMenuForMedia();
+            this.createLipContextMenus();
         }
 
 
 
 
 
-        createTemporaryLipContextMenu() {
-            // I am creating it, because the first time this id("lip-popup") won't exist,
-            // and it will cause an error, when removing it, because the function which creates it,
-            // first remove context menu with this id
-            chrome.contextMenus.create({
-                id: "lip-popup",
-                title: 'Lookup In Popup',
-                contexts: ["selection"]
-            });
-        }
 
         onStorageChange() {
             chrome.storage.onChanged.addListener(async (changes, namespace) => {
                 this.localStorageData = await lipUtility.localStorageDataPromise(true);
-                this.createLipContextMenu();
+                this.createLipContextMenus();
                 console.log("storage change");
             });
         }
@@ -65,7 +52,7 @@
                 if (request.method === 'open-lip-popup-window') {
                     this.openLipPopupWindow(request.url, request.query);
                 } else if (request.method === 'update_opened_lip_popup_window_data') {
-                    this.updateOpenedLipPopupWindowData(request.changeData, sender.tab.windowId)
+                    this.updateOpenedLipPopupWindowData(request.change, sender.tab.windowId)
                 } else if (request.method === 'close-lip-popup-window') {
                     chrome.tabs.remove(sender.tab.id);
                 } else if (request.method === "extend") {
@@ -91,7 +78,7 @@
                 let openedWindow;
                 if (!lipUtility.isObjEmpty(this.openedLipPopupWindows)) {
                     openedWindow = this.openedLipPopupWindows[Object.keys(this.openedLipPopupWindows)[0]];
-                    this.updateOpenedLipPopupWindowData(['query', query], openedWindow.windowId);
+                    this.updateOpenedLipPopupWindowData({ type: 'query', data: query }, openedWindow.windowId);
                     chrome.tabs.update(openedWindow.tabId, { url: url }, () => {});
                     chrome.windows.update(openedWindow.windowId, { focused: true }, () => {});
 
@@ -152,13 +139,12 @@
             }
             return windowOptionsObj;
         }
-        updateOpenedLipPopupWindowData(changeData, windowId) {
-            if (changeData[0] == 'query') {
-                this.openedLipPopupWindows[windowId]["query"] = changeData[1];
+        updateOpenedLipPopupWindowData(change, windowId) {
+            if (change.type == 'query') {
+                this.openedLipPopupWindows[windowId]["query"] = change.data;
             }
-            if (changeData[0] == 'navbarState') {
-                this.openedLipPopupWindows[windowId]["navbarState"] = changeData[1];
-
+            if (change.type == 'navbarState') {
+                this.openedLipPopupWindows[windowId]["navbarState"] = change.data;
             }
         }
         onWindowRemoved() {
@@ -167,44 +153,49 @@
             });
 
         }
+
+        createLipContextMenus() {
+            chrome.contextMenus.removeAll(() => {
+                console.log("removed all");
+                this.createLipContextMenu();
+                this.createLipContextMenuForLink();
+                this.createLipContextMenuForMedia();
+            })
+
+        }
+
         createLipContextMenu() {
 
-            chrome.contextMenus.remove('lip-popup', async () => {
-                chrome.contextMenus.create({
-                    // parentId: 'open-lip',
-                    id: "lip-popup",
-                    title: "Lookup in popup \"%s\"",
-                    contexts: ["selection"],
-                    onclick: (info, tab) => {},
-                });
-
-
-                if (('sources' in this.localStorageData)) {
-                    this.localStorageData.sources.forEach((source) => {
-                        if (!source.isHidden) {
-                            // options += `<option data-url="${source.url.replace(/"/g, '&quot;').replace(/'/g, '&#x27;')}">${source.title}</option>`
-                            chrome.contextMenus.create({
-                                parentId: 'lip-popup',
-                                title: source.title,
-                                contexts: ["selection"],
-                                onclick: (info, tab) => {
-                                    let url = lipUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
-                                    this.openLipPopupWindow(url, info.selectionText.trim());
-
-                                },
-                            });
-                        }
-                    });
-                }
+            chrome.contextMenus.create({
+                id: "lip-popup",
+                title: "Lookup in popup \"%s\"",
+                contexts: ["selection"],
+                onclick: (info, tab) => {},
             });
+
+
+            if (('sources' in this.localStorageData)) {
+                this.localStorageData.sources.forEach((source) => {
+                    if (!source.isHidden) {
+                        chrome.contextMenus.create({
+                            parentId: 'lip-popup',
+                            title: source.title,
+                            contexts: ["selection"],
+                            onclick: (info, tab) => {
+                                let url = lipUtility.createSourceUrlForNewWindow(source.url, info.selectionText);
+                                this.openLipPopupWindow(url, info.selectionText.trim());
+
+                            },
+                        });
+                    }
+                });
+            }
 
 
         }
 
         createLipContextMenuForLink() {
             chrome.contextMenus.create({
-                // parentId: 'open-lip',
-                // id: "lip-popup",
                 title: "Open link in popup",
                 contexts: ["link"],
                 onclick: (info, tab) => {
@@ -214,8 +205,6 @@
         }
         createLipContextMenuForMedia() {
             chrome.contextMenus.create({
-                // parentId: 'open-lip',
-                // id: "lip-popup",
                 title: "Open media in popup",
                 contexts: ["image", "video", "audio"],
                 onclick: (info, tab) => {
@@ -309,13 +298,7 @@
                 },
                 isShowingBubbleAllowed: true,
             }, async () => {
-                // let lipBackground = new LipBackground();
                 this.localStorageData = await lipUtility.localStorageDataPromise();
-
-                // In firefox contextMenu isn't created "with search engines"
-                // when it's first installed, because at that time data is yet created.
-                this.createLipContextMenu();
-
             });
         }
     }
