@@ -4,6 +4,8 @@
 
         async _constructor() {
             // I think it does not work if I put it after "await"
+            this.createTemporaryLipContextMenu();
+
             this.onInstalled();
 
             this.localStorageData = await lipUtility.localStorageDataPromise();
@@ -29,6 +31,17 @@
             this.onStorageChange();
             this.onWindowRemoved();
 
+
+            this.createLipContextMenu();
+            this.createLipContextMenuForLink();
+            this.createLipContextMenuForMedia();
+        }
+
+
+
+
+
+        createTemporaryLipContextMenu() {
             // I am creating it, because the first time this id("lip-popup") won't exist,
             // and it will cause an error, when removing it, because the function which creates it,
             // first remove context menu with this id
@@ -37,18 +50,12 @@
                 title: 'Lookup In Popup',
                 contexts: ["selection"]
             });
-            this.createLipContextMenu();
-            this.createLipContextMenuForLink();
         }
-
-
-
-
 
         onStorageChange() {
             chrome.storage.onChanged.addListener(async (changes, namespace) => {
-                this.createLipContextMenu();
                 this.localStorageData = await lipUtility.localStorageDataPromise(true);
+                this.createLipContextMenu();
                 console.log("storage change");
             });
         }
@@ -166,7 +173,7 @@
                 chrome.contextMenus.create({
                     // parentId: 'open-lip',
                     id: "lip-popup",
-                    title: "Lookup In Popup \"%s\"",
+                    title: "Lookup in popup \"%s\"",
                     contexts: ["selection"],
                     onclick: (info, tab) => {},
                 });
@@ -198,10 +205,22 @@
             chrome.contextMenus.create({
                 // parentId: 'open-lip',
                 // id: "lip-popup",
-                title: "Open link popup",
-                contexts: ["link", "image", "video", "audio"],
+                title: "Open link in popup",
+                contexts: ["link"],
                 onclick: (info, tab) => {
                     this.openLipPopupWindow(info.linkUrl);
+                },
+            });
+        }
+        createLipContextMenuForMedia() {
+            chrome.contextMenus.create({
+                // parentId: 'open-lip',
+                // id: "lip-popup",
+                title: "Open media in popup",
+                contexts: ["image", "video", "audio"],
+                onclick: (info, tab) => {
+                    console.log(info);
+                    this.openLipPopupWindow(info.srcUrl);
                 },
             });
         }
@@ -289,9 +308,13 @@
                     isShowingNavbarAllowed: true
                 },
                 isShowingBubbleAllowed: true,
-            }, async function() {
+            }, async () => {
                 // let lipBackground = new LipBackground();
-                lipBackground.localStorageData = await lipUtility.localStorageDataPromise();
+                this.localStorageData = await lipUtility.localStorageDataPromise();
+
+                // In firefox contextMenu isn't created "with search engines"
+                // when it's first installed, because at that time data is yet created.
+                this.createLipContextMenu();
 
             });
         }

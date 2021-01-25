@@ -1,3 +1,4 @@
+// BUG Context menu items are being created two times
 
 // TODO Improve website access, allow user to be able to add just page(s), instead of the main domain
 
