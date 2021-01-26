@@ -43,7 +43,6 @@
             chrome.storage.onChanged.addListener(async (changes, namespace) => {
                 this.localStorageData = await lipUtility.localStorageDataPromise(true);
                 this.createLipContextMenus();
-                console.log("storage change");
             });
         }
 
@@ -86,7 +85,6 @@
                 }
             }
 
-            console.log(windowOptionsObj);
             chrome.windows.create(
                 windowOptionsObj,
                 (win) => {

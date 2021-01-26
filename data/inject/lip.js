@@ -50,7 +50,6 @@
             // website access check
             let isAllowed = true;
             let currentWebsiteUrl = window.location.protocol + "//" + lipUtility.removeWWWBeginningOfHostname(window.location.hostname);
-            console.log(this.localStorageData.enableDisable);
             if (this.localStorageData.enableDisable.websiteAccessMode == "deny-mode") {
                 if (this.localStorageData.enableDisable.denyList.includes(currentWebsiteUrl)) {
                     isAllowed = false;

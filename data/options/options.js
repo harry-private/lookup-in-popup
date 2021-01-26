@@ -164,7 +164,6 @@
             });
             // set default selected option that gotten from storage
 
-            console.log(this.localStorageData.popupWindow);
             this.popupWindowIsCloseOnEscAllowedElem.value = this.localStorageData.popupWindow.isCloseOnEscAllowed;
             this.popupWindowIsMultipleAllowedElem.value = this.localStorageData.popupWindow.isMultipleAllowed;
             this.popupWindowStateElem.value = this.localStorageData.popupWindow.state;
@@ -261,10 +260,7 @@
 
                 }
 
-                if (!lipUtility.isObjEmpty(error)) {
-                    // console.log(error)
-
-                }
+                if (!lipUtility.isObjEmpty(error)) {}
 
             })
         }

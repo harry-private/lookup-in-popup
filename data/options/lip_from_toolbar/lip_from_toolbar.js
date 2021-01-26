@@ -3,7 +3,6 @@
     class LipFromToolbar {
         async _constructor() {
             this.localStorageData = await lipUtility.localStorageDataPromise();
-            console.log(this.localStorageData);
             this.body = document.body;
             this.html = document.documentElement;
 

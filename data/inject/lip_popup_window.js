@@ -2,7 +2,6 @@ chrome.runtime.sendMessage({
     method: 'extend',
 }, (response) => {
     if (response && response.isLipPopupWindow) {
-        console.log('currentLipPopupWindowData: ', response.currentLipPopupWindowData);
         lipPopupWindowRun(response.currentLipPopupWindowData);
     }
 });
@@ -159,7 +158,7 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 if (!this.isMenuHidden) {
                     this.isMenuHidden = true;
                     this.toggleMenuBtnIcon.style.transform = 'rotate(180deg)';
-                    console.log(this.toggleMenuBtnIcon);
+
                     this.menuBarCollapse.classList.add('hidden');
                     this.removeMenuBtn.classList.add('hidden');
                     chrome.runtime.sendMessage({
