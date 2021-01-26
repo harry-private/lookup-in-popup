@@ -1,10 +1,9 @@
-// BUG Context menu items are being created two times
-
-// TODO Improve website access, allow user to be able to add just page(s), instead of the main domain
 
 // TODO Remove unnecessary comments, especially form css files.
 
 // TODO Add better description for the extension in both manifest.json, and package.json.
+
+// CONSIDER Allowing user to be able to add just page(s), instead of the main domain
 
 // CONSIDER Adding an option where a window mode (incognito, or normal) can be set for all,
             or for specific site/search engine.
