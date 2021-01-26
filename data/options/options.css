@@ -148,7 +148,7 @@ select:focus {
 
 }
 
-.main-settings-segment .header {
+.main-settings-segment-header {
     cursor: pointer;
     -moz-user-select: none;
     -webkit-user-select: none;
@@ -162,18 +162,20 @@ select:focus {
     justify-content: space-between;
 }
 
-.main-settings-segment .header .expand-icon {
+.main-settings-segment-header .expand-icon {
     transition: transform 0.25s cubic-bezier(0.42, 0, 1, 0.4);
 }
 
-.main-settings-segment .header.next-sibling-is-hidden .expand-icon {
+.main-settings-segment-header.next-sibling-is-hidden .expand-icon {
     transform: rotate(180deg);
 }
 
 
-.second-settings-segment .header {
+.second-settings-segment-header {
     font-weight: 400;
     font-size: 17px;
+    margin-bottom: 12px;
+    padding: 5px;
 }
 
 #search-engines-settings .search-engine {
@@ -335,4 +337,9 @@ select:focus {
 
 .hidden {
     display: none !important;
+}
+
+.inline-icon {
+    vertical-align: bottom;
+    font-size: 20px;
 }
