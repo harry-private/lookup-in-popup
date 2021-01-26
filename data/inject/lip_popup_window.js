@@ -145,7 +145,6 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 }
                 let url = lipUtility.createSearchEngineUrlForNewWindow(selectedSearchEngineUrl, query);
                 location.href = url;
-                // return;
                 chrome.runtime.sendMessage({
                     method: 'update_opened_lip_popup_window_data',
                     change: { type: 'query', data: query }

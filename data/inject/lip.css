@@ -13,8 +13,6 @@
 
 .lip-bubble:hover {
     background-color: rgb(248, 248, 248) !important;
-    /* box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 1px; */
-    /* border: 1px solid rgb(198, 198, 198); */
     border-image: initial !important;
 }
 
@@ -40,7 +38,6 @@
     margin: 0 !important;
     cursor: pointer !important;
     background-repeat: no-repeat;
-    /* background-position: calc(100% - 5px) center !important; */
     background-position-x: 50% !important;
     background-position-y: 50% !important;
     background-color: #ffffff !important;

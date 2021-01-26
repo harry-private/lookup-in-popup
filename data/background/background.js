@@ -88,7 +88,6 @@
             chrome.windows.create(
                 windowOptionsObj,
                 (win) => {
-                    console.log(win);
                     this.openedLipPopupWindows[win.id] = {
                         windowId: win.tabs[0].windowId,
                         tabId: win.tabs[0].id,
@@ -154,7 +153,6 @@
 
         createLipContextMenus() {
             chrome.contextMenus.removeAll(() => {
-                console.log(`removed all ${Math.random()}`);
                 this.createLipContextMenu();
                 this.createLipContextMenuForLink();
                 this.createLipContextMenuForMedia();
@@ -206,14 +204,12 @@
                 title: "Open media in popup",
                 contexts: ["image", "video", "audio"],
                 onclick: (info, tab) => {
-                    console.log(info);
                     this.openLipPopupWindow(info.srcUrl);
                 },
             });
         }
         onInstalled() {
             chrome.runtime.onInstalled.addListener(async (details) => {
-                console.log(details);
                 if (details.reason == "install") {
                     this.firstTime();
                 }

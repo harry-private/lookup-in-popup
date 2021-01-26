@@ -14,7 +14,6 @@
     bottom: 0 !important;
     z-index: 999999999 !important;
     width: 100% !important;
-    /* background: #eee !important; */
     height: auto !important;
     display: flex !important;
     padding: 0 !important;
@@ -49,7 +48,6 @@
     font-weight: 900 !important;
     padding: 5px !important;
     border: 0 !important;
-    /* border-right: 1px solid #ccc !important; */
     border: 1px solid #dcdcdc !important;
     border-radius: 0 !important;
 
@@ -73,14 +71,8 @@
 
 }
 
-/* .lip-popup-window-menu-bar-toggle:hover span,
-.lip-popup-window-menu-bar-remove:hover span {
-    transform: scale(1.5) !important;
-} */
-
 .lip-popup-window-menu-bar-toggle:focus,
 .lip-popup-window-menu-bar-remove:focus {
-    /* border: none !important; */
     outline: none !important;
     text-transform: none !important;
 
@@ -97,7 +89,6 @@
 
 .lip-popup-window-menu-bar-extra {
     display: flex !important;
-    /* flex: 1 !important; */
     width: 100px !important;
     justify-content: space-between !important;
     margin-right: 25px !important;
@@ -195,15 +186,11 @@
     flex: 2 !important;
     padding: 0 20px 0px 5px !important;
     border: 0.5px solid #ccc !important;
-    /* border-right: 0px !important; */
     border-radius: 0 !important;
-    /* border-top-right-radius: 0 !important; */
-    /* border-bottom-right-radius: 0 !important; */
     margin: 0 !important;
     appearance: auto !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
-    /* background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important; */
     background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB3aWR0aD0iMTc5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQwOCAxMjE2cTAgMjYtMTkgNDV0LTQ1IDE5aC04OTZxLTI2IDAtNDUtMTl0LTE5LTQ1IDE5LTQ1bDQ0OC00NDhxMTktMTkgNDUtMTl0NDUgMTlsNDQ4IDQ0OHExOSAxOSAxOSA0NXoiLz48L3N2Zz4=") !important;
     background-size: 14px !important;
     background-repeat: no-repeat !important;
@@ -236,7 +223,6 @@
     cursor: pointer !important;
     background-color: #ffffff !important;
     background-repeat: no-repeat;
-    /* background-position: calc(100% - 5px) center !important; */
     background-position-x: 50% !important;
     background-position-y: 50% !important;
     flex: 1 !important;
@@ -263,8 +249,6 @@
     .lip-popup-window-menu-bar {
         display: flex !important;
         width: 100% !important;
-        /* padding: 5px 2px !important; */
-
     }
 
     .lip-popup-window-menu-bar-collapse {

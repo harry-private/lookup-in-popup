@@ -1,52 +1,22 @@
-/* appending "my-dictionary-" because StackOverflow has the popup class, so wont work there */
 body {
     line-height: 1;
     font-size: 15px;
     overflow: auto;
     background: #eeeeee;
     min-height: 500px;
-    /* max-height: 90vh; */
     margin-bottom: 50px;
     min-width: 600px;
     font-family: sans-serif;
 
 }
 
-/* @-moz-document url-prefix() {
-    body {
-        // min-height: 550px;
-    }
-} */
-
-
-/* .lookup-custom-select {
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="rgba(3, 3, 3, 1)" x="0px" y="0px" width="8px" height="8px" viewBox="0 0 386.257 386.257" style="enable-background:new 0 0 386.257 386.257;" xml:space="preserve"><polygon points="0,96.879 193.129,289.379 386.257,96.879 "/></svg>');
-    background-position: calc(100% - 5px) center;
-    background-repeat: no-repeat;
-    padding: 0 0 0 5px;
-    outline: none !important;
-    margin: 0;
-    font-family: Verdana, sans-serif;
-    color: #000000;
-    height: 30px;
-    cursor: pointer;
-} */
-
-
 .navbar {
     max-width: 750px;
     font-size: 15px;
     font-weight: normal;
     letter-spacing: normal;
-    /* background: #ffffff; */
     margin: 0 auto;
-    /* border: 1px solid #ccc; */
 }
-
-
-
 
 .formContainer {
     display: flex;
@@ -102,16 +72,13 @@ body {
     flex: 2 !important;
     padding: 0 20px 0px 5px !important;
     border: 0.5px solid #ccc !important;
-    /* border-right: 0px !important; */
     border-radius: 0 !important;
-    /* border-top-right-radius: 0 !important; */
     /* border-bottom-right-radius: 0 !important; */
     margin: 0 !important;
     appearance: auto !important;
     -webkit-appearance: none !important;
     -moz-appearance: none !important;
     background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>") !important;
-    /* background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaGVpZ2h0PSIxNzkyIiB2aWV3Qm94PSIwIDAgMTc5MiAxNzkyIiB3aWR0aD0iMTc5MiIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNMTQwOCAxMjE2cTAgMjYtMTkgNDV0LTQ1IDE5aC04OTZxLTI2IDAtNDUtMTl0LTE5LTQ1IDE5LTQ1bDQ0OC00NDhxMTktMTkgNDUtMTl0NDUgMTlsNDQ4IDQ0OHExOSAxOSAxOSA0NXoiLz48L3N2Zz4=") !important; */
     background-size: 20px !important;
     background-repeat: no-repeat !important;
     background-color: #ffffff !important;
@@ -143,7 +110,6 @@ body {
     cursor: pointer !important;
     background-color: #ffffff !important;
     background-repeat: no-repeat;
-    /* background-position: calc(100% - 5px) center !important; */
     background-position-x: 50% !important;
     background-position-y: 50% !important;
     flex: 1 !important;

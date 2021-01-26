@@ -7,7 +7,6 @@ body {
     background: #eeeeee;
 
     min-height: 500px;
-    /* max-height: 500px; */
     margin-bottom: 50px;
     min-width: 600px;
     font-family: sans-serif;
@@ -17,7 +16,6 @@ body {
 
 input {
     outline: none;
-    /* border: none; */
     border: 2px solid #aba8a8;
 }
 
@@ -28,8 +26,6 @@ input:focus {
 .flex-container {
     padding: 0;
     margin: 0;
-    /* list-style: none; */
-    /* border: 1px solid silver; */
     -ms-box-orient: horizontal;
     display: -webkit-box;
     display: -moz-box;
@@ -56,7 +52,6 @@ input:focus {
 
 .flash-messages {
     position: fixed;
-    /* top: 5px; */
     left: 40%;
     display: none;
     background: rgb(34, 187, 51);
@@ -67,7 +62,6 @@ input:focus {
 
 button {
     background-color: #5d5d5b;
-    /* Green */
     border: none;
     color: white;
     padding: 10px 10px;
@@ -101,7 +95,6 @@ select {
     background: #ffffff !important;
     width: 100%;
     padding: 12px 15px;
-    /* border: none; */
     border-radius: 4px;
     -webkit-box-shadow: none;
     box-shadow: none;
@@ -122,23 +115,16 @@ select:focus {
 }
 
 .main-settings {
-    /* width: 450px; */
     margin: 0 auto;
-    /* background: #fff; */
-    /* display: flex;
-    flex-wrap: wrap; */
     max-width: 750px;
 }
 
 .main-settings-segment {
     background: #ffffff;
-    /* flex: 1; */
     min-width: 300px;
     border: 1px solid ccc;
     border-radius: 8px;
     padding: 15px;
-    /* margin: 5px; */
-    /* margin-left: 5px; */
 }
 
 .second-settings-segment {
@@ -155,7 +141,6 @@ select:focus {
     -ms-user-select: none;
     user-select: none;
     font-weight: 600;
-    /* padding: 5px; */
     margin-bottom: 12px;
     font-size: 17px;
     display: flex;
@@ -256,11 +241,6 @@ select:focus {
 
 
 /* sortableJS */
-/* 
-.search-engine-drag {
-    cursor: grab !important;
-    cursor: -webkit-grabbing;
-} */
 
 .sortable-ghost {
     background-color: #eee;
@@ -292,7 +272,6 @@ select:focus {
 
 .tooltip {
     background: #5d5d5b;
-    /* max-width: 400px; */
     color: white;
     font-weight: bold;
     padding: 8px;

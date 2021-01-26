@@ -26,7 +26,6 @@
             this.allowListElem = document.querySelector("#allow-list");
 
             this.isShowingBubbleAllowedElem = document.querySelector("#is-showing-bubble-allowed");
-            // document.body.style.height = (screen.height - 120) + "px";
 
             this.run();
         }

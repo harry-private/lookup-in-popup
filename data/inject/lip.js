@@ -2,7 +2,6 @@
     'use strict'
     class Lip {
         async _constructor() {
-            // this.searchEngines = {};
             this.localStorageData = await lipUtility.localStorageDataPromise();
 
             if (this.isGloballyDisabled()) return;
@@ -87,9 +86,6 @@
             }
         }
         isSelectedText(event) {
-            // if (!this.selectedText || event.target === this.popup || this.selectedText.includes(' ')) {
-            //     return false;
-            // }
             if (!this.selectedText.trim() || event.target === this.bubble) {
                 return false;
             }
@@ -105,12 +101,8 @@
             return options;
         }
         showBubble(event) {
-            // unset some of the styles that was set in the narrow width to center the popup
-            this.bubble.style.marginLeft = "unset";
-            this.bubble.style.position = "absolute";
-
-            let offsetX = 15;
-            let offsetY = 10;
+            let offsetX = 12;
+            let offsetY = 8;
 
             // this width and height represent the width and height defined in the lip.css
             let bubbleWidth = 32;
@@ -129,22 +121,6 @@
                 this.bubble.style.top = `${event.pageY - bubbleHeight - offsetY}px`;
             }
 
-            if ((event.x + bubbleWidth + offsetX + scrollWidthX) >= window.innerWidth &&
-                (event.x - bubbleWidth - scrollWidthX <= 0)) {
-                // center the bubble
-                this.bubble.style.top = `${event.y + offsetY}px`;
-                this.bubble.style.left = "50%";
-                // unset the below 2 styles at top
-                this.bubble.style.position = "fixed";
-                this.bubble.style.marginLeft = `-${bubbleWidth / 2}px`;
-
-                if (event.y + bubbleHeight + offsetY + scrollWidthY >= window.innerHeight) {
-                    this.bubble.style.top = `${event.y - bubbleHeight - offsetY}px`;
-                }
-
-            }
-
-
             if (this.body.appendChild(this.bubble)) { this.isAdded = true; }
         }
 
@@ -160,7 +136,6 @@
             }
             chrome.runtime.sendMessage({
                 method: 'open-lip-popup-window',
-                // url: encodeURIComponent(url)
                 url: url,
                 query: this.selectedText.trim()
             });
