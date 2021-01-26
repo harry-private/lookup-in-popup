@@ -156,7 +156,7 @@
 
         createLipContextMenus() {
             chrome.contextMenus.removeAll(() => {
-                console.log("removed all");
+                console.log(`removed all ${Math.random()}`);
                 this.createLipContextMenu();
                 this.createLipContextMenuForLink();
                 this.createLipContextMenuForMedia();
@@ -299,6 +299,11 @@
                 isShowingBubbleAllowed: true,
             }, async () => {
                 this.localStorageData = await lipUtility.localStorageDataPromise();
+                // On Firefox sometimes onStorageChange-listener does not work when the extension
+                // is first installed, that is why creating context menu here too,
+                // I don't why, but without setTimeout, searchEngines items are added multiple
+                // times, or an error is occurred "duplicate id" 
+                setTimeout(() => { this.createLipContextMenus(); }, 1000);
             });
         }
     }

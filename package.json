@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "chrome": "web-ext -c=chrome_config.js run -t chromium",
     "firefox": "web-ext -c=firefox_config.js run",
-    "both": "web-ext run -t firefox-desktop -t chromium --start-url https://en.wikipedia.org/wiki/Main_Page",
+    "both": "web-ext run -t firefox-desktop -t chromium --start-url https://en.wikipedia.org/wiki/Main_Page --start-url about:debugging#/runtime/this-firefox",
     "build-chrome": "web-ext -c=chrome_config.js build",
     "build-firefox": "web-ext -c=firefox_config.js build"
   },
