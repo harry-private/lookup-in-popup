@@ -77,7 +77,7 @@
       "suggested_key": {
         "default": "Alt+L"
       },
-      "description": "Open the extension from toolbar"
+      "description": "Activate the extension"
     }
   }
 }
