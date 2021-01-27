@@ -31,6 +31,8 @@ module.exports = {
         "package.json",
         "package-lock.json",
         "LICENSE",
-        "debug.log"
+        "debug.log",
+        "GLOBAL_TODOS.txt",
+        "files_i_may_need_in_future"
     ],
 };
