@@ -1,8 +1,7 @@
 {
   "browser_specific_settings": {
     "gecko": {
-      "id": "{c7ec5939-f508-4e04-8414-ff9a2512e17a}",
-      "strict_min_version": "65.0"
+      "id": "{c7ec5939-f508-4e04-8414-ff9a2512e17a}"
     }
   },
   "manifest_version": 2,
@@ -43,10 +42,7 @@
     "256": "data/icons/icon256.png",
     "512": "data/icons/icon512.png"
   },
-  "web_accessible_resources": [
-    "data/icons/icon_original.png",
-    "data/icons/loading.gif"
-  ],
+  "web_accessible_resources": [],
   "content_scripts": [
     {
       "matches": [
@@ -81,7 +77,7 @@
       "suggested_key": {
         "default": "Alt+L"
       },
-      "description": "Activate the extension"
+      "description": "Open the extension from toolbar"
     }
   }
 }
