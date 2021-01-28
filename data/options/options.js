@@ -340,7 +340,7 @@
             let urlTrimmed = url.trim();
             let newUrl = new URL(urlTrimmed);
             return (`
-              <div class="website-access-website-wrapper flex-container nowrap" style="justify-content: space-between">
+              <div class="website-access-website-wrapper flex-container" style="justify-content: space-between">
                 <div class="website column"><img style="width: 16px; height: 16px; margin-right: 10px; margin-top: 6px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${urlTrimmed}</div>
                 <div class="column" style="text-align: right;">
                   <span class="website-remove-from-website-access" style="font-size: 25px;cursor: pointer;margin-right: 10px;" title="Remove the website"><strong><span class="material-icons">delete_forever</span></strong></span>
@@ -362,7 +362,7 @@
             return `
               <div class="search-engine" style="">
                 
-                  <div class="flex-container nowrap" style="justify-content: space-between">
+                  <div class="flex-container" style="justify-content: space-between">
                       <div class="visible-title column" title="${this.sanitize(title)}"><img style="width: 16px; height: 16px; margin-right: 10px;" src="https://external-content.duckduckgo.com/ip3/${newUrl["hostname"]}.ico">${this.sanitize(title)}</div>
                       <div class="search-engine-side-options column">
                           <span class="search-engine-edit" title="Edit the search engine"><strong><span class="material-icons">edit</span></strong></span>

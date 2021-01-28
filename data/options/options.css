@@ -35,17 +35,12 @@ input:focus {
     display: flex;
 }
 
-.nowrap {
-    -webkit-flex-wrap: nowrap;
-    flex-wrap: nowrap;
-}
-
 .column {
     flex: 50%;
     /* the next properties are to truncate the texts */
     text-overflow: ellipsis;
     overflow: hidden;
-    white-space: nowrap;
+    /* white-space: nowrap; */
     width: 0;
 }
 
@@ -319,6 +314,13 @@ select:focus {
 }
 
 .inline-icon {
-    vertical-align: bottom;
+    /* vertical-align: bottom; */
+    margin-top: -3px;
     font-size: 20px;
+}
+
+.note {
+    line-height: 1.4;
+    font-size: 13.5px;
+    margin-left: 6px;
 }

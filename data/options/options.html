@@ -18,8 +18,6 @@
         <a href="https://github.com/harry-private/lookup-in-popup" target="_blank" class="settings-page-link">Github</a>
     </nav>
     <div class="main-settings">
-        <!-- <span style="display: inline-block; padding: 15px; background: palevioletred;">Note: no changes will be applied until you click on the "Save Settings" button below.</span> -->
-
         <div class="add-new-search-engine main-settings-segment">
             <div class="main-settings-segment-header hide-next-sibling next-sibling-is-hidden">Add New Search Engine <span class="material-icons expand-icon">expand_less</span></div>
             <div class="hidable hidden">
@@ -40,11 +38,11 @@
         </div>
 
         <br>
-        <div class="flex-container nowrap main-settings-segment">
+        <div class="flex-container main-settings-segment">
             <div class="column">
                 <div class="main-settings-segment-header hide-next-sibling next-sibling-is-hidden">Added Search Engines<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
-                    <span><span class="material-icons inline-icon">error</span> <span style="font-size: 13.5px;"> Note that First "Search Engine" on the list will be the default when "Show Bubble" is set to "No"</span></span> <br><br>
+                    <span class="flex-container"><span class="material-icons inline-icon">error</span> <span class="note"> Note that First "Search Engine" on the list will be the default when "Show Bubble" is set to "No"</span></span> <br><br>
                     <div class="second-settings-segment">
                         <div class="second-settings-segment-header">Search Engines</div>
 
@@ -54,11 +52,11 @@
             </div>
         </div>
         <br>
-        <div class="flex-container nowrap main-settings-segment">
+        <div class="flex-container main-settings-segment">
             <div class="column">
                 <div class="main-settings-segment-header hide-next-sibling next-sibling-is-hidden">Enable/Disable the extension<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
-                    <span><span class="material-icons inline-icon">error</span> <span style="font-size: 13.5px;"> Note that the extension will still work from context menu, and toolbar</span></span>
+                    <span class="flex-container"><span class="material-icons inline-icon">error</span> <span class="note"> Note that the extension will still work from context menu, and toolbar</span></span>
                     <br><br>
                     <div class="second-settings-segment">
                         <div class="second-settings-segment-header">Enable or Disable the extension globally</div>
@@ -104,7 +102,7 @@
             </div>
         </div>
         <br>
-        <div class="flex-container nowrap main-settings-segment">
+        <div class="flex-container main-settings-segment">
             <div class="column">
                 <div class="main-settings-segment-header hide-next-sibling next-sibling-is-hidden">Popup Window<span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
@@ -131,7 +129,9 @@
                         <div class="second-settings-segment-header">
                             <span>Popup window state</span>
                             <br><br>
-                            <span style="font-size:13.5px" title="Tip: On Chrome for Windows you can use Window key + Arrow keys to resize the window"><span class="material-icons inline-icon">emoji_objects</span>Tip: On Chrome for Windows you can use <strong>Window key + Arrow keys</strong> to resize the window</span>
+                            <span class="flex-container">
+                                <span class="material-icons inline-icon">emoji_objects</span>
+                                <span class="note">Tip: To go fullscreen, press <strong>F11</strong> on Windows, and press <strong>Command+Shift+F</strong> on Mac.</span>
                         </div>
 
                         <select id="popup-window-state">
@@ -173,7 +173,7 @@
 
         </div>
         <br>
-        <div class="flex-container nowrap main-settings-segment">
+        <div class="flex-container main-settings-segment">
             <div class="column">
                 <div class="main-settings-segment-header hide-next-sibling next-sibling-is-hidden">Upon text selection <span class="material-icons expand-icon">expand_less</span></div>
                 <div class="hidable hidden">
@@ -239,7 +239,7 @@
 
     <div class="tooltip" data-tooltip-for="popup-window-from-top">
         <div class="arrow" data-popper-arrow></div>
-        <span class="material-icons inline-icon">error</span> <span style="font-size: 13.5px;"> Note that "from top" doesn't work, if height is default.</span>
+        <span class="flex-container"><span class="material-icons inline-icon">error</span> <span class="note"> Note that "from top" doesn't work, if height is default.</span></span>
     </div>
 
     <script src="/data/internal_libs/lip_utility.js"></script>
