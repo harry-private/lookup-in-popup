@@ -15,10 +15,12 @@
             this.popupWindowIsMultipleAllowedElem = document.querySelector("#popup-window-is-multiple-allowed");
             this.popupWindowStateElem = document.querySelector("#popup-window-state");
             this.popupWindowWidthElem = document.querySelector("#popup-window-width");
+            this.popupWindowWidthElem = document.querySelector("#popup-window-width");
             this.popupWindowHeightElem = document.querySelector("#popup-window-height");
             this.popupWindowFromLeftElem = document.querySelector("#popup-window-from-left");
             this.popupWindowFromTopElem = document.querySelector("#popup-window-from-top");
             this.popupWindowIsShowingNavbarAllowedElem = document.querySelector("#popup-window-is-showing-navbar-allowed");
+            this.popupWindowIsShowingNavbarForLinkAllowedElem = document.querySelector("#popup-window-is-showing-navbar-for-link-allowed");
 
             this.enableDisableWebsiteWiseElem = document.querySelector("#enable-disable-website-wise");
             this.websiteAccessFormElem = document.querySelector("#website-access-form");
@@ -69,6 +71,7 @@
                 let popupWindowFromLeftToStore = (!Number.isInteger(parseInt(this.popupWindowFromLeftElem.value)) ? "" : parseInt(this.popupWindowFromLeftElem.value));
                 let popupWindowFromTopToStore = (!Number.isInteger(parseInt(this.popupWindowFromTopElem.value)) ? "" : parseInt(this.popupWindowFromTopElem.value));
                 let popupWindowIsShowingNavbarAllowedToStore = (this.popupWindowIsShowingNavbarAllowedElem.value == "true");
+                let popupWindowIsShowingNavbarForLinkAllowedToStore = (this.popupWindowIsShowingNavbarForLinkAllowedElem.value == "true");
 
                 if (searchEnginesToStore.error) { return; }
 
@@ -92,6 +95,7 @@
                         fromLeft: popupWindowFromLeftToStore,
                         fromTop: popupWindowFromTopToStore,
                         isShowingNavbarAllowed: popupWindowIsShowingNavbarAllowedToStore,
+                        isShowingNavbarForLinkAllowed: popupWindowIsShowingNavbarForLinkAllowedToStore,
                     },
                     isShowingBubbleAllowed: isShowingBubbleAllowedToStore
 
@@ -171,6 +175,7 @@
             this.popupWindowFromLeftElem.value = this.localStorageData.popupWindow.fromLeft;
             this.popupWindowFromTopElem.value = this.localStorageData.popupWindow.fromTop;
             this.popupWindowIsShowingNavbarAllowedElem.value = this.localStorageData.popupWindow.isShowingNavbarAllowed;
+            this.popupWindowIsShowingNavbarForLinkAllowedElem.value = this.localStorageData.popupWindow.isShowingNavbarForLinkAllowed;
 
             this.triggerKeyElem.value = this.localStorageData.triggerKey;
             this.enableDisableGloballyElem.value = this.localStorageData.enableDisable.globally;

@@ -17,7 +17,8 @@
              *    windowId: 6,
              *    tabId: 8,
              *    query: "",
-             *    navbarState: "visible|hidden|removed" 
+             *    navbarState: "visible"|"hidden"|"removed", 
+             *    popupFor: "textSelection"|"link"|"media"
              * }]]
              */
             this.openedLipPopupWindows = {};
@@ -49,7 +50,7 @@
         onMessages() {
             chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
                 if (request.method === 'open-lip-popup-window') {
-                    this.openLipPopupWindow(request.url, request.query);
+                    this.openLipPopupWindow(request.url, request.query, "textSelection");
                 } else if (request.method === 'update_opened_lip_popup_window_data') {
                     this.updateOpenedLipPopupWindowData(request.change, sender.tab.windowId)
                 } else if (request.method === 'close-lip-popup-window') {
@@ -66,10 +67,14 @@
 
             });
         }
-
-        openLipPopupWindow(url, query = "") {
+        /**
+         * Open popup window
+         * @param {String} url 
+         * @param {Sting} query 
+         * @param {"textSelection"|"link"|"media"} popupFor
+         */
+        openLipPopupWindow(url, query = "", popupFor) {
             // windowCreateOptions
-
 
             let windowOptionsObj = this.windowCreateOptions(url);
 
@@ -78,6 +83,7 @@
                 if (!lipUtility.isObjEmpty(this.openedLipPopupWindows)) {
                     openedWindow = this.openedLipPopupWindows[Object.keys(this.openedLipPopupWindows)[0]];
                     this.updateOpenedLipPopupWindowData({ type: 'query', data: query }, openedWindow.windowId);
+                    this.updateOpenedLipPopupWindowData({ type: 'popupFor', data: popupFor }, openedWindow.windowId);
                     chrome.tabs.update(openedWindow.tabId, { url: url }, () => {});
                     chrome.windows.update(openedWindow.windowId, { focused: true }, () => {});
 
@@ -92,7 +98,8 @@
                         windowId: win.tabs[0].windowId,
                         tabId: win.tabs[0].id,
                         query: query,
-                        navbarState: "visible"
+                        navbarState: "visible",
+                        popupFor: popupFor
                     }
 
                     // if state is "maximized" don't run the firefox specific update
@@ -139,9 +146,10 @@
         updateOpenedLipPopupWindowData(change, windowId) {
             if (change.type == 'query') {
                 this.openedLipPopupWindows[windowId]["query"] = change.data;
-            }
-            if (change.type == 'navbarState') {
+            } else if (change.type == 'navbarState') {
                 this.openedLipPopupWindows[windowId]["navbarState"] = change.data;
+            } else if (change.type == 'popupFor') {
+                this.openedLipPopupWindows[windowId]['popupFor'] = change.data;
             }
         }
         onWindowRemoved() {
@@ -181,7 +189,7 @@
                             contexts: ["selection"],
                             onclick: (info, tab) => {
                                 let url = lipUtility.createSearchEngineUrlForNewWindow(searchEngine.url, info.selectionText);
-                                this.openLipPopupWindow(url, info.selectionText.trim());
+                                this.openLipPopupWindow(url, info.selectionText.trim(), "textSelection");
 
                             },
                         });
@@ -197,21 +205,21 @@
                 title: "Open link in popup",
                 contexts: ["link"],
                 onclick: (info, tab) => {
-                    this.openLipPopupWindow(info.linkUrl);
+                    this.openLipPopupWindow(info.linkUrl, "", "link");
                 },
             });
         }
-        /* Disabling this feature, I may enable it in future
-        createLipContextMenuForMedia() {
-            chrome.contextMenus.create({
-                title: "Open media in popup",
-                contexts: ["image", "video", "audio"],
-                onclick: (info, tab) => {
-                    this.openLipPopupWindow(info.srcUrl);
-                },
-            });
-        }
-        */
+        /*         // Disabling this feature, I may enable it in future
+                createLipContextMenuForMedia() {
+                    chrome.contextMenus.create({
+                        title: "Open media in popup",
+                        contexts: ["image", "video", "audio"],
+                        onclick: (info, tab) => {
+                            this.openLipPopupWindow(info.srcUrl, "", "media");
+                        },
+                    });
+                } */
+
         onInstalled() {
             chrome.runtime.onInstalled.addListener(async (details) => {
                 if (details.reason == "install") {
@@ -292,7 +300,8 @@
                     width: "", // integer|"" in px. empty means default
                     fromLeft: "", // integer|"" in px. empty means default
                     fromTop: "", // integer|"" in px. empty means default
-                    isShowingNavbarAllowed: true
+                    isShowingNavbarAllowed: true,
+                    isShowingNavbarForLinkAllowed: false
                 },
                 isShowingBubbleAllowed: true,
             }, async () => {

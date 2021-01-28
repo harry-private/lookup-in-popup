@@ -34,8 +34,11 @@ let lipPopupWindowRun = async (currentLipPopupWindowData) => {
                 this.closeOnEsc();
             }
 
-
-            if (!this.localStorageData.popupWindow.isShowingNavbarAllowed || this.currentLipPopupWindowData.navbarState == "removed") { return; }
+            if (
+                (this.currentLipPopupWindowData.popupFor == 'link' && !this.localStorageData.popupWindow.isShowingNavbarForLinkAllowed) ||
+                !this.localStorageData.popupWindow.isShowingNavbarAllowed ||
+                this.currentLipPopupWindowData.navbarState == "removed"
+            ) { return; }
 
             let observer = new MutationObserver(() => {
                 if (document.body) {
