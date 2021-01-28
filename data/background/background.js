@@ -155,8 +155,10 @@
             chrome.contextMenus.removeAll(() => {
                 this.createLipContextMenu();
                 this.createLipContextMenuForLink();
-                this.createLipContextMenuForMedia();
-            })
+                /* // Disabling this feature, I may enable it in future
+                    this.createLipContextMenuForMedia();
+                */
+            });
 
         }
 
@@ -199,6 +201,7 @@
                 },
             });
         }
+        /* Disabling this feature, I may enable it in future
         createLipContextMenuForMedia() {
             chrome.contextMenus.create({
                 title: "Open media in popup",
@@ -208,6 +211,7 @@
                 },
             });
         }
+        */
         onInstalled() {
             chrome.runtime.onInstalled.addListener(async (details) => {
                 if (details.reason == "install") {

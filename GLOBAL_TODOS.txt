@@ -1,5 +1,8 @@
-
-// TODO Remove unnecessary comments, especially form css files.
+/* TODO Goal hide/remove bottom menu when the pop-pup is for link
+    - by default bottom menu will be hidden
+    - user can un-hide it from settings
+*/ 
+// TODO Remove unnecessary titles' in options
 
 // TODO Add better description for the extension in both manifest.json, and package.json.
 
