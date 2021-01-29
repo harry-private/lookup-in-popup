@@ -1,7 +1,7 @@
 {
   "name": "lookup-in-popup",
   "version": "0.0.1",
-  "description": "Lookup selected texts in popup on your selected search engine",
+  "description": "Lookup selected texts in the popup on your preferred search engine, and open links in the popup",
   "main": "lip.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
