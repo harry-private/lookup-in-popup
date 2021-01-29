@@ -9,10 +9,8 @@
   "description": "Lookup selected texts in the popup on your preferred search engine, and open links in the popup",
   "version": "0.0.1",
   "permissions": [
-    "tabs",
     "storage",
     "<all_urls>",
-    "activeTab",
     "contextMenus"
   ],
   "background": {
