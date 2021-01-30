@@ -1,10 +1,6 @@
-/* TODO Goal hide/remove bottom menu when the pop-pup is for link
-    - by default bottom menu will be hidden
-    - user can un-hide it from settings
-*/ 
-// TODO Remove unnecessary titles' in options
+// FIX Styling of Bubble and Bottom Navbar Menu in "https://firebase.google.com/
 
-// TODO Add better description for the extension in both manifest.json, and package.json.
+// TODO Add YouTube video link in extension/addon  description  
 
 // CONSIDER Allowing user to be able to add just page(s), instead of the main domain
 

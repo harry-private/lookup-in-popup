@@ -50,5 +50,18 @@
    1. Readd the `browser_specific_settings`
    2. commit the changes
    3. merge the branch to master
-   4. upload to the Github.com
+   4. upload to the Github
+
+
+
+---
+
+
+
+### Links
+
+- [Chrome extension developer dashboard](https://chrome.google.com/u/1/webstore/devconsole/5d355d47-731e-4269-8a27-1e8479f361ea?hl=en)
+- [Firefox addon developer dashboard](https://addons.mozilla.org/en-US/developers/addons)
+- [YouTube](https://youtu.be/pX8Q0wE7aJc)
+- [Github](https://github.com/harry-private/lookup-in-popup)
 
