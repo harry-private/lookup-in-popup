@@ -2,6 +2,14 @@
 
 // TODO Add YouTube video link in extension/addon  description  
 
+// CONSIDER Adding incognito for open link in pop-up, two option (item) one for opening
+            in normal mode, and one is for incognito, user can decide if want this item 
+            to be added in the context menu
+
+// CONSIDER Adding open current page in the pop-up, and add normal and incognito, 
+            user can decide if want this item to be added in the context menu
+
+
 // CONSIDER Allowing user to be able to add just page(s), instead of the main domain
 
 // CONSIDER Adding an option where a window mode (incognito, or normal) can be set for all,
