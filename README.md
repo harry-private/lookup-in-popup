@@ -5,7 +5,7 @@ Lookup text selections and links in the popup
   
   
   ### Links
-  [YoTube demonstration video](https://youtu.be/kOOT5MK76UM)
+  [YoTube - Demonstration video](https://youtu.be/kOOT5MK76UM)
 
   [Chrome](https://chrome.google.com/webstore/detail/lookup-in-popup/akaefbhdlppmfdecoakjogglbjgacdhm)
 
