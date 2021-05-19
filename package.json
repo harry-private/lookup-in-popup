@@ -1,6 +1,6 @@
 {
   "name": "lookup-in-popup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Lookup selected texts in the popup on your preferred search engine, and open links in the popup",
   "main": "lip.js",
   "scripts": {

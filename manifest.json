@@ -7,7 +7,7 @@
   "manifest_version": 2,
   "name": "Lookup In Popup",
   "description": "Lookup selected texts in the popup on your preferred search engine, and open links in the popup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "permissions": [
     "storage",
     "<all_urls>",
