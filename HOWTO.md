@@ -52,7 +52,12 @@
    3. merge the branch to master
    4. upload to the Github
 
-
+##### GitHub Release
+- Steps
+  1. Take the latest version from both `chrome_build` and `firefox_build`
+  2. Add both of them to archive(zip)
+  3. Change the file name to version (for example `[0.0.1]`)
+  4. Go to Github add the zip file to release
 
 ---
 
